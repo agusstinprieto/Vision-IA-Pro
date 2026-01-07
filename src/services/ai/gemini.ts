@@ -46,6 +46,7 @@ export const analyzeInspectionDelta = async (
 
     } catch (error: any) {
         console.error("AI Audit Error Details:", error);
+        const errorMessage = error.message || "Error Desconocido";
         return {
             tipo_inspeccion: InspectionType.CHECK_OUT,
             alerta_seguridad: SecurityAlert.AMARILLA,
@@ -53,9 +54,9 @@ export const analyzeInspectionDelta = async (
                 identidad_confirmada: false,
                 integridad_sellos: SealIntegrity.NO_VISIBLES,
                 lectura_medidor: "ERROR",
-                descripcion_anomalia: `Falla: ${error.message || "Error Desconocido"}`
+                descripcion_anomalia: `Falla: ${errorMessage}`
             },
-            razonamiento_forense: "Error de comunicación con el motor IA. Verifica la API KEY en Vercel."
+            razonamiento_forense: `ERROR TÉCNICO: ${errorMessage}. (Verifica VITE_GEMINI_API_KEY en Vercel Settings).`
         };
     }
 };
