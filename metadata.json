@@ -1,0 +1,7 @@
+{
+  "name": "GuardianAI - Forensic Logistics Auditor",
+  "description": "Expert forensic auditor for hazmat transport integrity. Analyzes tires and fuel seals to detect fraud and manipulation using Gemini 3 Vision.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

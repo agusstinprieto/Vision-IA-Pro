@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONTRATO CONFIDENCIAL - SIMSA VISION IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #050505;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .text-yellow {
+            color: #FFCC33;
+        }
+
+        .bg-yellow {
+            background-color: #FFCC33;
+        }
+
+        #protection-overlay {
+            position: fixed;
+            inset: 0;
+            background: #050505;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .legal-text p {
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            color: #d4d4d8;
+            font-size: 0.875rem;
+        }
+
+        .legal-text strong {
+            color: white;
+            font-weight: 900;
+        }
+    </style>
+</head>
+
+<body class="text-zinc-300 bg-[#050505]">
+
+    <!-- Password Protection -->
+    <div id="protection-overlay">
+        <div class="max-w-md w-full p-10 bg-[#0A0A0B] rounded-[2.5rem] border border-white/5 text-center shadow-2xl">
+            <div
+                class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(37,99,235,0.3)]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+            </div>
+            <h2 class="text-2xl font-black text-white uppercase tracking-tighter mb-2">Legal Clearance</h2>
+            <p class="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em] mb-8">IA.AGUS Legal Operations</p>
+            <input type="password" id="password-input" placeholder="Enter Access Key"
+                class="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-center text-white placeholder:text-zinc-800 focus:outline-none focus:border-blue-600 mb-6 font-mono">
+            <button onclick="checkPassword()"
+                class="w-full bg-white text-black py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-zinc-200 transition-all">Authorize
+                Access</button>
+            <p id="error-msg" class="text-red-600 text-[10px] font-black uppercase tracking-widest mt-4 hidden">
+                Unauthorized Access Attempt</p>
+        </div>
+    </div>
+
+    <div id="main-content" class="hidden">
+        <nav
+            class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-lg border-b border-white/5 px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
+                    <span class="text-white font-black text-[10px]">L</span>
+                </div>
+                <span class="font-black text-white uppercase tracking-tighter text-sm">SIMSA VISION IA <span
+                        class="text-zinc-600">/ Legal Agreement</span></span>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="exportPDF()"
+                    class="bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-lg transition-all flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Exportar Contrato
+                </button>
+                <span
+                    class="text-[9px] font-bold text-blue-500 border border-blue-500/30 px-3 py-1 rounded-full uppercase tracking-widest animate-pulse">Official
+                    Draft</span>
+            </div>
+        </nav>
+
+        <main class="max-w-4xl mx-auto px-6 pt-32 pb-24">
+            <header class="mb-20 text-center">
+                <h1 class="text-5xl font-black text-white uppercase tracking-tighter mb-4 leading-none">Contrato de
+                    Prestación de<br /><span class="text-blue-500">Servicios Tecnológicos IA</span></h1>
+                <p class="text-zinc-500 font-mono text-sm">Ref: SVI-2026-001 | 1 Febrero, 2026</p>
+            </header>
+
+            <div class="bg-[#0A0A0B] p-12 md:p-16 rounded-[2.5rem] border border-white/5 legal-text text-justify">
+
+                <h3 class="text-blue-500 font-black uppercase tracking-widest mb-6 text-sm">1. Declaraciones</h3>
+                <p>
+                    Celebran el presente contrato por una parte <strong>IA.AGUS (El Prestador)</strong> y por la otra
+                    <strong>GRUPO SIMSA (El Cliente)</strong>, con el objeto de formalizar el desarrollo, implementación
+                    y licenciamiento del sistema "SIMSA VISION IA".
+                </p>
+
+                <h3 class="text-blue-500 font-black uppercase tracking-widest mb-6 text-sm mt-12">2. Alcance del
+                    Servicio</h3>
+                <p>
+                    El Prestador se compromete a entregar una solución de software "As-Is" (Tal Cual) basada en
+                    Inteligencia Artificial para la detección de anomalías en unidades de transporte, incluyendo la
+                    integración con hardware de terceros en modalidad IaaS (Infraestructura como Servicio).
+                </p>
+
+                <h3 class="text-red-500 font-black uppercase tracking-widest mb-6 text-sm mt-12">3. Limitación de
+                    Responsabilidad</h3>
+                <p>
+                    <strong>EN NINGÚN CASO EL PRESTADOR SERÁ RESPONSABLE</strong> ante el Cliente o terceros por daños
+                    indirectos, incidentales, consecuentes, especiales o punitivos, incluyendo pero no limitado a:
+                    pérdida de beneficios, interrupción del negocio, pérdida de datos o fallos en la detección de
+                    eventos de seguridad.
+                </p>
+                <p>
+                    La responsabilidad total del Prestador por cualquier reclamación derivada de este contrato
+                    <strong>NO EXCEDERÁ EL MONTO TOTAL DE LOS HONORARIOS PAGADOS</strong> por el Cliente durante los 3
+                    meses anteriores al evento que dio origen a la reclamación. La tecnología de IA se proporciona como
+                    una herramienta de asistencia y NO sustituye la supervisión humana ni garantiza una precisión del
+                    100%.
+                </p>
+
+                <h3 class="text-blue-500 font-black uppercase tracking-widest mb-6 text-sm mt-12">4. Indemnización</h3>
+                <p>
+                    El Cliente acuerda indemnizar, defender y mantener indemne al Prestador frente a cualquier
+                    reclamación, pérdida o daño derivado del uso del sistema, incluyendo el uso de datos biométricos o
+                    grabaciones de video que no cumplan con las regulaciones locales de privacidad.
+                </p>
+
+                <h3 class="text-blue-500 font-black uppercase tracking-widest mb-6 text-sm mt-12">5. Propiedad
+                    Intelectual</h3>
+                <p>
+                    Todo el código fuente, modelos de IA entrenados, algoritmos y documentación técnica generada
+                    permanecen como propiedad exclusiva de <strong>IA.AGUS</strong>. El Cliente recibe una licencia de
+                    uso no exclusiva e intransferible mientras mantenga al día sus pagos de suscripción mensual.
+                </p>
+
+                <div class="mt-20 pt-10 border-t border-white/10 grid grid-cols-2 gap-20">
+                    <div class="text-center">
+                        <div class="h-24 border-b border-white/20 mb-4"></div>
+                        <p class="text-white font-black uppercase text-xs">Por IA.AGUS</p>
+                        <p class="text-zinc-500 text-[10px] uppercase">Agustín Prieto</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="h-24 border-b border-white/20 mb-4"></div>
+                        <p class="text-white font-black uppercase text-xs">Por GRUPO SIMSA</p>
+                        <p class="text-zinc-500 text-[10px] uppercase">Representante Legal</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <section class="max-w-2xl mx-auto text-center space-y-6 mt-12">
+                <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-black italic">
+                    CONFIDENCIAL: Documento legal protegido. Fecha de emisión: 27 Ene 2026.
+                </p>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        function checkPassword() {
+            const input = document.getElementById('password-input');
+            const pass = input.value.trim();
+            if (pass === 'admin' || pass === 'ia.agus') {
+                document.getElementById('protection-overlay').style.display = 'none';
+                document.getElementById('main-content').classList.remove('hidden');
+                document.getElementById('main-content').style.display = 'block';
+            } else {
+                document.getElementById('error-msg').classList.remove('hidden');
+                input.value = '';
+            }
+        }
+
+        document.getElementById('password-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        function exportPDF() {
+            const element = document.getElementById('main-content');
+
+            const opt = {
+                margin: 0.5,
+                filename: 'Contrato_Servicios_SIMSA_IA.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#050505' },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            html2pdf().from(element).set(opt).save();
+        }
+    </script>
+</body>
+
+</html>

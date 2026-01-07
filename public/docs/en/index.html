@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMSA VISION IA - Documentation Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --simsa-yellow: #FFCC33;
+            --simsa-charcoal: #24272D;
+            --simsa-red: #ED1C24;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #0F1012;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .glass {
+            background: rgba(36, 39, 45, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 204, 51, 0.1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            border-color: var(--simsa-yellow);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .text-yellow {
+            color: var(--simsa-yellow);
+        }
+
+        .bg-yellow {
+            background-color: var(--simsa-yellow);
+        }
+    </style>
+</head>
+
+<body class="text-white min-h-screen flex items-center justify-center p-4 relative overflow-x-hidden">
+
+    <!-- Background Effects -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#FFCC33]/5 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#ED1C24]/5 rounded-full blur-[120px]"></div>
+    </div>
+
+    <div class="max-w-4xl w-full text-center z-10 py-12">
+        <div class="mb-12">
+            <div class="flex justify-center mb-6">
+                <div class="w-16 h-16 bg-yellow rounded-2xl flex items-center justify-center shadow-2xl">
+                    <span class="text-3xl font-black text-black">S</span>
+                </div>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-black mb-4 tracking-tighter uppercase">
+                SIMSA <span class="text-yellow">VISION IA</span>
+            </h1>
+            <p class="text-zinc-400 text-xl max-w-2xl mx-auto font-light leading-relaxed">
+                Industrial Auditing and Forensic Prevention for <span class="text-white font-semibold italic">Grupo
+                    SIMSA</span>.
+                Innovating in fleet integrity.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Documentation Cards -->
+            <a href="manual.html"
+                class="glass p-8 rounded-3xl text-left transition-all duration-300 card-hover group cursor-pointer block">
+                <div class="flex justify-between items-start mb-6">
+                    <div
+                        class="p-3 bg-yellow/10 rounded-xl text-yellow group-hover:bg-yellow group-hover:text-black transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                        </svg>
+                    </div>
+                </div>
+                <h2 class="text-2xl font-bold mb-2 group-hover:text-yellow transition-colors">User Manual</h2>
+                <p class="text-zinc-400 text-sm font-light">SIMSA VISION operational guide: 360 inspection and cargo
+                    validation processes.</p>
+            </a>
+
+            <a href="pitch.html"
+                class="glass p-8 rounded-3xl text-left transition-all duration-300 card-hover group cursor-pointer block">
+                <div class="flex justify-between items-start mb-6">
+                    <div
+                        class="p-3 bg-red-500/10 rounded-xl text-red-500 group-hover:bg-red-500 group-hover:text-white transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20v-6M6 20V10M18 20V4" />
+                        </svg>
+                    </div>
+                </div>
+                <h2 class="text-2xl font-bold mb-2 group-hover:text-red-500 transition-colors">Strategic Pitch</h2>
+                <p class="text-zinc-400 text-sm font-light">Economic impact and loss prevention through automated visual
+                    auditing.</p>
+            </a>
+
+            <a href="specs.html"
+                class="glass p-8 rounded-3xl text-left transition-all duration-300 card-hover group cursor-pointer block">
+                <div class="flex justify-between items-start mb-6">
+                    <div
+                        class="p-3 bg-blue-500/10 rounded-xl text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                            <line x1="12" y1="17" x2="12.01" y2="17" />
+                        </svg>
+                    </div>
+                </div>
+                <h2 class="text-2xl font-bold mb-2 group-hover:text-blue-400 transition-colors">Technical Specs</h2>
+                <p class="text-zinc-400 text-sm font-light">Security architecture, Gemini 1.5 AI, and data encryption
+                    protocols.</p>
+            </a>
+
+            <a href="pricing.html"
+                class="glass p-8 rounded-3xl text-left transition-all duration-300 card-hover group cursor-pointer block">
+                <div class="flex justify-between items-start mb-6">
+                    <div
+                        class="p-3 bg-emerald-500/10 rounded-xl text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="1" x2="12" y2="23" />
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                        </svg>
+                    </div>
+                </div>
+                <h2 class="text-2xl font-bold mb-2 group-hover:text-emerald-400 transition-colors">Investment Models
+                </h2>
+                <p class="text-zinc-400 text-sm font-light">SaaS, Turnkey, and ROI Sharing options for Grupo SIMSA.</p>
+            </a>
+        </div>
+
+        <div class="mt-12 flex justify-center">
+            <a href="../index.html"
+                class="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-sm font-black uppercase tracking-widest">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="2" y1="12" x2="22" y2="12" />
+                    <path
+                        d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                </svg>
+                Versión en Español
+            </a>
+        </div>
+
+        <!-- Footer IA.AGUS -->
+        <footer class="mt-24 pt-12 border-t border-white/5">
+            <div class="flex flex-col items-center">
+                <h3 class="text-2xl font-black mb-1">IA.AGUS</h3>
+                <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.4em] mb-8">AI-Powered Auditing
+                    Solutions</p>
+
+                <div class="flex gap-12 mb-10 opacity-40">
+                    <a href="https://www.youtube.com/@ia-agus" target="_blank"
+                        class="hover:text-yellow transition-colors font-bold text-[10px] tracking-widest uppercase">YouTube</a>
+                    <a href="https://www.facebook.com/inteligencia.agus" target="_blank"
+                        class="hover:text-yellow transition-colors font-bold text-[10px] tracking-widest uppercase">Facebook</a>
+                </div>
+
+                <p class="text-[9px] text-zinc-600 uppercase tracking-[0.5em] font-black italic">
+                    © 2026 SIMSA VISION IA &bull; IA.AGUS Industrial Systems
+                </p>
+            </div>
+        </footer>
+    </div>
+</body>
+
+</html>

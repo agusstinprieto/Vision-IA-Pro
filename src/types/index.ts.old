@@ -1,0 +1,29 @@
+
+export enum InspectionType {
+  LLANTA = 'LLANTA',
+  COMBUSTIBLE = 'COMBUSTIBLE'
+}
+
+export enum SecurityAlert {
+  ROJA = 'ROJA',
+  AMARILLA = 'AMARILLA',
+  VERDE = 'VERDE'
+}
+
+export enum SealIntegrity {
+  INTACTOS = 'INTACTOS',
+  VIOLADOS = 'VIOLADOS',
+  NO_VISIBLES = 'NO_VISIBLES'
+}
+
+export interface ForensicAuditResult {
+  tipo_inspeccion: InspectionType;
+  alerta_seguridad: SecurityAlert;
+  hallazgos: {
+    identidad_confirmada: boolean;
+    integridad_sellos: SealIntegrity;
+    lectura_medidor: string;
+    descripcion_anomalia: string;
+  };
+  razonamiento_forense: string;
+}

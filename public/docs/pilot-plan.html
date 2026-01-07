@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONFIDENCIAL - Plan Piloto 50 Unidades</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #050505;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .lang-en {
+            display: none;
+        }
+
+        .lang-es {
+            display: block;
+        }
+    </style>
+    <script>
+        function toggleLanguage(lang) {
+            const esElements = document.querySelectorAll('.lang-es');
+            const enElements = document.querySelectorAll('.lang-en');
+
+            if (lang === 'en') {
+                esElements.forEach(el => el.style.display = 'none');
+                enElements.forEach(el => el.style.display = 'block');
+            } else {
+                esElements.forEach(el => el.style.display = 'block');
+                enElements.forEach(el => el.style.display = 'none');
+            }
+        }
+
+        function exportPDF() {
+            const element = document.body;
+            const opt = {
+                margin: [0, 0],
+                filename: 'SIMSA_Pilot_Plan.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            // Temporary "Clean Mode" for Printing
+
+            // Add print styles
+            const style = document.createElement('style');
+            style.id = 'print-style';
+            style.innerHTML = `
+                body { background-color: white !important; color: black !important; }
+                
+                /* Force Text Colors */
+                .text-white { color: black !important; }
+                .text-zinc-300, .text-zinc-400, .text-zinc-500, .text-zinc-600 { color: #333 !important; }
+                .text-blue-500, .text-emerald-500, .text-[#EA492E] { color: black !important; font-weight: 900 !important; }
+
+                /* Reset Component Backgrounds */
+                .bg-\\[\\#050505\\], 
+                .bg-\\[\\#0A0A0B\\], 
+                .bg-black\\/50, 
+                .bg-white\\/5 { 
+                    background: white !important; 
+                    background-color: white !important;
+                    background-image: none !important;
+                    box-shadow: none !important;
+                    border: 1px solid #ddd !important;
+                }
+                
+                .bg-gradient-to-br {
+                    background: white !important;
+                    border: 2px solid #000 !important;
+                }
+
+                /* Add borders where backgrounds were removed to keep structure */
+                .rounded-3xl, 
+                .rounded-\\[2\\.5rem\\] { 
+                    border: 1px solid #000 !important; 
+                    border-radius: 12px !important;
+                    background-color: white !important;
+                }
+
+                /* Table Styling */
+                table th { background: #eee !important; color: black !important; border: 1px solid #000 !important; }
+                table td { border-bottom: 1px solid #ccc !important; color: black !important; background: white !important; }
+                
+                /* Hide Navigation & Elements */
+                nav, footer, .blur-\\[100px\\] { display: none !important; } 
+
+                /* Adjust Headers */
+                h1, h2, h3 { color: black !important; }
+                
+                /* Icon adjustments */
+                svg { stroke: black !important; }
+            `;
+            document.head.appendChild(style);
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Restore styles
+                document.head.removeChild(style);
+            });
+        }
+
+    </script>
+</head>
+
+<body class="text-zinc-300 bg-[#050505] min-h-screen flex flex-col selection:bg-[#EA492E] selection:text-white">
+
+    <!-- Navigation -->
+    <nav
+        class="w-full border-b border-white/5 px-8 py-6 flex justify-between items-center bg-black/50 backdrop-blur-sm sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-[#EA492E] rounded flex items-center justify-center">
+                <span class="text-white font-black text-xs">SV</span>
+            </div>
+            <div>
+                <h1 class="font-black text-white uppercase tracking-tighter text-sm leading-none">SIMSA VISION IA</h1>
+                <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">
+                    <span class="lang-es">Plan de Infraestructura (Piloto)</span>
+                    <span class="lang-en">Infrastructure Plan (Pilot)</span>
+                </p>
+            </div>
+        </div>
+        <div class="flex items-center gap-6">
+            <button onclick="exportPDF()" class="flex items-center gap-2 hover:text-white transition-colors group">
+                <div
+                    class="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center group-hover:border-[#EA492E] group-hover:text-[#EA492E]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                </div>
+                <span class="text-xs font-bold uppercase tracking-widest hidden md:block">
+                    <span class="lang-es">Descargar PDF</span>
+                    <span class="lang-en">Download PDF</span>
+                </span>
+            </button>
+            <a href="private-menu.html" class="flex items-center gap-2 hover:text-white transition-colors group">
+                <div
+                    class="w-6 h-6 rounded-full border border-white/10 flex items-center justify-center group-hover:border-white/50">
+                    <span class="text-xs">←</span>
+                </div>
+                <span class="text-xs font-bold uppercase tracking-widest hidden md:block">
+                    <span class="lang-es">Volver al Hub</span>
+                    <span class="lang-en">Back to Hub</span>
+                </span>
+            </a>
+            <div class="flex items-center gap-2 bg-white/5 px-2 py-1 rounded-full border border-white/10">
+                <button onclick="toggleLanguage('es')"
+                    class="text-[10px] font-black uppercase hover:text-white text-zinc-400 px-2">ES</button>
+                <div class="w-px h-3 bg-white/20"></div>
+                <button onclick="toggleLanguage('en')"
+                    class="text-[10px] font-black uppercase hover:text-white text-zinc-400 px-2">EN</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-1 max-w-5xl mx-auto w-full p-8 md:p-16">
+
+        <!-- Header -->
+        <header class="mb-20">
+            <span
+                class="inline-block bg-[#EA492E]/10 text-[#EA492E] border border-[#EA492E]/20 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6">
+                <span class="lang-es">Fase 5: Despliegue Piloto</span>
+                <span class="lang-en">Phase 5: Pilot Deployment</span>
+            </span>
+            <h1 class="text-5xl md:text-6xl font-black text-white uppercase tracking-tighter mb-6 leading-[0.9]">
+                <span class="lang-es">Lista de Equipamiento <br><span class="text-zinc-700">Hardware &
+                        Sensores</span></span>
+                <span class="lang-en">Equipment List <br><span class="text-zinc-700">Hardware & Sensors</span></span>
+            </h1>
+            <p class="text-lg text-zinc-400 max-w-2xl leading-relaxed">
+                <span class="lang-es">Especificaciones técnicas para el montaje del primer Arco de Inspección
+                    Automatizado (Fixed Gate IA) en la terminal de Torreón. Requerido para la validación con 50
+                    unidades.</span>
+                <span class="lang-en">Technical specifications for the assembly of the first Automated Inspection Arch
+                    (Fixed Gate IA) at the Torreón terminal. Required for the 50-unit validation.</span>
+            </p>
+        </header>
+
+        <!-- Vision System -->
+        <section class="mb-20">
+            <div class="flex items-center gap-4 mb-8">
+                <div
+                    class="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 border border-blue-500/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+                        <circle cx="12" cy="13" r="3" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-black text-white uppercase tracking-tight">
+                    <span class="lang-es">01. Sistema de Visión <span class="text-blue-500">(Ojos)</span></span>
+                    <span class="lang-en">01. Vision System <span class="text-blue-500">(Eyes)</span></span>
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Item 1 -->
+                <div
+                    class="bg-[#0A0A0B] p-8 rounded-3xl border border-white/5 hover:border-blue-500/50 transition-colors">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-blue-500 font-mono text-xs font-bold">QTY: 4</span>
+                        <span class="bg-zinc-800 text-zinc-400 px-2 py-1 rounded text-[10px] font-bold uppercase">Basler
+                            / Hikvision</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Cámaras Industriales Laterales (5MP+)</h3>
+                    <p class="text-zinc-500 text-sm mb-4">Global Shutter, 60fps mínimo. Para captura de flancos de
+                        neumáticos en movimiento sin desenfoque (Motion Blur).</p>
+                    <ul class="text-xs text-zinc-400 space-y-1 font-mono">
+                        <li>• Lente: 12mm-25mm Varifocal</li>
+                        <li>• Trigger: Hardware (GPIO)</li>
+                        <li>• IP67 Protection</li>
+                    </ul>
+                </div>
+
+                <!-- Item 2 -->
+                <div
+                    class="bg-[#0A0A0B] p-8 rounded-3xl border border-white/5 hover:border-blue-500/50 transition-colors">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-blue-500 font-mono text-xs font-bold">QTY: 2</span>
+                        <span class="bg-zinc-800 text-zinc-400 px-2 py-1 rounded text-[10px] font-bold uppercase">LPR
+                            Spec</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Cámaras ANPR (Placas)</h3>
+                    <p class="text-zinc-500 text-sm mb-4">Cámaras optimizadas para lectura de placas (LPR) con IR
+                        integrado para visión nocturna.</p>
+                    <ul class="text-xs text-zinc-400 space-y-1 font-mono">
+                        <li>• Alcance: 5-15 metros</li>
+                        <li>• Filtro IR Cut</li>
+                        <li>• OCR On-board (Opcional)</li>
+                    </ul>
+                </div>
+
+                <!-- Item 3 -->
+                <div
+                    class="bg-[#0A0A0B] p-8 rounded-3xl border border-white/5 hover:border-blue-500/50 transition-colors md:col-span-2">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-blue-500 font-mono text-xs font-bold">QTY: 4 (Barras)</span>
+                        <span class="bg-zinc-800 text-zinc-400 px-2 py-1 rounded text-[10px] font-bold uppercase">LED
+                            Strobe</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Iluminación Industrial Sincronizada</h3>
+                    <p class="text-zinc-500 text-sm mb-4">Paneles LED de alta potencia (5000K-6000K) sincronizados con
+                        el obturador de la cámara para congelar el movimiento.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sensors -->
+        <section class="mb-20">
+            <div class="flex items-center gap-4 mb-8">
+                <div
+                    class="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500 border border-emerald-500/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 12h20" />
+                        <path d="M2 12v3a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-3" />
+                        <circle cx="12" cy="12" r="4" />
+                        <path d="M12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-black text-white uppercase tracking-tight">
+                    <span class="lang-es">02. Sensores & Triggers <span class="text-emerald-500">(Nervios)</span></span>
+                    <span class="lang-en">02. Sensors & Triggers <span class="text-emerald-500">(Nerves)</span></span>
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div
+                    class="bg-[#0A0A0B] p-8 rounded-3xl border border-white/5 hover:border-emerald-500/50 transition-colors">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-emerald-500 font-mono text-xs font-bold">QTY: 2</span>
+                        <span
+                            class="bg-zinc-800 text-zinc-400 px-2 py-1 rounded text-[10px] font-bold uppercase">Inductivos</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Lazos Magnéticos (Piso)</h3>
+                    <p class="text-zinc-500 text-xs text-justify">Detectan la masa metálica del camión para "despertar"
+                        el sistema y confirmar presencia.</p>
+                </div>
+                <div
+                    class="bg-[#0A0A0B] p-8 rounded-3xl border border-white/5 hover:border-emerald-500/50 transition-colors">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-emerald-500 font-mono text-xs font-bold">QTY: 4</span>
+                        <span
+                            class="bg-zinc-800 text-zinc-400 px-2 py-1 rounded text-[10px] font-bold uppercase">Fotoeléctricos</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Barreras Infrarrojas</h3>
+                    <p class="text-zinc-500 text-xs text-justify">Disparan la cámara exactamente cuando el eje de la
+                        llanta cruza el haz de luz.</p>
+                </div>
+                <div
+                    class="bg-[#0A0A0B] p-8 rounded-3xl border border-white/5 hover:border-emerald-500/50 transition-colors">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-emerald-500 font-mono text-xs font-bold">QTY: 1</span>
+                        <span
+                            class="bg-zinc-800 text-zinc-400 px-2 py-1 rounded text-[10px] font-bold uppercase">Controller</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">PLC / Trigger Box</h3>
+                    <p class="text-zinc-500 text-xs text-justify">Sincroniza la señal de los sensores con los disparos
+                        de cámara y luces (Microsegundos).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Processing -->
+        <section class="mb-20">
+            <div class="flex items-center gap-4 mb-8">
+                <div
+                    class="w-12 h-12 bg-[#EA492E]/10 rounded-2xl flex items-center justify-center text-[#EA492E] border border-[#EA492E]/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="4" width="16" height="16" rx="2" />
+                        <rect x="9" y="9" width="6" height="6" />
+                        <line x1="9" y1="1" x2="9" y2="4" />
+                        <line x1="15" y1="1" x2="15" y2="4" />
+                        <line x1="9" y1="20" x2="9" y2="23" />
+                        <line x1="15" y1="20" x2="15" y2="23" />
+                        <line x1="20" y1="9" x2="23" y2="9" />
+                        <line x1="20" y1="14" x2="23" y2="14" />
+                        <line x1="1" y1="9" x2="4" y2="9" />
+                        <line x1="1" y1="14" x2="4" y2="14" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-black text-white uppercase tracking-tight">
+                    <span class="lang-es">03. Procesamiento <span class="text-[#EA492E]">(Cerebro)</span></span>
+                    <span class="lang-en">03. Processing Unit <span class="text-[#EA492E]">(Brain)</span></span>
+                </h2>
+            </div>
+
+            <div
+                class="bg-gradient-to-br from-[#121214] to-black p-10 rounded-[2.5rem] border border-[#EA492E]/20 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-[#EA492E]/5 blur-[100px] -z-10"></div>
+
+                <h3 class="text-3xl font-black text-white mb-6 uppercase">Edge Server AI</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div>
+                        <p class="text-[10px] text-[#EA492E] font-bold uppercase tracking-widest mb-1">HARDWARE</p>
+                        <p class="text-white font-bold">NVIDIA Jetson Orin / IPC vPro</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-[#EA492E] font-bold uppercase tracking-widest mb-1">STORAGE</p>
+                        <p class="text-white font-bold">2TB NVMe SSD (Industrial)</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-[#EA492E] font-bold uppercase tracking-widest mb-1">CONNECTIVITY</p>
+                        <p class="text-white font-bold">5G / Fiber + Starlink Backup</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-[#EA492E] font-bold uppercase tracking-widest mb-1">POWER</p>
+                        <p class="text-white font-bold">UPS Online 2kVA</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-8 border-t border-white/5">
+                    <p class="text-zinc-500 text-sm">
+                        <strong class="text-white">Función Crítica:</strong> Este servidor local procesa las imágenes en
+                        "Borde" (Edge), comprime los datos y envía solo los metadatos y recortes optimizados a la nube
+                        (Google Gemini) para minimizar latencia y consumo de datos.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Structure -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-black text-white uppercase tracking-tight mb-8">
+                <span class="lang-es">04. Infraestructura Civil</span>
+                <span class="lang-en">04. Civil Infrastructure</span>
+            </h2>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-zinc-400">
+                    <thead class="bg-white/5 text-white uppercase font-bold text-xs tracking-wider">
+                        <tr>
+                            <th class="px-6 py-4 rounded-l-xl">Item</th>
+                            <th class="px-6 py-4">Detalle / Spec</th>
+                            <th class="px-6 py-4 rounded-r-xl">Notas</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5">
+                        <tr class="hover:bg-white/5 transition-colors">
+                            <td class="px-6 py-4 font-bold text-white">Arco Estructural</td>
+                            <td class="px-6 py-4">Acero Galvanizado, Altura 5.5m, Ancho 4.5m</td>
+                            <td class="px-6 py-4">Resistente a vientos y corrosión</td>
+                        </tr>
+                        <tr class="hover:bg-white/5 transition-colors">
+                            <td class="px-6 py-4 font-bold text-white">Base de Concreto</td>
+                            <td class="px-6 py-4">Zapatas aisladas 1m x 1m</td>
+                            <td class="px-6 py-4">Obra civil local requerida</td>
+                        </tr>
+                        <tr class="hover:bg-white/5 transition-colors">
+                            <td class="px-6 py-4 font-bold text-white">Gabinete NEMA</td>
+                            <td class="px-6 py-4">NEMA 4X, Climatizado (Aire Acondicionado)</td>
+                            <td class="px-6 py-4">Protección vs calor extremo de Torreón</td>
+                        </tr>
+                        <tr class="hover:bg-white/5 transition-colors">
+                            <td class="px-6 py-4 font-bold text-white">Red & Cableado</td>
+                            <td class="px-6 py-4">Switch PoE+ Industrial, Cat6a Blindado</td>
+                            <td class="px-6 py-4">Ductería subterránea recomendada</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Budget -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-black text-white uppercase tracking-tight mb-8">
+                <span class="lang-es">05. Presupuesto Estimado (Distributor Pricing)</span>
+                <span class="lang-en">05. Estimated Budget (Distributor Pricing)</span>
+            </h2>
+
+            <div class="bg-gradient-to-br from-[#121214] to-black p-8 rounded-[2.5rem] border border-white/10">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-zinc-400">
+                        <thead class="bg-white/5 text-white uppercase font-bold text-xs tracking-wider">
+                            <tr>
+                                <th class="px-6 py-4 rounded-l-xl">Componente</th>
+                                <th class="px-6 py-4">Proveedor (Sugerido)</th>
+                                <th class="px-6 py-4">Entrega</th>
+                                <th class="px-6 py-4 text-right">Precio Est.</th>
+                                <th class="px-6 py-4 rounded-r-xl text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/5">
+                            <!-- Infrastructure (New) -->
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-6 py-4">
+                                    <span class="block text-white font-bold">Arco Estructural (Acero)</span>
+                                    <span class="text-xs">Galvanizado 5.5m x 4.5m</span>
+                                </td>
+                                <td class="px-6 py-4">Talleres Torreón (Local)</td>
+                                <td class="px-6 py-4 text-yellow-500 font-bold">3-4 Semanas</td>
+                                <td class="px-6 py-4 text-right">$3,200 USD</td>
+                                <td class="px-6 py-4 text-right font-bold text-white">$3,200 USD</td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-6 py-4">
+                                    <span class="block text-white font-bold">Obra Civil & Montaje</span>
+                                    <span class="text-xs">Zapatas, Cableado, Mano de Obra</span>
+                                </td>
+                                <td class="px-6 py-4">Contratista Local</td>
+                                <td class="px-6 py-4 text-emerald-500 font-bold">1 Semana</td>
+                                <td class="px-6 py-4 text-right">$2,500 USD</td>
+                                <td class="px-6 py-4 text-right font-bold text-white">$2,500 USD</td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-6 py-4">
+                                    <span class="block text-white font-bold">Pintura Epóxica (Acabado Metálico)</span>
+                                    <span class="text-xs">Primer + 2 Capas ALTO TRÁFICO (Silver)</span>
+                                </td>
+                                <td class="px-6 py-4">Pinturas Comex / Osel</td>
+                                <td class="px-6 py-4 text-emerald-500 font-bold">2 Días</td>
+                                <td class="px-6 py-4 text-right">$600 USD</td>
+                                <td class="px-6 py-4 text-right font-bold text-white">$600 USD</td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-6 py-4">
+                                    <span class="block text-white font-bold">Gabinete NEMA + Clima</span>
+                                    <span class="text-xs">Inox 4X + A/C 400BTU (Hoffman/Rittal)</span>
+                                </td>
+                                <td class="px-6 py-4">Risoul / Hermos</td>
+                                <td class="px-6 py-4 text-emerald-500 font-bold">1-2 Semanas</td>
+                                <td class="px-6 py-4 text-right">$1,200 USD</td>
+                                <td class="px-6 py-4 text-right font-bold text-white">$1,200 USD</td>
+                            </tr>
+
+                            <!-- Vision Hardware -->
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-6 py-4">
+                                    <span class="block text-white font-bold">4x Basler ace 2 (5MP)</span>
+                                    <span class="text-xs">a2A2440-98g5m Global Shutter</span>
+                                </td>
+                                <td class="px-6 py-4">Edmund Optics / IVS</td>
+                                <td class="px-6 py-4 text-yellow-500 font-bold">2-3 Semanas</td>
+                                <td class="px-6 py-4 text-right">$450 ea</td>
+                                <td class="px-6 py-4 text-right font-bold text-white">$1,800 USD</td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-6 py-4">
+                                    <span class="block text-white font-bold">2x Hikvision LPR</span>
+                                    <span class="text-xs">iDS-2CD7A46G0/P-IZHSY</span>
+                                </td>
+                                <td class="px-6 py-4">Syscom / TeamVox</td>
+                                <td class="px-6 py-4 text-emerald-500 font-bold">In Stock (3 Días)</td>
+                                <td class="px-6 py-4 text-right">$480 ea</td>
+                                <td class="px-6 py-4 text-right font-bold text-white">$960 USD</td>
+                            </tr>
+
+                            <!-- Electronics -->
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-6 py-4">
+                                    <span class="block text-white font-bold">Edge AI Server</span>
+                                    <span class="text-xs">NVIDIA Jetson Orin NX 16GB</span>
+                                </td>
+                                <td class="px-6 py-4">Arrow / Mouser / Amazon</td>
+                                <td class="px-6 py-4 text-emerald-500 font-bold">5-7 Días</td>
+                                <td class="px-6 py-4 text-right">$799 USD</td>
+                                <td class="px-6 py-4 text-right font-bold text-white">$799 USD</td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-6 py-4">
+                                    <span class="block text-white font-bold">Kit Sensores & Luces</span>
+                                    <span class="text-xs">Banner QS18 + Strobes LED</span>
+                                </td>
+                                <td class="px-6 py-4">Risoul / Grainger</td>
+                                <td class="px-6 py-4 text-emerald-500 font-bold">1 Semana</td>
+                                <td class="px-6 py-4 text-right">Kit</td>
+                                <td class="px-6 py-4 text-right font-bold text-white">$1,110 USD</td>
+                            </tr>
+
+                            <!-- Totals -->
+                            <tr class="bg-[#EA492E]/10 border-t border-[#EA492E]/30">
+                                <td class="px-6 py-6 font-black text-white uppercase text-xl" colspan="3">
+                                    Gran Total Proyecto Piloto
+                                    <span
+                                        class="block text-[10px] text-[#EA492E] font-normal tracking-wide mt-1">HARDWARE
+                                        + INSTALACIÓN + OBRA CIVIL</span>
+                                </td>
+                                <td class="px-6 py-6 text-right font-black text-[#EA492E] text-2xl" colspan="2">
+                                    $12,169 USD
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="mt-6 text-xs text-zinc-500 text-right">
+                    * Precios promedio de distribuidor (Mouser, DigiKey, Edmundo Optics). No incluye IVA ni Mano de Obra
+                    Civil.
+                </p>
+            </div>
+        </section>
+
+
+        <!-- Technical Blueprints -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-black text-white uppercase tracking-tight mb-8">
+                <span class="lang-es">06. Planos Técnicos & Conectividad</span>
+                <span class="lang-en">06. Technical Blueprints & Connectivity</span>
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+
+                <!-- Render Card -->
+                <div class="bg-white/5 p-8 rounded-3xl border border-white/10 md:col-span-2">
+                    <h3 class="text-xl font-bold text-white mb-6 uppercase">Visualización Arquitectónica</h3>
+                    <div class="relative w-full aspect-video rounded-xl border border-white/10 overflow-hidden group">
+                        <img src="img/arch_render_painted.png" alt="Industrial Arch Render Painted"
+                            class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500">
+                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/90 to-transparent p-6">
+                            <p class="text-white font-bold text-lg">Acabado Metálico Premium</p>
+                            <p class="text-zinc-400 text-xs">Protección Epóxica Anticorrosiva (Silver)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diagram Card -->
+                <div class="bg-white/5 p-8 rounded-3xl border border-white/10">
+                    <h3 class="text-xl font-bold text-white mb-6 uppercase">Diagrama de Flujo</h3>
+                    <div
+                        class="relative w-full aspect-video bg-[#0A0A0B] rounded-xl border border-white/10 p-4 flex items-center justify-center overflow-hidden">
+                        <!-- Simple visual representation since Mermaid might break in raw HTML/PDF easily without more JS -->
+                        <div class="flex flex-col items-center gap-4 text-xs font-mono w-full">
+                            <div class="flex gap-4 w-full justify-center">
+                                <div
+                                    class="bg-emerald-500/20 text-emerald-500 border border-emerald-500/50 p-2 rounded text-center w-24">
+                                    SENSORES<br>(Trigger)
+                                </div>
+                                <div class="text-zinc-600 self-center">➔</div>
+                                <div
+                                    class="bg-blue-500/20 text-blue-500 border border-blue-500/50 p-2 rounded text-center w-24">
+                                    CÁMARAS<br>(Captura)
+                                </div>
+                            </div>
+                            <div class="text-zinc-600 rotate-90">➔</div>
+                            <div
+                                class="bg-[#EA492E]/20 text-[#EA492E] border border-[#EA492E]/50 p-4 rounded-xl text-center w-48 font-bold">
+                                CEREBRO AI (Jetson)<br>
+                                <span class="text-[10px] opacity-70 text-white font-normal">Analiza, Recorta,
+                                    Comprime</span>
+                            </div>
+                            <div class="text-zinc-600 rotate-90">➔</div>
+                            <div class="flex gap-4 w-full justify-center">
+                                <div class="bg-white/10 text-white border border-white/20 p-2 rounded text-center w-24">
+                                    STARLINK<br>(Internet)
+                                </div>
+                                <div class="text-zinc-600 self-center">➔</div>
+                                <div
+                                    class="bg-purple-500/20 text-purple-500 border border-purple-500/50 p-2 rounded text-center w-24 font-bold">
+                                    GEMINI 2.0<br>(La Nube)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Connectivity Card -->
+                <div class="bg-white/5 p-8 rounded-3xl border border-white/10">
+                    <h3 class="text-xl font-bold text-white mb-6 uppercase">Internet & Datos</h3>
+
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-1">REQUISITO DE
+                                ANCHO DE BANDA</p>
+                            <p class="text-white text-sm">
+                                <strong class="text-[#EA492E]">50 Mbps Subida (Upload)</strong><br>
+                                Crítico para enviar imágenes de alta resolución en tiempo real.
+                            </p>
+                        </div>
+
+                        <div>
+                            <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-1">COSTO MENSUAL
+                                ESTIMADO</p>
+                            <div class="flex items-center gap-4">
+                                <div class="bg-black/40 px-4 py-2 rounded-lg border border-white/10">
+                                    <span class="text-zinc-400 text-xs block">Starlink Business</span>
+                                    <span class="text-white font-bold">~$140 USD/mes</span>
+                                </div>
+                                <div class="bg-black/40 px-4 py-2 rounded-lg border border-white/10">
+                                    <span class="text-zinc-400 text-xs block">Fibra Empresarial</span>
+                                    <span class="text-white font-bold">~$60 USD/mes</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
+                            <p class="text-blue-400 text-xs">
+                                <strong>Recomendación:</strong> Usar Fibra Óptica como primario y Starlink como respaldo
+                                (Failover) para garantizar 99.9% Uptime.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Installation Details -->
+                <div class="bg-white/5 p-8 rounded-3xl border border-white/10 md:col-span-2">
+                    <h3 class="text-xl font-bold text-white mb-6 uppercase">Detalles de Instalación Física</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+                        <div>
+                            <p class="text-[#EA492E] font-bold mb-2">1. Dimensiones del Arco</p>
+                            <ul class="text-zinc-400 space-y-2 list-disc list-inside">
+                                <li><strong>Altura Libre:</strong> 5.50 metros (Estándar SCT + margen).</li>
+                                <li><strong>Ancho Libre:</strong> 4.50 metros.</li>
+                                <li><strong>Cimentación:</strong> Zapatas de concreto armado de 1x1x1m para estabilidad
+                                    ante viento.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p class="text-[#EA492E] font-bold mb-2">2. El "Cerebro" (NEMA Box)</p>
+                            <ul class="text-zinc-400 space-y-2 list-disc list-inside">
+                                <li>Gabinete <strong>NEMA 4X</strong> (Acero Inoxidable/Poliéster).</li>
+                                <li><strong>Aire Acondicionado de Gabinete</strong> (400 BTU) obligatorio para Torreón
+                                    (40°C+).</li>
+                                <li>Montaje a 1.5m de altura en poste lateral del arco.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p class="text-[#EA492E] font-bold mb-2">3. Cableado</p>
+                            <ul class="text-zinc-400 space-y-2 list-disc list-inside">
+                                <li>Tubería <strong>Conduit Pared Gruesa</strong> (Galvanizada).</li>
+                                <li>Cable de Red <strong>Cat6a Blindado (S/FTP)</strong> para evitar ruido eléctrico de
+                                    los camiones.</li>
+                                <li>Tierra física dedicada (< 5 Ohms).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact / Branding -->
+        <section class="mb-20 border-t border-white/10 pt-16">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                <div>
+                    <h3 class="text-2xl font-black text-white uppercase tracking-tight mb-2">IA.AGUS</h3>
+                    <p class="text-zinc-500 text-sm">Innovación y Automatización Industrial</p>
+                </div>
+
+                <div class="space-y-2 text-right">
+                    <p class="text-lg font-bold text-white">Ing. Agustín Prieto</p>
+                    <p class="text-xs text-[#EA492E] font-bold uppercase tracking-widest mb-4">Director de Proyectos</p>
+
+                    <div class="flex flex-col gap-1 text-sm text-zinc-400 font-mono">
+                        <a href="https://www.ia-agus.com" target="_blank"
+                            class="hover:text-white transition-colors">www.ia-agus.com</a>
+                        <a href="https://wa.me/528711439941" target="_blank"
+                            class="hover:text-white transition-colors">+52 871 143 9941</a>
+                        <div class="flex gap-4 justify-end mt-2">
+                            <a href="https://facebook.com/inteligencia.agus" target="_blank"
+                                class="hover:text-blue-500 transition-colors">FB: inteligencia.agus</a>
+                            <a href="https://youtube.com/@ia-agus" target="_blank"
+                                class="hover:text-red-500 transition-colors">YT: @ia-agus</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Branding -->
+        <footer
+            class="mt-10 border-t border-white/5 pt-10 flex justify-between items-center opacity-50 hover:opacity-100 transition-opacity">
+            <div class="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">
+                SIMSA VISION IA &copy; 2026
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">Powered by</span>
+                <span class="text-xs font-black text-white tracking-tighter">IA.AGUS</span>
+            </div>
+        </footer>
+
+    </main>
+
+</body>
+
+</html>

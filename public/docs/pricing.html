@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMSA VISION IA - Modelos de Inversión</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --simsa-yellow: #FFCC33;
+            --simsa-charcoal: #24272D;
+            --simsa-red: #ED1C24;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #0F1012;
+        }
+
+        .text-yellow {
+            color: var(--simsa-yellow);
+        }
+
+        .bg-yellow {
+            background-color: var(--simsa-yellow);
+        }
+    </style>
+</head>
+
+<body class="text-zinc-300 bg-[#0F1012]">
+
+    <nav
+        class="fixed top-0 w-full z-50 bg-[#0F1012]/80 backdrop-blur-lg border-b border-white/5 px-8 py-4 flex justify-between items-center">
+        <a href="index.html" class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-[#FFCC33] rounded-lg flex items-center justify-center">
+                <span class="text-black font-black text-sm">S</span>
+            </div>
+            <span class="font-black text-white uppercase tracking-tighter">SIMSA <span class="text-yellow">VISION
+                    IA</span></span>
+        </a>
+        <a href="index.html"
+            class="text-xs font-black uppercase tracking-widest text-zinc-500 hover:text-white transition-colors">Volver
+            al Hub</a>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-6 pt-32 pb-24">
+        <div class="text-center mb-20">
+            <h1 class="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter mb-4">Planes de <span
+                    class="text-yellow">Inversión</span></h1>
+            <p class="text-zinc-500 font-bold uppercase tracking-widest">Modelos escalables diseñados para Grupo SIMSA
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <!-- IaaS Basic -->
+            <div
+                class="bg-[#1A1C1E] rounded-[2.5rem] p-10 border border-white/5 flex flex-col hover:border-white/10 transition-all">
+                <h3 class="text-zinc-400 font-black uppercase tracking-widest text-xs mb-4">IaaS (Automación Plus)</h3>
+                <div class="mb-8">
+                    <span class="text-5xl font-black text-white">$1,850</span>
+                    <span class="text-zinc-500 font-bold uppercase tracking-widest text-[10px]">USD / Terminal
+                        mes</span>
+                </div>
+                <ul class="space-y-4 mb-12 flex-1">
+                    <li class="flex items-center gap-3 text-sm font-medium">
+                        <div class="w-2 h-2 bg-yellow rounded-full"></div> Auditoría de Llantas Automática
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-medium">
+                        <div class="w-2 h-2 bg-yellow rounded-full"></div> Monitoreo de Entrada/Salida
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-medium">
+                        <div class="w-2 h-2 bg-yellow rounded-full"></div> Cloud Storage de Evidencia 4K
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-medium">
+                        <div class="w-2 h-2 bg-yellow rounded-full"></div> Mantenimiento Predictivo Arcos
+                    </li>
+                </ul>
+                <button
+                    class="bg-white/5 hover:bg-white/10 py-5 rounded-2xl font-black uppercase tracking-widest text-xs transition-all">Elegir
+                    IaaS</button>
+            </div>
+
+            <!-- ROI Sharing (Total Automation) -->
+            <div
+                class="bg-[#24272D] rounded-[2.5rem] p-10 border-2 border-yellow flex flex-col relative transform md:scale-105 shadow-2xl">
+                <div
+                    class="absolute -top-5 left-1/2 -translate-x-1/2 bg-yellow text-black px-6 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
+                    Escalabilidad SIMSA</div>
+                <h3 class="text-yellow font-black uppercase tracking-widest text-xs mb-4">ROI Performance Fee</h3>
+                <div class="mb-8">
+                    <span class="text-5xl font-black text-white">$950</span>
+                    <span class="text-zinc-400 font-bold uppercase tracking-widest text-[10px]">USD / Terminal
+                        mes</span>
+                </div>
+                <p class="text-xs text-yellow font-bold uppercase mb-8 tracking-tighter">+ 20% COMISIÓN POR OPTIMIZACIÓN
+                    DE UTILIZACIÓN</p>
+                <ul class="space-y-4 mb-12 flex-1">
+                    <li class="flex items-center gap-3 text-sm font-bold text-white">
+                        <div class="w-2 h-2 bg-yellow rounded-full"></div> Reportes de % de Utilización
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-medium">
+                        <div class="w-2 h-2 bg-yellow rounded-full"></div> Alerta de Robo Proactiva
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-medium">
+                        <div class="w-2 h-2 bg-yellow rounded-full"></div> Dashboard Ejecutivo de Flota
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-medium">
+                        <div class="w-2 h-2 bg-yellow rounded-full"></div> Integración ERP Directa
+                    </li>
+                </ul>
+                <button
+                    class="bg-yellow hover:bg-yellow/80 text-black py-5 rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-[0_10px_30px_rgba(255,204,51,0.2)]">Contactar
+                    Ventas</button>
+            </div>
+        </div>
+
+        <!-- Footer IA.AGUS -->
+        <footer class="mt-24 pt-12 border-t border-white/5 text-center">
+            <div class="flex flex-col items-center">
+                <h3 class="text-2xl font-black text-white mb-1">IA.AGUS</h3>
+                <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.4em] mb-8">Soluciones de Auditoría
+                    con Inteligencia Artificial</p>
+
+                <div class="flex gap-12 mb-10 opacity-40">
+                    <a href="https://www.youtube.com/@ia-agus" target="_blank"
+                        class="hover:text-yellow transition-colors font-bold text-[10px] tracking-widest uppercase">YouTube</a>
+                    <a href="https://www.facebook.com/inteligencia.agus" target="_blank"
+                        class="hover:text-yellow transition-colors font-bold text-[10px] tracking-widest uppercase">Facebook</a>
+                </div>
+
+                <p class="text-[9px] text-zinc-600 uppercase tracking-[0.5em] font-black italic">
+                    © 2026 SIMSA VISION IA &bull; IA.AGUS Industrial Systems
+                </p>
+            </div>
+        </footer>
+    </main>
+</body>
+
+</html>

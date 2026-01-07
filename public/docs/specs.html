@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMSA VISION IA - Especificaciones Técnicas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --simsa-yellow: #FFCC33;
+            --simsa-charcoal: #24272D;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #0F1012;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .text-yellow {
+            color: var(--simsa-yellow);
+        }
+
+        .bg-yellow {
+            background-color: var(--simsa-yellow);
+        }
+
+        #protection-overlay {
+            position: fixed;
+            inset: 0;
+            background: #0F1012;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body class="text-zinc-300 bg-[#0F1012]">
+
+    <!-- Password Protection -->
+    <div id="protection-overlay">
+        <div class="max-w-md w-full p-10 bg-[#1A1C1E] rounded-[2.5rem] border border-white/5 text-center shadow-2xl">
+            <div class="w-16 h-16 bg-yellow rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+            </div>
+            <h2 class="text-2xl font-black text-white uppercase tracking-tighter mb-2">Acceso Restringido</h2>
+            <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-8">Uso exclusivo para IT SIMSA /
+                IA.AGUS</p>
+            <input type="password" id="password-input" placeholder="Contraseña de seguridad"
+                class="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-center text-white placeholder:text-zinc-700 focus:outline-none focus:border-yellow mb-6">
+            <button onclick="checkPassword()"
+                class="w-full bg-yellow py-4 rounded-xl text-black font-black uppercase tracking-widest text-xs hover:bg-yellow/80 transition-all">Desbloquear
+                Specs</button>
+            <p id="error-msg" class="text-red-500 text-[10px] font-black uppercase tracking-widest mt-4 hidden">
+                Contraseña Incorrecta</p>
+        </div>
+    </div>
+
+    <div id="main-content" class="hidden">
+        <nav
+            class="fixed top-0 w-full z-50 bg-[#0F1012]/80 backdrop-blur-lg border-b border-white/5 px-8 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-[#FFCC33] rounded-lg flex items-center justify-center">
+                    <span class="text-black font-black text-sm">S</span>
+                </div>
+                <span class="font-black text-white uppercase tracking-tighter">SIMSA <span class="text-yellow">VISION
+                        IA</span></span>
+            </a>
+            <span
+                class="text-[10px] font-black text-yellow uppercase border border-yellow/30 px-3 py-1 rounded-full">S-Tier
+                Security</span>
+        </nav>
+
+        <main class="max-w-4xl mx-auto px-6 pt-32 pb-24">
+            <header class="mb-16">
+                <h1 class="text-6xl font-black text-white uppercase tracking-tighter mb-4">Arquitectura <br /><span
+                        class="text-yellow">Industrial</span></h1>
+                <p class="text-zinc-500 font-mono text-sm leading-relaxed">Stack: Supabase, Gemini 1.5 Pro, PWA with
+                    IndexedDB Secure Sync.</p>
+            </header>
+
+            <!-- Technical Blocks -->
+            <div class="space-y-12">
+                <section>
+                    <h2
+                        class="text-xl font-black text-white uppercase tracking-widest mb-6 border-l-4 border-yellow pl-4">
+                        Flujo de Datos Forense</h2>
+                    <div class="mermaid bg-zinc-900/50 p-8 rounded-3xl border border-white/5">
+                        graph TD
+                        A[Captura Segura] -->|Píxeles + Metadata| B[IndexedDB Offline]
+                        B -->|Sincronización| C[Supabase Storage]
+                        C -->|Webhook| D[Gemini Vision Engine]
+                        D -->|Delta Analysis| E{¿Alerta Roja?}
+                        E -->|Sí| F[Push Manager / Bloqueo]
+                        E -->|No| G[Visto Bueno Operativo]
+                    </div>
+                </section>
+
+                <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-[#1A1C1E] p-8 rounded-3xl border border-white/5">
+                        <h3 class="text-sm font-black text-yellow uppercase tracking-widest mb-4">Visión Artificial</h3>
+                        <p class="text-xs text-zinc-400 leading-relaxed font-medium mb-4">
+                            Implementamos Gemini 1.5 Pro para el análisis de disparidad visual. El motor procesa
+                            comparaciones de:
+                        </p>
+                        <ul class="text-[10px] space-y-2 font-mono text-zinc-500 uppercase">
+                            <li>- Patrón de banda de rodadura (Llantas)</li>
+                            <li>- Integridad de precintos numerados</li>
+                            <li>- OCR en medidores analógicos (Rotogauge)</li>
+                        </ul>
+                    </div>
+                    <div class="bg-[#1A1C1E] p-8 rounded-3xl border border-white/5">
+                        <h3 class="text-sm font-black text-blue-400 uppercase tracking-widest mb-4">Captura de Arcos
+                            (Gate Scan)</h3>
+                        <p class="text-xs text-zinc-400 leading-relaxed font-medium">
+                            Uso de cámaras IP con sensor Starvis para captura nocturna y framerates de 60fps para
+                            análisis en movimiento.
+                        </p>
+                        <ul class="text-[10px] space-y-2 font-mono text-zinc-500 uppercase">
+                            <li>- Bloqueo de Galería (Input File Disabled)</li>
+                            <li>- Watermark Burn-in (Canvas Layer)</li>
+                            <li>- GPS Cross-check con IP Geolocation</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="bg-blue-500/5 border border-blue-500/10 p-8 rounded-3xl">
+                    <h3 class="text-sm font-black text-blue-400 uppercase tracking-widest mb-4">Módulo: Fixed Gate Audit
+                        (Próximamente)</h3>
+                    <p class="text-[11px] text-zinc-500 leading-relaxed mb-6 italic">
+                        Extensión del sistema para automatización total en entradas/salidas de terminales mediante
+                        visión artificial fija.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-3">
+                            <h4 class="text-[10px] font-black text-white uppercase tracking-widest">Hardware Fijo</h4>
+                            <p class="text-[10px] text-zinc-500">Integración con cámaras IP de alto framerate (RTSP)
+                                posicionadas a nivel de piso para captura lateral.</p>
+                        </div>
+                        <div class="space-y-3">
+                            <h4 class="text-[10px] font-black text-white uppercase tracking-widest">IA de Flujo</h4>
+                            <p class="text-[10px] text-zinc-500">Algoritmo de segmentación para identificar cada llanta
+                                individualmente mientras el trailer está en movimiento.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Footer IA.AGUS -->
+            <footer class="mt-24 pt-12 border-t border-white/5 text-center">
+                <div class="flex flex-col items-center">
+                    <h3 class="text-2xl font-black text-white mb-1">IA.AGUS</h3>
+                    <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.4em] mb-8">Soluciones de
+                        Auditoría con Inteligencia Artificial</p>
+                    <p class="text-[9px] text-zinc-600 uppercase tracking-[0.5em] font-black italic">
+                        © 2026 SIMSA VISION IA &bull; IA.AGUS Industrial Systems
+                    </p>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        function checkPassword() {
+            const input = document.getElementById('password-input');
+            const pass = input.value.trim();
+            if (pass === 'admin' || pass === 'ia.agus') {
+                document.getElementById('protection-overlay').style.display = 'none';
+                document.getElementById('main-content').classList.remove('hidden');
+                document.getElementById('main-content').style.display = 'block';
+                mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+            } else {
+                document.getElementById('error-msg').classList.remove('hidden');
+                input.value = '';
+            }
+        }
+
+        // Support Enter Key
+        document.getElementById('password-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+    </script>
+</body>
+
+</html>

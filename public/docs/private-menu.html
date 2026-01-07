@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONFIDENCIAL - Centro de Comando SIMSA VISION IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #050505;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        #protection-overlay {
+            position: fixed;
+            inset: 0;
+            background: #050505;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lang-en {
+            display: none;
+        }
+
+        .lang-es {
+            display: block;
+        }
+    </style>
+    <script>
+        function toggleLanguage(lang) {
+            const esElements = document.querySelectorAll('.lang-es');
+            const enElements = document.querySelectorAll('.lang-en');
+
+            if (lang === 'en') {
+                esElements.forEach(el => el.style.display = 'none');
+                enElements.forEach(el => el.style.display = 'block');
+                localStorage.setItem('simsa_lang', 'en');
+            } else {
+                esElements.forEach(el => el.style.display = 'block');
+                enElements.forEach(el => el.style.display = 'none');
+                localStorage.setItem('simsa_lang', 'es');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('simsa_lang') || 'es';
+            toggleLanguage(savedLang);
+        });
+    </script>
+</head>
+
+<body class="text-zinc-300 bg-[#050505] min-h-screen flex flex-col">
+
+    <!-- Password Protection -->
+    <div id="protection-overlay">
+        <div class="max-w-md w-full p-10 bg-[#0A0A0B] rounded-[2.5rem] border border-white/5 text-center shadow-2xl">
+            <div
+                class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-black text-white uppercase tracking-tighter mb-2">Simsa Vision IA</h2>
+            <div class="flex items-center gap-2 mb-8 justify-center">
+                <span class="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em]">
+                    <span class="lang-es">Centro de Comando Privado</span>
+                    <span class="lang-en">Private Command Center</span>
+                </span>
+            </div>
+
+            <input type="password" id="password-input" placeholder="Clave de Acceso / Access Key"
+                class="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-center text-white placeholder:text-zinc-800 focus:outline-none focus:border-white mb-6 font-mono">
+            <button onclick="checkPassword()"
+                class="w-full bg-white text-black py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-zinc-200 transition-all">
+                <span class="lang-es">Desbloquear</span>
+                <span class="lang-en">Unlock Access</span>
+            </button>
+            <p id="error-msg" class="text-red-500 text-[10px] font-black uppercase tracking-widest mt-4 hidden">
+                <span class="lang-es">Acceso Denegado</span>
+                <span class="lang-en">Access Denied</span>
+            </p>
+        </div>
+    </div>
+
+    <div id="main-content" class="hidden flex-1 flex flex-col">
+        <nav
+            class="w-full border-b border-white/5 px-8 py-6 flex justify-between items-center bg-black/50 backdrop-blur-sm">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-zinc-800 rounded flex items-center justify-center">
+                    <span class="text-white font-black text-xs">SV</span>
+                </div>
+                <div>
+                    <h1 class="font-black text-white uppercase tracking-tighter text-sm leading-none">SIMSA VISION IA
+                    </h1>
+                    <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">
+                        <span class="lang-es">Documentación Estratégica</span>
+                        <span class="lang-en">Strategic Documentation</span>
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <!-- Language Switcher -->
+                <div class="flex items-center gap-2 bg-white/5 px-2 py-1 rounded-full border border-white/10">
+                    <button onclick="toggleLanguage('es')"
+                        class="text-[10px] font-black uppercase hover:text-white text-zinc-400 px-2">ES</button>
+                    <div class="w-px h-3 bg-white/20"></div>
+                    <button onclick="toggleLanguage('en')"
+                        class="text-[10px] font-black uppercase hover:text-white text-zinc-400 px-2">EN</button>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    <span class="text-[10px] font-mono text-zinc-500 uppercase">
+                        <span class="lang-es">Sistema Online</span>
+                        <span class="lang-en">System Online</span>
+                    </span>
+                </div>
+            </div>
+        </nav>
+
+        <main class="flex-1 max-w-7xl mx-auto w-full p-8 md:p-16 grid content-center">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Internal Plan (MASTER) -->
+                <a href="private-business-plan.html"
+                    class="col-span-1 md:col-span-2 bg-[#0A0A0B] p-10 rounded-[2.5rem] border border-red-500/20 hover:border-red-500 transition-all group relative overflow-hidden">
+                    <div
+                        class="absolute top-0 right-0 w-64 h-64 bg-red-600/5 blur-[80px] group-hover:bg-red-600/10 transition-all">
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-8">
+                            <span
+                                class="bg-red-500/10 text-red-500 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-red-500/20">
+                                <span class="lang-es">Uso Interno</span>
+                                <span class="lang-en">Internal Use</span>
+                            </span>
+                            <span class="text-zinc-600 group-hover:text-white transition-colors">↗</span>
+                        </div>
+                        <h2 class="text-3xl font-black text-white uppercase mb-4 tracking-tight">
+                            <span class="lang-es">Plan de Negocios <br><span class="text-red-500">Master (Full
+                                    Data)</span></span>
+                            <span class="lang-en">Business Plan <br><span class="text-red-500">Master (Full
+                                    Data)</span></span>
+                        </h2>
+                        <p class="text-zinc-400 text-sm leading-relaxed max-w-md">
+                            <span class="lang-es">Documento maestro CONFIDENCIAL. Incluye desglose de costos de
+                                servidor, márgenes de utilidad reales, comisiones y proyecciones de flujo de caja
+                                interno.</span>
+                            <span class="lang-en">CONFIDENTIAL Master Document. Includes breakdown of server costs,
+                                actual profit margins, commissions, and internal cash flow projections.</span>
+                        </p>
+                    </div>
+                </a>
+
+                <!-- Demo App (LIVE) -->
+                <a href="/" target="_blank"
+                    class="bg-[#EA492E] p-10 rounded-[2.5rem] border border-[#EA492E] hover:scale-[1.02] transition-all group relative overflow-hidden shadow-[0_0_50px_rgba(234,73,46,0.3)]">
+                    <div class="relative z-10 text-white">
+                        <div class="flex justify-between items-start mb-8">
+                            <span
+                                class="bg-black/20 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-white/20">
+                                <span class="lang-es">Aplicación en Vivo</span>
+                                <span class="lang-en">Live Application</span>
+                            </span>
+                            <span
+                                class="bg-white text-[#EA492E] w-8 h-8 rounded-full flex items-center justify-center font-bold">↗</span>
+                        </div>
+                        <h2 class="text-3xl font-black uppercase mb-2 tracking-tight">
+                            <span class="lang-es">Demo App <br>SIMSA VISION</span>
+                            <span class="lang-en">App Demo <br>SIMSA VISION</span>
+                        </h2>
+                        <p class="text-white/80 text-sm font-medium">
+                            <span class="lang-es">Acceso directo al sistema de Taller. Escaneo, IA y Dashboard.</span>
+                            <span class="lang-en">Direct access to Workshop System. Scanning, AI, and Dashboard.</span>
+                        </p>
+                    </div>
+                </a>
+
+                <!-- Web Presentation (NEW) -->
+                <a href="presentation.html" target="_blank"
+                    class="bg-[#0A0A0B] p-10 rounded-[2.5rem] border border-blue-500/20 hover:border-blue-500 transition-all group relative overflow-hidden flex flex-col justify-between">
+                    <div
+                        class="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 blur-[60px] group-hover:bg-blue-600/20 transition-all">
+                    </div>
+                    <div class="relative z-10">
+                        <span
+                            class="bg-blue-500/10 text-blue-500 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-500/20 mb-6 inline-block">
+                            <span class="lang-es">Modo Presentación</span>
+                            <span class="lang-en">Presentation Mode</span>
+                        </span>
+                        <h2 class="text-3xl font-black text-white uppercase tracking-tighter mb-2 leading-none">
+                            <span class="lang-es">Pitch de Ventas (Web)</span>
+                            <span class="lang-en">Sales Pitch (Web)</span>
+                        </h2>
+                        <p class="text-xs text-zinc-500 font-mono">Reveal.js • Fullscreen</p>
+                    </div>
+                    <div class="mt-8 flex justify-end">
+                        <div
+                            class="w-12 h-12 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="black" stroke-width="3" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Client Proposal (PUBLIC) -->
+                <a href="client-proposal.html"
+                    class="bg-[#0A0A0B] p-10 rounded-[2.5rem] border border-blue-500/20 hover:border-blue-500 transition-all group relative overflow-hidden">
+                    <div
+                        class="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[80px] group-hover:bg-blue-600/10 transition-all">
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-8">
+                            <span
+                                class="bg-blue-500/10 text-blue-400 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-500/20">
+                                <span class="lang-es">Para Cliente (Combugas)</span>
+                                <span class="lang-en">Client View (Combugas)</span>
+                            </span>
+                            <span class="text-zinc-600 group-hover:text-white transition-colors">↗</span>
+                        </div>
+                        <h2 class="text-2xl font-black text-white uppercase mb-4 tracking-tight">
+                            <span class="lang-es">Propuesta <br><span class="text-blue-500">Comercial</span></span>
+                            <span class="lang-en">Commercial <br><span class="text-blue-500">Proposal</span></span>
+                        </h2>
+                        <p class="text-zinc-400 text-xs leading-relaxed">
+                            <span class="lang-es">Versión sanitizada para presentar. Muestra inversión total, beneficios
+                                técnicos y TCO a 10 años. <strong class="text-white">Oculta costos
+                                    internos.</strong></span>
+                            <span class="lang-en">Sanitized version for presentation. Shows total investment, technical
+                                benefits, and 10-year TCO. <strong class="text-white">Hides internal
+                                    costs.</strong></span>
+                        </p>
+                    </div>
+                </a>
+
+                <!-- Client FAQ (SALES) -->
+                <a href="client-faq.html"
+                    class="bg-[#0A0A0B] p-10 rounded-[2.5rem] border border-emerald-500/20 hover:border-emerald-500 transition-all group relative overflow-hidden">
+                    <div
+                        class="absolute top-0 right-0 w-64 h-64 bg-emerald-600/5 blur-[80px] group-hover:bg-emerald-600/10 transition-all">
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-8">
+                            <span
+                                class="bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-emerald-500/20">
+                                <span class="lang-es">Apoyo Ventas</span>
+                                <span class="lang-en">Sales Support</span>
+                            </span>
+                            <span class="text-zinc-600 group-hover:text-white transition-colors">↗</span>
+                        </div>
+                        <h2 class="text-2xl font-black text-white uppercase mb-4 tracking-tight">
+                            <span class="lang-es">Preguntas <br><span class="text-emerald-500">Frecuentes</span></span>
+                            <span class="lang-en">Frequently Asked <br><span class="text-emerald-500">Questions
+                                    (FAQ)</span></span>
+                        </h2>
+                        <p class="text-zinc-400 text-xs leading-relaxed">
+                            <span class="lang-es">Respuestas clave para directivos: Offline-First, Propiedad de Datos,
+                                Garantía de Hardware y ROI.</span>
+                            <span class="lang-en">Key answers for executives: Offline-First, Data Ownership, Hardware
+                                Warranty, and ROI.</span>
+                        </p>
+                    </div>
+                </a>
+
+                <!-- Contract (LEGAL) -->
+                <a href="private-contract.html"
+                    class="bg-[#0A0A0B] p-10 rounded-[2.5rem] border border-yellow/20 hover:border-yellow transition-all group relative overflow-hidden">
+                    <div
+                        class="absolute top-0 right-0 w-64 h-64 bg-yellow/5 blur-[80px] group-hover:bg-yellow/10 transition-all">
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-8">
+                            <span
+                                class="bg-yellow/10 text-yellow px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-yellow/20">
+                                <span class="lang-es">Legal</span>
+                                <span class="lang-en">Legal</span>
+                            </span>
+                            <span class="text-zinc-600 group-hover:text-white transition-colors">↗</span>
+                        </div>
+                        <h2 class="text-2xl font-black text-white uppercase mb-4 tracking-tight">
+                            <span class="lang-es">Contrato <br><span class="text-yellow">Servicios</span></span>
+                            <span class="lang-en">Service <br><span class="text-yellow">Contract</span></span>
+                        </h2>
+                        <p class="text-zinc-400 text-xs leading-relaxed">
+                            <span class="lang-es">Marco legal blindado. Cláusulas de responsabilidad limitada, SLA y
+                                propiedad intelectual.</span>
+                            <span class="lang-en">Armored legal framework. Limited liability clauses, SLA, and
+                                intellectual property.</span>
+                        </p>
+                    </div>
+                </a>
+
+                <!-- Tech Specs -->
+                <a href="specs.html"
+                    class="bg-[#0A0A0B] p-10 rounded-[2.5rem] border border-white/5 hover:border-white/20 transition-all group relative overflow-hidden">
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-8">
+                            <span
+                                class="bg-zinc-800 text-zinc-400 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-white/10">
+                                <span class="lang-es">Técnico</span>
+                                <span class="lang-en">Technical</span>
+                            </span>
+                            <span class="text-zinc-600 group-hover:text-white transition-colors">↗</span>
+                        </div>
+                        <h2 class="text-2xl font-black text-white uppercase mb-4 tracking-tight">
+                            <span class="lang-es">Ficha <br><span class="text-zinc-500">Técnica</span></span>
+                            <span class="lang-en">Technical <br><span class="text-zinc-500">Specs</span></span>
+                        </h2>
+                        <p class="text-zinc-400 text-xs leading-relaxed">
+                            <span class="lang-es">Diagramas de flujo, arquitectura de red y especificaciones detalladas
+                                del hardware.</span>
+                            <span class="lang-en">Flowcharts, network architecture, and detailed hardware
+                                specifications.</span>
+                        </p>
+                    </div>
+                </a>
+
+                <!-- Pilot Plan (INFRA) -->
+                <a href="pilot-plan.html"
+                    class="bg-[#0A0A0B] p-10 rounded-[2.5rem] border border-[#EA492E]/20 hover:border-[#EA492E] transition-all group relative overflow-hidden">
+                    <div
+                        class="absolute top-0 right-0 w-64 h-64 bg-[#EA492E]/5 blur-[80px] group-hover:bg-[#EA492E]/10 transition-all">
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-8">
+                            <span
+                                class="bg-[#EA492E]/10 text-[#EA492E] px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-[#EA492E]/20">
+                                <span class="lang-es">Fase 5 Piloto</span>
+                                <span class="lang-en">Phase 5 Pilot</span>
+                            </span>
+                            <span class="text-zinc-600 group-hover:text-white transition-colors">↗</span>
+                        </div>
+                        <h2 class="text-2xl font-black text-white uppercase mb-4 tracking-tight">
+                            <span class="lang-es">Hardware <br><span
+                                    class="text-[#EA492E]">Infraestructura</span></span>
+                            <span class="lang-en">Hardware <br><span class="text-[#EA492E]">Infrastructure</span></span>
+                        </h2>
+                        <p class="text-zinc-400 text-xs leading-relaxed">
+                            <span class="lang-es">Lista de compra para el Arco de Inspección: Cámaras, Sensores, Edge
+                                Server y cableado.</span>
+                            <span class="lang-en">Shopping list for the Inspection Arch: Cameras, Sensors, Edge Server,
+                                and cabling.</span>
+                        </p>
+                    </div>
+                </a>
+
+                <!-- Manual (TRAINING) -->
+                <a href="manual.html"
+                    class="bg-[#0A0A0B] p-10 rounded-[2.5rem] border border-white/5 hover:border-white/20 transition-all group relative overflow-hidden">
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-8">
+                            <span
+                                class="bg-zinc-800 text-zinc-400 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-white/10">
+                                <span class="lang-es">Entrenamiento</span>
+                                <span class="lang-en">Training</span>
+                            </span>
+                            <span class="text-zinc-600 group-hover:text-white transition-colors">↗</span>
+                        </div>
+                        <h2 class="text-2xl font-black text-white uppercase mb-4 tracking-tight">
+                            <span class="lang-es">Manual de <br><span class="text-zinc-500">Operación</span></span>
+                            <span class="lang-en">User <br><span class="text-zinc-500">Manual</span></span>
+                        </h2>
+                        <p class="text-zinc-400 text-xs leading-relaxed">
+                            <span class="lang-es">Guía visual para guardias y monitoristas. Protocolos de alerta
+                                roja/amarilla.</span>
+                            <span class="lang-en">Visual guide for guards and operators. Red/Yellow alert
+                                protocols.</span>
+                        </p>
+                    </div>
+                </a>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function checkPassword() {
+            const password = document.getElementById('password-input').value;
+            const overlay = document.getElementById('protection-overlay');
+            const mainContent = document.getElementById('main-content');
+            const errorMsg = document.getElementById('error-msg');
+
+            // Passwords: admin or ia.agus
+            if (password === 'admin' || password === 'ia.agus') {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    mainContent.classList.remove('hidden');
+                }, 500); // Smooth fade out
+            } else {
+                errorMsg.classList.remove('hidden');
+                document.getElementById('password-input').classList.add('border-red-600');
+            }
+        }
+
+        // Allow Enter key to submit
+        document.getElementById('password-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+    </script>
+</body>
+
+</html>
