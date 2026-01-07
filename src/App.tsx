@@ -123,15 +123,15 @@ export default function App() {
             >
               ← Cancelar
             </button>
-            <div className="bg-[#121214] border border-[#1E1E21] p-12 rounded-[3rem] space-y-8">
-              <div className="w-24 h-24 bg-yellow/10 rounded-3xl flex items-center justify-center mx-auto text-yellow border border-yellow/20">
+            <div className="bg-[#121214] border border-[#1E1E21] p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] space-y-8 flex flex-col items-center">
+              <div className="w-20 h-20 md:w-24 md:h-24 bg-yellow/10 rounded-3xl flex items-center justify-center text-yellow border border-yellow/20">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M7 7h.01" /><path d="M7 12h.01" /><path d="M7 17h.01" /><path d="M12 7h.01" /><path d="M12 12h.01" /><path d="M12 17h.01" /><path d="M17 7h.01" /><path d="M17 12h.01" /><path d="M17 17h.01" /></svg>
               </div>
               <div>
-                <h3 className="text-2xl font-black uppercase tracking-tight mb-2">Escanee el QR de la Unidad</h3>
-                <p className="text-zinc-500 text-sm font-medium">Capture la placa de metal grabada cerca de la puerta del conductor.</p>
+                <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight mb-2 text-center text-white">Escanee el QR de la Unidad</h3>
+                <p className="text-zinc-500 text-sm font-medium text-center">Capture la placa de metal grabada cerca de la puerta del conductor.</p>
               </div>
-              <div className="aspect-square w-64 mx-auto bg-black rounded-3xl border-4 border-zinc-800 relative overflow-hidden flex items-center justify-center group cursor-pointer" onClick={() => {
+              <div className="aspect-square w-full max-w-[240px] bg-black rounded-3xl border-4 border-zinc-800 relative overflow-hidden flex items-center justify-center group cursor-pointer" onClick={() => {
                 setActiveTrip({
                   id: 'TRP-' + Math.floor(Math.random() * 10000),
                   truck_id: 'TRK-402',
