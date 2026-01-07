@@ -12,6 +12,7 @@ interface SecureCameraProps {
 export const SecureCamera: React.FC<SecureCameraProps> = ({ onCapture, tripId, plateId, active }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const [stream, setStream] = useState<MediaStream | null>(null);
     const [error, setError] = useState<string | null>(null);
 
@@ -81,6 +82,43 @@ export const SecureCamera: React.FC<SecureCameraProps> = ({ onCapture, tripId, p
         }, 'image/webp', 0.82);
     };
 
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Create an image object to draw into canvas for watermarking
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                if (!canvasRef.current) return;
+                const canvas = canvasRef.current;
+                canvas.width = img.width;
+                canvas.height = img.height;
+
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return;
+                ctx.drawImage(img, 0, 0);
+
+                const mockGPS = { lat: 25.543890, lng: -103.418933 };
+                const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 19);
+                const watermarkData: WatermarkData = {
+                    gps: mockGPS,
+                    timestamp,
+                    tripId,
+                    plateId
+                };
+
+                burnWatermark(canvas, img, watermarkData);
+                canvas.toBlob((blob) => {
+                    if (blob) onCapture(blob);
+                }, 'image/webp', 0.82);
+            };
+            img.src = event.target?.result as string;
+        };
+        reader.readAsDataURL(file);
+    };
+
     return (
         <div className="relative w-full aspect-[3/4] md:aspect-video bg-black rounded-3xl overflow-hidden border-4 border-zinc-800 shadow-2xl">
             {error ? (
@@ -103,7 +141,23 @@ export const SecureCamera: React.FC<SecureCameraProps> = ({ onCapture, tripId, p
                     </div>
 
                     {/* Secure UI Controls - Moved higher for mobile compatibility */}
-                    <div className="absolute bottom-10 md:bottom-8 left-0 right-0 px-4 flex justify-center z-[100]">
+                    <div className="absolute bottom-10 md:bottom-8 left-0 right-0 px-8 flex justify-center items-center gap-6 z-[100]">
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileUpload}
+                            accept="image/*"
+                            className="hidden"
+                        />
+
+                        <button
+                            onClick={() => fileInputRef.current?.click()}
+                            className="w-12 h-12 md:w-14 md:h-14 bg-black/40 backdrop-blur-xl rounded-full border border-white/20 flex items-center justify-center text-white active:scale-90 transition-all"
+                            title="Subir Foto"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" x2="12" y1="3" y2="15" /></svg>
+                        </button>
+
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
@@ -113,6 +167,8 @@ export const SecureCamera: React.FC<SecureCameraProps> = ({ onCapture, tripId, p
                         >
                             <div className="w-14 h-14 md:w-16 md:h-16 bg-[#EA492E] rounded-full shadow-inner" />
                         </button>
+
+                        <div className="w-12 h-12 md:w-14 md:h-14" /> {/* Spacer to keep capture centered */}
                     </div>
 
                     <div className="absolute top-6 left-6 flex flex-col gap-2">
