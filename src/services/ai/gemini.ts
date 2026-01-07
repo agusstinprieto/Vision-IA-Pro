@@ -3,7 +3,7 @@ import { ForensicAuditResult, SecurityAlert, InspectionType, SealIntegrity } fro
 
 /**
  * AI Delta Analysis Service
- * Stable version for Gemini 2.0 Flash with internal initialization.
+ * Resilient version with auto-fallback for quota management.
  */
 export const analyzeInspectionDelta = async (
     beforeImageBase64: string,
@@ -11,17 +11,12 @@ export const analyzeInspectionDelta = async (
     category: 'TIRE' | 'SEAL' | 'GAUGE'
 ): Promise<ForensicAuditResult> => {
 
-    // Direct access to environment variables to avoid caching issues
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
-    try {
-        if (!apiKey) {
-            throw new Error("Missing VITE_GEMINI_API_KEY in environment");
-        }
-
-        // Initialize inside the function for fresh state every call
+    // Helper function for the actual call
+    const callGemini = async (modelName: string) => {
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+        const model = genAI.getGenerativeModel({ model: modelName });
 
         const prompt = `ANALIZA FOTO 1 (BASE) vs FOTO 2 (ACTUAL). ¿Es el mismo neumático?
         RESPONDE SOLO JSON:
@@ -40,15 +35,30 @@ export const analyzeInspectionDelta = async (
 
         const response = await result.response;
         const text = response.text();
-
-        // Robust JSON cleaning
         const jsonMatch = text.match(/\{[\s\S]*\}/);
         const jsonStr = jsonMatch ? jsonMatch[0] : text;
-
         return JSON.parse(jsonStr) as ForensicAuditResult;
+    };
+
+    try {
+        if (!apiKey) {
+            throw new Error("Missing VITE_GEMINI_API_KEY");
+        }
+
+        try {
+            // First attempt: Gemini 2.0 Flash (Fastest/Best)
+            return await callGemini("gemini-2.0-flash-exp");
+        } catch (error: any) {
+            if (error.message?.includes("429") || error.message?.includes("quota")) {
+                console.warn("Gemini 2.0 Quota exceeded, falling back to 1.5 Flash...");
+                // Second attempt: Gemini 1.5 Flash (Reliable fallback)
+                return await callGemini("gemini-1.5-flash");
+            }
+            throw error;
+        }
 
     } catch (error: any) {
-        console.error("AI Audit Error Details:", error);
+        console.error("AI Audit Error:", error);
         const errorMessage = error.message || "Error Desconocido";
 
         return {
@@ -60,7 +70,7 @@ export const analyzeInspectionDelta = async (
                 lectura_medidor: "ERROR",
                 descripcion_anomalia: `Falla: ${errorMessage}`
             },
-            razonamiento_forense: `ERROR TÉCNICO: ${errorMessage}. Si dice 'Missing Key', revisa Vercel Settings. Si dice 'API Key not valid', la llave está mal.`
+            razonamiento_forense: `NOTA: ${errorMessage}. Intenta de nuevo en 30 segundos.`
         };
     }
 };
