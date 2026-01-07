@@ -56,9 +56,9 @@ export const ResultView: React.FC<ResultViewProps> = ({ results, onClose }) => {
                                     <span className="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Referencia (Base)</span>
                                 </div>
                             </div>
-                            <div className="relative group overflow-hidden rounded-2xl border-2 border-[#EA492E]/30">
+                            <div className="relative group overflow-hidden rounded-2xl border-2 border-brand/30">
                                 <img src={res.currentImage} className="w-full h-64 md:h-80 object-cover" />
-                                <div className="absolute top-4 left-4 bg-[#EA492E] px-3 py-1.5 rounded-lg shadow-lg">
+                                <div className="absolute top-4 left-4 bg-brand px-3 py-1.5 rounded-lg shadow-lg">
                                     <span className="text-[10px] font-black uppercase text-white tracking-widest">Actual (Captura Gate)</span>
                                 </div>
                             </div>
@@ -83,9 +83,23 @@ export const ResultView: React.FC<ResultViewProps> = ({ results, onClose }) => {
                 ))}
             </div>
 
-            <button onClick={onClose} className="bg-white text-black py-4 rounded-xl font-black uppercase tracking-widest hover:bg-zinc-200 transition-colors mt-auto">
-                Finalizar Auditoría
-            </button>
+            <div className="flex gap-4 mt-auto">
+                <button
+                    onClick={() => {
+                        alert("Generando Reporte PDF Profesional... (Simulación)");
+                    }}
+                    className="flex-1 bg-white/5 border border-white/10 text-white py-4 rounded-xl font-black uppercase tracking-widest hover:bg-white/10 transition-colors"
+                >
+                    Generar PDF
+                </button>
+                <button
+                    onClick={onClose}
+                    className="flex-1 bg-brand text-white py-4 rounded-xl font-black uppercase tracking-widest hover:opacity-90 transition-colors"
+                    style={{ color: 'var(--brand-color-contrast, #FFF)' }}
+                >
+                    Finalizar Auditoría
+                </button>
+            </div>
         </div>
     );
 }

@@ -71,3 +71,37 @@ export interface ForensicAuditResult {
     };
     razonamiento_forense: string;
 }
+
+export interface AppSettings {
+    primaryColor: string;
+    supervisor: {
+        name: string;
+        phone: string;
+        email: string;
+    };
+    manager: {
+        name: string;
+        phone: string;
+        email: string;
+    };
+}
+
+export enum DriverStatus {
+    ALERTA = 'ALERTA',
+    FATIGA = 'FATIGA',
+    DISTRACCION = 'DISTRACCION',
+    PELIGRO = 'PELIGRO'
+}
+
+export interface CabinAuditResult {
+    estado_chofer: DriverStatus;
+    nivel_riesgo: SecurityAlert;
+    hallazgos: {
+        ojos_cerrados: boolean;
+        bostezo_detectado: boolean;
+        celular_en_mano: boolean;
+        intruso_detectado: boolean;
+        descripcion: string;
+    };
+    recomendacion: string;
+}

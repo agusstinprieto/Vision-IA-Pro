@@ -98,42 +98,48 @@
                 <section>
                     <h2
                         class="text-xl font-black text-white uppercase tracking-widest mb-6 border-l-4 border-yellow pl-4">
-                        Flujo de Datos Forense</h2>
+                        Arquitectura Modular (Etapas A/B)</h2>
                     <div class="mermaid bg-zinc-900/50 p-8 rounded-3xl border border-white/5">
                         graph TD
-                        A[Captura Segura] -->|Píxeles + Metadata| B[IndexedDB Offline]
-                        B -->|Sincronización| C[Supabase Storage]
-                        C -->|Webhook| D[Gemini Vision Engine]
-                        D -->|Delta Analysis| E{¿Alerta Roja?}
-                        E -->|Sí| F[Push Manager / Bloqueo]
-                        E -->|No| G[Visto Bueno Operativo]
+                        subgraph "MÓDULO A: AUDITORÍA EXTERNA (LLANTAS)"
+                        A1[Gate Scan 4K] -->|Tire Delta| A2[Gemini Vision Engine]
+                        A2 -->|Detección Desgaste| A3[Alerta Supervisor]
+                        end
+
+                        subgraph "MÓDULO B: AUDITORÍA INTERNA (CABINA)"
+                        B1[DMS Capture] -->|Biometría Chofer| B2[Gemini Safety Engine]
+                        B2 -->|Fatiga/Asalto| B3[Protocolo SOS / Alerta Gerente]
+                        end
+
+                        A3 --> C[Simsa Hub Dashboard]
+                        B3 --> C
                     </div>
                 </section>
 
                 <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-[#1A1C1E] p-8 rounded-3xl border border-white/5">
-                        <h3 class="text-sm font-black text-yellow uppercase tracking-widest mb-4">Visión Artificial</h3>
+                    <div class="bg-[#1A1C1E] p-8 rounded-3xl border border-yellow/20">
+                        <h3 class="text-sm font-black text-yellow uppercase tracking-widest mb-4">Etapa 1: Tire Vision
+                            IA</h3>
                         <p class="text-xs text-zinc-400 leading-relaxed font-medium mb-4">
-                            Implementamos Gemini 1.5 Pro para el análisis de disparidad visual. El motor procesa
-                            comparaciones de:
+                            Enfoque en la reducción de costos operativos y prevención de robos mediante auditoría
+                            externa.
                         </p>
                         <ul class="text-[10px] space-y-2 font-mono text-zinc-500 uppercase">
-                            <li>- Patrón de banda de rodadura (Llantas)</li>
+                            <li>- Patrón de banda de rodadura</li>
                             <li>- Integridad de precintos numerados</li>
-                            <li>- OCR en medidores analógicos (Rotogauge)</li>
+                            <li>- Side OCR (ID Unidad/Remolque)</li>
                         </ul>
                     </div>
-                    <div class="bg-[#1A1C1E] p-8 rounded-3xl border border-white/5">
-                        <h3 class="text-sm font-black text-blue-400 uppercase tracking-widest mb-4">Captura de Arcos
-                            (Gate Scan)</h3>
-                        <p class="text-xs text-zinc-400 leading-relaxed font-medium">
-                            Uso de cámaras IP con sensor Starvis para captura nocturna y framerates de 60fps para
-                            análisis en movimiento.
+                    <div class="bg-[#1A1C1E] p-8 rounded-3xl border border-blue-500/20">
+                        <h3 class="text-sm font-black text-blue-400 uppercase tracking-widest mb-4">Etapa 2: Driver
+                            Safety IA</h3>
+                        <p class="text-xs text-zinc-400 leading-relaxed font-medium mb-4">
+                            Enfoque en la integridad del activo más valioso: el chofer, y la seguridad ante asaltos.
                         </p>
                         <ul class="text-[10px] space-y-2 font-mono text-zinc-500 uppercase">
-                            <li>- Bloqueo de Galería (Input File Disabled)</li>
-                            <li>- Watermark Burn-in (Canvas Layer)</li>
-                            <li>- GPS Cross-check con IP Geolocation</li>
+                            <li>- Biometría facial (Fatiga)</li>
+                            <li>- SOS Video Trigger (Asaltos)</li>
+                            <li>- Cell-use detection (Celular)</li>
                         </ul>
                     </div>
                 </section>

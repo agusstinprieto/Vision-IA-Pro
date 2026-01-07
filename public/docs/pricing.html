@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIMSA VISION IA - Modelos de Inversión</title>
+    <title>SIMSA VISION IA - Modelos de Inversión por Módulos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
     <style>
@@ -12,6 +12,7 @@
             --simsa-yellow: #FFCC33;
             --simsa-charcoal: #24272D;
             --simsa-red: #ED1C24;
+            --simsa-blue: #3B82F6;
         }
 
         body {
@@ -23,8 +24,16 @@
             color: var(--simsa-yellow);
         }
 
+        .text-blue {
+            color: var(--simsa-blue);
+        }
+
         .bg-yellow {
             background-color: var(--simsa-yellow);
+        }
+
+        .bg-blue {
+            background-color: var(--simsa-blue);
         }
     </style>
 </head>
@@ -47,89 +56,155 @@
 
     <main class="max-w-6xl mx-auto px-6 pt-32 pb-24">
         <div class="text-center mb-20">
-            <h1 class="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter mb-4">Planes de <span
-                    class="text-yellow">Inversión</span></h1>
-            <p class="text-zinc-500 font-bold uppercase tracking-widest">Modelos escalables diseñados para Grupo SIMSA
+            <h1 class="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter mb-4">Planes por <span
+                    class="text-yellow">Módulo</span></h1>
+            <p class="text-zinc-500 font-bold uppercase tracking-widest">Adquiere por Etapas o Combo Completo</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+
+            <!-- Módulo A: Auditoría de Llantas -->
+            <div
+                class="bg-[#1A1C1E] rounded-[2.5rem] p-10 border border-yellow/20 flex flex-col hover:border-yellow/40 transition-all relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-yellow/5 blur-[50px] rounded-full"></div>
+                <div
+                    class="bg-yellow/10 text-yellow text-[10px] font-black px-4 py-1 rounded-full w-fit mb-6 uppercase tracking-widest">
+                    Etapa 1: Inmediata</div>
+                <h3 class="text-white text-3xl font-black uppercase tracking-tighter mb-2">Auditoría de Llantas IA</h3>
+                <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-8">Detección de Desgaste & Daños
+                </p>
+
+                <div class="mb-10">
+                    <span class="text-5xl font-black text-white">$15.00</span>
+                    <span class="text-zinc-500 font-bold uppercase tracking-widest text-[10px]">USD / Unidad mes</span>
+                </div>
+
+                <ul class="space-y-4 mb-12 flex-1">
+                    <li class="flex items-center gap-3 text-sm font-medium">
+                        <svg class="w-5 h-5 text-yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                        Análisis de Banda de Rodadura 4K
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-medium">
+                        <svg class="w-5 h-5 text-yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                        Alertas de Robo/Cambio de Llantas
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-medium">
+                        <svg class="w-5 h-5 text-yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                        Reportes de Rendimiento por Marca
+                    </li>
+                </ul>
+                <button
+                    class="bg-yellow text-black py-5 rounded-2xl font-black uppercase tracking-widest text-xs transition-all hover:scale-105 active:scale-95 shadow-[0_10px_30px_rgba(255,204,51,0.2)]">Adquirir
+                    Módulo Llantas</button>
+            </div>
+
+            <!-- Módulo B: Cabina & Chofer -->
+            <div
+                class="bg-[#1A1C1E] rounded-[2.5rem] p-10 border border-blue-500/20 flex flex-col hover:border-blue-500/40 transition-all relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 blur-[50px] rounded-full"></div>
+                <div
+                    class="bg-blue-500/10 text-blue-500 text-[10px] font-black px-4 py-1 rounded-full w-fit mb-6 uppercase tracking-widest">
+                    Etapa 2: DMS</div>
+                <h3 class="text-white text-3xl font-black uppercase tracking-tighter mb-2">Safety Cabín IA</h3>
+                <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-8">Monitoreo Biométrico & SOS</p>
+
+                <div class="mb-10">
+                    <span class="text-5xl font-black text-white">$12.00</span>
+                    <span class="text-zinc-500 font-bold uppercase tracking-widest text-[10px]">USD / Unidad mes</span>
+                </div>
+
+                <ul class="space-y-4 mb-12 flex-1">
+                    <li class="flex items-center gap-3 text-sm font-medium">
+                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                        Detección de Fatiga & Distracción
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-medium">
+                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                        Protocolo de Asalto (SOS Video)
+                    </li>
+                    <li class="flex items-center gap-3 text-sm font-medium">
+                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                        Evidencia en tiempo real (Cellular Link)
+                    </li>
+                </ul>
+                <button
+                    class="bg-blue-500 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs transition-all hover:scale-105 active:scale-95 shadow-[0_10px_30px_rgba(59,130,246,0.2)]">Próximamente:
+                    Módulo DMS</button>
+            </div>
+        </div>
+
+        <!-- Combo Pack -->
+        <div
+            class="mt-12 bg-white/5 border border-white/10 rounded-[3rem] p-12 text-center max-w-4xl mx-auto backdrop-blur-xl">
+            <h3 class="text-zinc-400 font-black uppercase tracking-widest text-xs mb-4">Solución Total Fleet Security
+            </h3>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-6 mb-8">
+                <div class="flex items-baseline gap-2">
+                    <span class="text-6xl font-black text-white">$22.00</span>
+                    <span class="text-zinc-500 font-bold uppercase tracking-widest text-sm">USD / Mes</span>
+                </div>
+                <div class="hidden md:block w-px h-12 bg-white/10"></div>
+                <div class="text-left">
+                    <p class="text-emerald-500 font-black uppercase tracking-widest text-[10px]">Ahorro del 18%</p>
+                    <p class="text-xs text-zinc-500 font-bold italic">"Llantas + Cabina en un solo contrato"</p>
+                </div>
+            </div>
+            <p class="max-w-2xl mx-auto text-sm text-zinc-500 leading-relaxed mb-10">
+                La implementación en combo asegura que los datos de desgaste de llantas y el comportamiento del chofer
+                se crucen en nuestra **IA de TCO**, permitiendo predecir cuánto dinero estás perdiendo por malos hábitos
+                de conducción.
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <!-- IaaS Basic -->
-            <div
-                class="bg-[#1A1C1E] rounded-[2.5rem] p-10 border border-white/5 flex flex-col hover:border-white/10 transition-all">
-                <h3 class="text-zinc-400 font-black uppercase tracking-widest text-xs mb-4">IaaS (Automación Plus)</h3>
-                <div class="mb-8">
-                    <span class="text-5xl font-black text-white">$1,850</span>
-                    <span class="text-zinc-500 font-bold uppercase tracking-widest text-[10px]">USD / Terminal
-                        mes</span>
+        <!-- Profit Calculation for User -->
+        <section class="mt-24 pt-24 border-t border-white/5">
+            <h2 class="text-3xl font-black text-white uppercase tracking-tighter mb-12 text-center">Proyección de <span
+                    class="text-yellow">Ganancias</span> (Para IA.AGUS)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-black/40 p-10 rounded-[2.5rem] border border-white/5">
+                    <p class="text-[10px] font-black text-zinc-500 uppercase mb-2">Ingreso Mensual (Llantas)</p>
+                    <p class="text-4xl font-black text-white">$22,500 <span class="text-xs text-zinc-600">USD</span></p>
+                    <p class="text-[9px] text-zinc-500 mt-2 font-mono">1,500 Unid * $15</p>
                 </div>
-                <ul class="space-y-4 mb-12 flex-1">
-                    <li class="flex items-center gap-3 text-sm font-medium">
-                        <div class="w-2 h-2 bg-yellow rounded-full"></div> Auditoría de Llantas Automática
-                    </li>
-                    <li class="flex items-center gap-3 text-sm font-medium">
-                        <div class="w-2 h-2 bg-yellow rounded-full"></div> Monitoreo de Entrada/Salida
-                    </li>
-                    <li class="flex items-center gap-3 text-sm font-medium">
-                        <div class="w-2 h-2 bg-yellow rounded-full"></div> Cloud Storage de Evidencia 4K
-                    </li>
-                    <li class="flex items-center gap-3 text-sm font-medium">
-                        <div class="w-2 h-2 bg-yellow rounded-full"></div> Mantenimiento Predictivo Arcos
-                    </li>
-                </ul>
-                <button
-                    class="bg-white/5 hover:bg-white/10 py-5 rounded-2xl font-black uppercase tracking-widest text-xs transition-all">Elegir
-                    IaaS</button>
-            </div>
-
-            <!-- ROI Sharing (Total Automation) -->
-            <div
-                class="bg-[#24272D] rounded-[2.5rem] p-10 border-2 border-yellow flex flex-col relative transform md:scale-105 shadow-2xl">
-                <div
-                    class="absolute -top-5 left-1/2 -translate-x-1/2 bg-yellow text-black px-6 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
-                    Escalabilidad SIMSA</div>
-                <h3 class="text-yellow font-black uppercase tracking-widest text-xs mb-4">ROI Performance Fee</h3>
-                <div class="mb-8">
-                    <span class="text-5xl font-black text-white">$950</span>
-                    <span class="text-zinc-400 font-bold uppercase tracking-widest text-[10px]">USD / Terminal
-                        mes</span>
+                <div class="bg-black/40 p-10 rounded-[2.5rem] border border-white/5">
+                    <p class="text-[10px] font-black text-zinc-500 uppercase mb-2">Costo IA (Gemini+Supa)</p>
+                    <p class="text-4xl font-black text-zinc-400">$2,400 <span class="text-xs text-zinc-600">USD</span>
+                    </p>
+                    <p class="text-[9px] text-zinc-500 mt-2 font-mono">~$1.60 por unidad procesada</p>
                 </div>
-                <p class="text-xs text-yellow font-bold uppercase mb-8 tracking-tighter">+ 20% COMISIÓN POR OPTIMIZACIÓN
-                    DE UTILIZACIÓN</p>
-                <ul class="space-y-4 mb-12 flex-1">
-                    <li class="flex items-center gap-3 text-sm font-bold text-white">
-                        <div class="w-2 h-2 bg-yellow rounded-full"></div> Reportes de % de Utilización
-                    </li>
-                    <li class="flex items-center gap-3 text-sm font-medium">
-                        <div class="w-2 h-2 bg-yellow rounded-full"></div> Alerta de Robo Proactiva
-                    </li>
-                    <li class="flex items-center gap-3 text-sm font-medium">
-                        <div class="w-2 h-2 bg-yellow rounded-full"></div> Dashboard Ejecutivo de Flota
-                    </li>
-                    <li class="flex items-center gap-3 text-sm font-medium">
-                        <div class="w-2 h-2 bg-yellow rounded-full"></div> Integración ERP Directa
-                    </li>
-                </ul>
-                <button
-                    class="bg-yellow hover:bg-yellow/80 text-black py-5 rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-[0_10px_30px_rgba(255,204,51,0.2)]">Contactar
-                    Ventas</button>
+                <div class="bg-emerald-500/10 p-10 rounded-[2.5rem] border border-emerald-500/20">
+                    <p class="text-[10px] font-black text-emerald-500 uppercase mb-2">Utilidad Neta Estimada</p>
+                    <p class="text-5xl font-black text-emerald-500">$20,100 <span
+                            class="text-xs text-emerald-600">USD/mes</span></p>
+                    <p class="text-[9px] text-emerald-500/50 mt-2 font-mono">Margen de Ganancia: ~89%</p>
+                </div>
             </div>
-        </div>
+        </section>
 
         <!-- Footer IA.AGUS -->
         <footer class="mt-24 pt-12 border-t border-white/5 text-center">
             <div class="flex flex-col items-center">
                 <h3 class="text-2xl font-black text-white mb-1">IA.AGUS</h3>
-                <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.4em] mb-8">Soluciones de Auditoría
-                    con Inteligencia Artificial</p>
-
-                <div class="flex gap-12 mb-10 opacity-40">
-                    <a href="https://www.youtube.com/@ia-agus" target="_blank"
-                        class="hover:text-yellow transition-colors font-bold text-[10px] tracking-widest uppercase">YouTube</a>
-                    <a href="https://www.facebook.com/inteligencia.agus" target="_blank"
-                        class="hover:text-yellow transition-colors font-bold text-[10px] tracking-widest uppercase">Facebook</a>
-                </div>
-
+                <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.4em] mb-8">Industrial Fleet
+                    Intelligence</p>
                 <p class="text-[9px] text-zinc-600 uppercase tracking-[0.5em] font-black italic">
                     © 2026 SIMSA VISION IA &bull; IA.AGUS Industrial Systems
                 </p>

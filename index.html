@@ -10,6 +10,10 @@
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap"
     rel="stylesheet">
   <style>
+    :root {
+      --brand-color: #EA492E;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
       background-color: #0A0A0B;
@@ -22,6 +26,18 @@
     .glass {
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(10px);
+    }
+
+    .bg-brand {
+      background-color: var(--brand-color);
+    }
+
+    .text-brand {
+      color: var(--brand-color);
+    }
+
+    .border-brand {
+      border-color: var(--brand-color);
     }
   </style>
 </head>

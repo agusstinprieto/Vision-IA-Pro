@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { ForensicAuditResult, SecurityAlert, InspectionType, SealIntegrity } from "../../types";
+import { ForensicAuditResult, SecurityAlert, InspectionType, SealIntegrity, CabinAuditResult, DriverStatus } from "../../types";
 
 /**
  * AI Delta Analysis Service
@@ -71,6 +71,53 @@ export const analyzeInspectionDelta = async (
                 descripcion_anomalia: `Falla: ${errorMessage}`
             },
             razonamiento_forense: `NOTA: ${errorMessage}. Intenta de nuevo en 30 segundos.`
+        };
+    }
+};
+
+export const analyzeCabinIntegrity = async (imageBase64: string): Promise<CabinAuditResult> => {
+    const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || "");
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+
+    const prompt = `ACTÚA COMO UN SISTEMA DMS (DRIVER MONITORING SYSTEM).
+    Analiza la imagen de la cabina y detecta fatiga o peligro.
+    RESPONDE SOLO JSON:
+    {
+      "estado_chofer": "ALERTA | FATIGA | DISTRACCION | PELIGRO",
+      "nivel_riesgo": "VERDE | AMARILLA | ROJA",
+      "hallazgos": {
+        "ojos_cerrados": boolean,
+        "bostezo_detectado": boolean,
+        "celular_en_mano": boolean,
+        "intruso_detectado": boolean,
+        "descripcion": "resumen en español (máx 15 palabras)"
+      },
+      "recomendacion": "acción inmediata"
+    }`;
+
+    try {
+        const result = await model.generateContent([
+            prompt,
+            { inlineData: { mimeType: "image/jpeg", data: imageBase64 } }
+        ]);
+
+        const response = await result.response;
+        const text = response.text();
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        return JSON.parse(jsonMatch ? jsonMatch[0] : text) as CabinAuditResult;
+    } catch (error: any) {
+        console.error("DMS AI Error:", error);
+        return {
+            estado_chofer: DriverStatus.ALERTA,
+            nivel_riesgo: SecurityAlert.AMARILLA,
+            hallazgos: {
+                ojos_cerrados: false,
+                bostezo_detectado: false,
+                celular_en_mano: false,
+                intruso_detectado: false,
+                descripcion: "Error en sensor IA"
+            },
+            recomendacion: "Verificar conexión de cámara"
         };
     }
 };
