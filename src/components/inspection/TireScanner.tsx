@@ -37,13 +37,13 @@ export const TireScanner: React.FC<TireScannerProps> = ({ tripId, plateId, tireC
 
     return (
         <div className="flex flex-col gap-6">
-            <div class="flex justify-between items-end mb-2 text-white">
+            <div className="flex justify-between items-end mb-2 text-white">
                 <div>
                     <h2 className="text-2xl font-black uppercase tracking-tighter italic">REVISIÓN DE NEUMÁTICOS</h2>
                     <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em]">CANTIDAD A REVISAR: {positions.length} LLANTAS</p>
                 </div>
-                <div class="text-right">
-                    <span class="text-3xl font-black text-[#EA492E]">{Math.round(progress)}%</span>
+                <div className="text-right">
+                    <span className="text-3xl font-black text-[#EA492E]">{Math.round(progress)}%</span>
                 </div>
             </div>
 
