@@ -1,33 +1,36 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { ForensicAuditResult, SecurityAlert, InspectionType, SealIntegrity } from "../../types";
 
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || "");
-
 /**
  * AI Delta Analysis Service
- * Stable version with enhanced error logging for production.
+ * Stable version for Gemini 2.0 Flash with internal initialization.
  */
 export const analyzeInspectionDelta = async (
     beforeImageBase64: string,
     afterImageBase64: string,
     category: 'TIRE' | 'SEAL' | 'GAUGE'
 ): Promise<ForensicAuditResult> => {
-    // Switching to 2.0-flash (Experimental/Latest) for better reliability as requested
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
 
-    const prompt = `ANALIZA FOTO 1 (BASE) vs FOTO 2 (ACTUAL). ¿Es el mismo neumático?
-    RESPONDE SOLO JSON:
-    {
-      "tipo_inspeccion": "TIRE_MATCH",
-      "alerta_seguridad": "ROJA | AMARILLA | VERDE",
-      "hallazgos": { "identidad_confirmada": boolean, "coincidencia_id": "TOTAL|PARCIAL|NULA" },
-      "razonamiento_forense": "explicación corta en español"
-    }`;
+    // Direct access to environment variables to avoid caching issues
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
     try {
-        if (!import.meta.env.VITE_GEMINI_API_KEY) {
-            throw new Error("Missing Gemini API Key");
+        if (!apiKey) {
+            throw new Error("Missing VITE_GEMINI_API_KEY in environment");
         }
+
+        // Initialize inside the function for fresh state every call
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+
+        const prompt = `ANALIZA FOTO 1 (BASE) vs FOTO 2 (ACTUAL). ¿Es el mismo neumático?
+        RESPONDE SOLO JSON:
+        {
+          "tipo_inspeccion": "TIRE_MATCH",
+          "alerta_seguridad": "ROJA | AMARILLA | VERDE",
+          "hallazgos": { "identidad_confirmada": boolean, "coincidencia_id": "TOTAL|PARCIAL|NULA" },
+          "razonamiento_forense": "explicación corta en español"
+        }`;
 
         const result = await model.generateContent([
             prompt,
@@ -47,6 +50,7 @@ export const analyzeInspectionDelta = async (
     } catch (error: any) {
         console.error("AI Audit Error Details:", error);
         const errorMessage = error.message || "Error Desconocido";
+
         return {
             tipo_inspeccion: InspectionType.CHECK_OUT,
             alerta_seguridad: SecurityAlert.AMARILLA,
@@ -56,7 +60,7 @@ export const analyzeInspectionDelta = async (
                 lectura_medidor: "ERROR",
                 descripcion_anomalia: `Falla: ${errorMessage}`
             },
-            razonamiento_forense: `ERROR TÉCNICO: ${errorMessage}. (Verifica VITE_GEMINI_API_KEY en Vercel Settings).`
+            razonamiento_forense: `ERROR TÉCNICO: ${errorMessage}. Si dice 'Missing Key', revisa Vercel Settings. Si dice 'API Key not valid', la llave está mal.`
         };
     }
 };
