@@ -108,8 +108,8 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) 
                 ) : (
                     <div className="h-full p-8 flex flex-col items-center justify-center text-center animate-in fade-in zoom-in duration-500">
                         <div className={`w-24 h-24 rounded-[2rem] flex items-center justify-center mb-6 shadow-2xl ${lastResult?.nivel_riesgo === SecurityAlert.ROJA ? 'bg-red-500 shadow-red-500/20' :
-                                lastResult?.nivel_riesgo === SecurityAlert.AMARILLA ? 'bg-yellow shadow-yellow/20 text-black' :
-                                    'bg-emerald-500 shadow-emerald-500/20'
+                            lastResult?.nivel_riesgo === SecurityAlert.AMARILLA ? 'bg-yellow shadow-yellow/20 text-black' :
+                                'bg-emerald-500 shadow-emerald-500/20'
                             }`}>
                             {lastResult?.nivel_riesgo === SecurityAlert.ROJA ? (
                                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
@@ -125,19 +125,31 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) 
 
                         <div className="w-full max-w-sm bg-white/5 border border-white/10 rounded-3xl p-6 text-left space-y-4 mb-10">
                             <div className="flex justify-between items-center pb-4 border-b border-white/5">
-                                <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest">Ojos Cerrados</span>
-                                <span className={lastResult?.hallazgos.ojos_cerrados ? 'text-red-500 font-black' : 'text-emerald-500 font-black'}>
-                                    {lastResult?.hallazgos.ojos_cerrados ? 'SÍ' : 'NO'}
-                                </span>
+                                <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest">Nivel de Estrés</span>
+                                <div className="flex items-center gap-3">
+                                    <div className="w-24 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                        <div
+                                            className={`h-full transition-all duration-1000 ${(lastResult?.hallazgos.stress_level || 0) > 7 ? 'bg-red-500' :
+                                                    (lastResult?.hallazgos.stress_level || 0) > 4 ? 'bg-yellow' : 'bg-emerald-500'
+                                                }`}
+                                            style={{ width: `${(lastResult?.hallazgos.stress_level || 0) * 10}%` }}
+                                        />
+                                    </div>
+                                    <span className="text-xs font-bold text-white">{lastResult?.hallazgos.stress_level}/10</span>
+                                </div>
                             </div>
-                            <div className="flex justify-between items-center pb-4 border-b border-white/5">
-                                <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest">Bostezo</span>
-                                <span className={lastResult?.hallazgos.bostezo_detectado ? 'text-amber-500 font-black' : 'text-emerald-500 font-black'}>
-                                    {lastResult?.hallazgos.bostezo_detectado ? 'SÍ' : 'NO'}
-                                </span>
+                            <div className="grid grid-cols-2 gap-4 pb-4 border-b border-white/5">
+                                <div>
+                                    <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest block mb-1">Salud Física</span>
+                                    <span className="text-xs font-bold text-white uppercase">{lastResult?.hallazgos.salud_fisica || 'Analizando...'}</span>
+                                </div>
+                                <div>
+                                    <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest block mb-1">Salud Mental</span>
+                                    <span className="text-xs font-bold text-white uppercase">{lastResult?.hallazgos.salud_mental || 'Estable'}</span>
+                                </div>
                             </div>
                             <div className="p-4 bg-brand/10 border border-brand/20 rounded-2xl">
-                                <p className="text-[10px] font-black uppercase text-brand tracking-widest mb-1 italic">Recomendación IA</p>
+                                <p className="text-[10px] font-black uppercase text-brand tracking-widest mb-1 italic">Protocolo Médico / Sugerencia</p>
                                 <p className="text-white text-xs font-bold">{lastResult?.recomendacion}</p>
                             </div>
                         </div>

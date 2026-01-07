@@ -79,8 +79,8 @@ export const analyzeCabinIntegrity = async (imageBase64: string): Promise<CabinA
     const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || "");
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
 
-    const prompt = `ACTÚA COMO UN SISTEMA DMS (DRIVER MONITORING SYSTEM).
-    Analiza la imagen de la cabina y detecta fatiga o peligro.
+    const prompt = `ACTÚA COMO UN SISTEMA DMS (DRIVER MONITORING SYSTEM) Y WELLNESS IA.
+    Analiza la imagen de la cabina y detecta fatiga, peligro, estrés y estado de salud.
     RESPONDE SOLO JSON:
     {
       "estado_chofer": "ALERTA | FATIGA | DISTRACCION | PELIGRO",
@@ -90,6 +90,9 @@ export const analyzeCabinIntegrity = async (imageBase64: string): Promise<CabinA
         "bostezo_detectado": boolean,
         "celular_en_mano": boolean,
         "intruso_detectado": boolean,
+        "stress_level": number, (0-10 basado en micro-expresiones y tensión facial)
+        "salud_fisica": "ej: Normal, Palidez, Sudoración, Respiración Pesada",
+        "salud_mental": "ej: Estable, Ansiedad, Irritabilidad, Agotamiento",
         "descripcion": "resumen en español (máx 15 palabras)"
       },
       "recomendacion": "acción inmediata"
@@ -115,6 +118,9 @@ export const analyzeCabinIntegrity = async (imageBase64: string): Promise<CabinA
                 bostezo_detectado: false,
                 celular_en_mano: false,
                 intruso_detectado: false,
+                stress_level: 0,
+                salud_fisica: "Error lectura",
+                salud_mental: "Error lectura",
                 descripcion: "Error en sensor IA"
             },
             recomendacion: "Verificar conexión de cámara"

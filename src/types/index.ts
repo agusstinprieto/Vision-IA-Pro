@@ -101,6 +101,9 @@ export interface CabinAuditResult {
         bostezo_detectado: boolean;
         celular_en_mano: boolean;
         intruso_detectado: boolean;
+        stress_level?: number; // 0-10
+        salud_fisica?: string; // e.g. "Normal", "Signos de Arritmia", "Palidez"
+        salud_mental?: string; // e.g. "Estable", "Ansiedad Elevada"
         descripcion: string;
     };
     recomendacion: string;
