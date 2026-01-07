@@ -82,7 +82,7 @@ export const SecureCamera: React.FC<SecureCameraProps> = ({ onCapture, tripId, p
     };
 
     return (
-        <div className="relative w-full aspect-video bg-black rounded-3xl overflow-hidden border-4 border-zinc-800 shadow-2xl">
+        <div className="relative w-full aspect-[3/4] md:aspect-video bg-black rounded-3xl overflow-hidden border-4 border-zinc-800 shadow-2xl">
             {error ? (
                 <div className="absolute inset-0 flex items-center justify-center p-8 text-center bg-red-950/20 text-red-400">
                     <p className="font-bold uppercase tracking-widest text-xs">{error}</p>

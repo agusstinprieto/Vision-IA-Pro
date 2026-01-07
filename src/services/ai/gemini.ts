@@ -1,9 +1,9 @@
 
 
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { ForensicAuditResult, SecurityAlert, InspectionType, SealIntegrity } from "../../types";
 
-const genAI = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY || "" });
+const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || "");
 
 /**
  * AI Delta Analysis Service
