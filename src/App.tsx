@@ -61,10 +61,10 @@ export default function App() {
                 <h2 className="text-4xl font-black mb-4 uppercase tracking-tighter leading-tight">Control Tower <br /><span className="text-blue-500">Fixed Gate IA</span></h2>
                 <p className="text-zinc-500 text-lg mb-10 max-w-sm font-medium">Monitoreo automático de arcos perimetrales. Captura desatendida SIN intervención del chofer.</p>
 
-                <div className="flex gap-4 items-center">
+                <div className="flex flex-col md:flex-row gap-4 items-center">
                   <button
                     onClick={() => setView('qr-scan')}
-                    className="bg-[#EA492E] hover:bg-[#EA492E]/80 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest transition-all shadow-[0_0_30px_rgba(234,73,46,0.3)] hover:shadow-[0_0_50px_rgba(234,73,46,0.5)] flex items-center gap-3"
+                    className="w-full md:w-auto bg-[#EA492E] hover:bg-[#EA492E]/80 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest transition-all shadow-[0_0_30px_rgba(234,73,46,0.3)] hover:shadow-[0_0_50px_rgba(234,73,46,0.5)] flex items-center justify-center gap-3"
                   >
                     <span>Simular Escaneo</span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
