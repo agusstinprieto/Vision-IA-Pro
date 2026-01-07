@@ -77,13 +77,12 @@ export const TireScanner: React.FC<TireScannerProps> = ({ tripId, plateId, tireC
                     </div>
                 </div>
 
-                {/* Step Instructions Overlay */}
-                <div className="absolute top-0 right-0 p-4 md:p-8 text-right pointer-events-none">
-                    <div className="bg-black/60 backdrop-blur-md p-4 md:p-6 rounded-3xl border border-white/10 shadow-2xl">
-                        <p className="text-[8px] md:text-[10px] text-[#EA492E] font-black uppercase tracking-widest mb-1">POSICIÓN ACTUAL</p>
-                        <p className="text-lg md:text-2xl font-black text-white uppercase tracking-tighter mb-2 md:mb-4">{positions[currentStep]}</p>
+                <div className="absolute top-0 right-0 p-2 md:p-8 text-right pointer-events-none z-[60]">
+                    <div className="bg-black/60 backdrop-blur-md p-3 md:p-6 rounded-2xl md:rounded-3xl border border-white/10 shadow-2xl">
+                        <p className="text-[7px] md:text-[10px] text-[#EA492E] font-black uppercase tracking-widest mb-0.5">POSICIÓN ACTUAL</p>
+                        <p className="text-sm md:text-2xl font-black text-white uppercase tracking-tighter mb-1 md:mb-4">{positions[currentStep]}</p>
 
-                        <div className="space-y-2 text-[9px] font-bold uppercase tracking-widest text-zinc-400">
+                        <div className="hidden md:block space-y-2 text-[9px] font-bold uppercase tracking-widest text-zinc-400">
                             <p className="flex items-center gap-2"><span className="w-1 h-1 bg-[#EA492E] rounded-full" /> Distancia: 1 Metro</p>
                             <p className="flex items-center gap-2"><span className="w-1 h-1 bg-[#EA492E] rounded-full" /> Ángulo: Perpendicular</p>
                             <p className="flex items-center gap-2"><span className="w-1 h-1 bg-[#EA492E] rounded-full" /> Fondo: Nítido</p>

@@ -103,10 +103,10 @@ export const SecureCamera: React.FC<SecureCameraProps> = ({ onCapture, tripId, p
                     </div>
 
                     {/* Secure UI Controls */}
-                    <div className="absolute bottom-0 left-0 right-0 p-8 flex justify-center bg-gradient-to-t from-black/80 to-transparent z-50">
+                    <div className="absolute bottom-2 md:bottom-0 left-0 right-0 p-4 md:p-8 flex justify-center bg-gradient-to-t from-black/80 to-transparent z-[70]">
                         <button
                             onClick={handleCapture}
-                            className="w-20 h-20 bg-white rounded-full border-8 border-white/30 flex items-center justify-center active:scale-95 transition-transform"
+                            className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-full border-4 md:border-8 border-white/30 flex items-center justify-center active:scale-95 transition-transform shadow-2xl"
                         >
                             <div className="w-14 h-14 bg-[#EA492E] rounded-full" />
                         </button>
