@@ -76,10 +76,10 @@ export const SecureCamera: React.FC<SecureCameraProps> = ({ onCapture, tripId, p
         // Process frame with watermark
         burnWatermark(canvas, video, watermarkData);
 
-        // Convert to Blob
+        // Convert to Blob as JPEG for better AI compatibility
         canvas.toBlob((blob) => {
             if (blob) onCapture(blob);
-        }, 'image/webp', 0.82);
+        }, 'image/jpeg', 0.85);
     };
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,7 +112,7 @@ export const SecureCamera: React.FC<SecureCameraProps> = ({ onCapture, tripId, p
                 burnWatermark(canvas, img, watermarkData);
                 canvas.toBlob((blob) => {
                     if (blob) onCapture(blob);
-                }, 'image/webp', 0.82);
+                }, 'image/jpeg', 0.85);
             };
             img.src = event.target?.result as string;
         };
