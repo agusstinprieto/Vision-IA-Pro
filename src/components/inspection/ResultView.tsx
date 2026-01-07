@@ -40,7 +40,7 @@ export const ResultView: React.FC<ResultViewProps> = ({ results, onClose }) => {
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-lg font-black uppercase tracking-tighter">{res.position}</h3>
                             <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-${res.analysis.alerta_seguridad === 'ROJA' ? 'red-500' :
-                                    res.analysis.alerta_seguridad === 'AMARILLA' ? 'yellow' : 'emerald-500'
+                                res.analysis.alerta_seguridad === 'AMARILLA' ? 'yellow' : 'emerald-500'
                                 }/20 text-${res.analysis.alerta_seguridad === 'ROJA' ? 'red-500' :
                                     res.analysis.alerta_seguridad === 'AMARILLA' ? 'yellow' : 'emerald-500'
                                 }`}>
@@ -48,15 +48,19 @@ export const ResultView: React.FC<ResultViewProps> = ({ results, onClose }) => {
                             </span>
                         </div>
 
-                        {/* Comparison */}
-                        <div className="grid grid-cols-2 gap-4 mb-4">
-                            <div className="relative group">
-                                <img src={res.previousImage} className="w-full h-32 object-cover rounded-xl opacity-60" />
-                                <span className="absolute bottom-2 left-2 bg-black/60 px-2 py-1 rounded text-[9px] font-bold uppercase text-zinc-400">Referencia</span>
+                        {/* Comparison - Enlarged for better visibility */}
+                        <div className="flex flex-col gap-4 mb-6">
+                            <div className="relative group overflow-hidden rounded-2xl border border-white/5">
+                                <img src={res.previousImage} className="w-full h-64 md:h-80 object-cover opacity-70 hover:opacity-100 transition-opacity" />
+                                <div className="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10">
+                                    <span className="text-[10px] font-black uppercase text-zinc-400 tracking-widest">Referencia (Base)</span>
+                                </div>
                             </div>
-                            <div className="relative">
-                                <img src={res.currentImage} className="w-full h-32 object-cover rounded-xl border-2 border-white/20" />
-                                <span className="absolute bottom-2 left-2 bg-black/60 px-2 py-1 rounded text-[9px] font-bold uppercase text-white">Actual (Gate)</span>
+                            <div className="relative group overflow-hidden rounded-2xl border-2 border-[#EA492E]/30">
+                                <img src={res.currentImage} className="w-full h-64 md:h-80 object-cover" />
+                                <div className="absolute top-4 left-4 bg-[#EA492E] px-3 py-1.5 rounded-lg shadow-lg">
+                                    <span className="text-[10px] font-black uppercase text-white tracking-widest">Actual (Captura Gate)</span>
+                                </div>
                             </div>
                         </div>
 
