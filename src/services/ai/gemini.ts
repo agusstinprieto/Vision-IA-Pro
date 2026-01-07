@@ -12,8 +12,8 @@ export const analyzeInspectionDelta = async (
     afterImageBase64: string,
     category: 'TIRE' | 'SEAL' | 'GAUGE'
 ): Promise<ForensicAuditResult> => {
-    // Switching to 1.5-flash for higher stability and speed
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // Switching to 2.0-flash (Experimental/Latest) for better reliability as requested
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
 
     const prompt = `ANALIZA FOTO 1 (BASE) vs FOTO 2 (ACTUAL). ¿Es el mismo neumático?
     RESPONDE SOLO JSON:
