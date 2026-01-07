@@ -5,6 +5,7 @@ import { ResultView } from './components/inspection/ResultView'; // NEW
 import { SecurityAlert, TripData, ForensicAuditResult } from './types';
 import { getPreviousTripData } from './services/db/mockDB'; // NEW
 import { analyzeInspectionDelta } from './services/ai/gemini'; // NEW
+import { saveInspection } from './services/auth/supabase'; // NEW
 
 // Industrial Color Palette
 const COLORS = {
@@ -196,6 +197,22 @@ export default function App() {
                   };
                 }));
 
+                const isAlert = results.some(r => r.analysis.alerta_seguridad === 'ROJA');
+
+                // 3. Save to Supabase (Cloud)
+                try {
+                  await saveInspection({
+                    inspection_type: 'ENTRY', // Default for demo
+                    status: isAlert ? 'DAMAGE_DETECTED' : 'CLEAN',
+                    ai_summary: results.map(r => `${r.position}: ${r.analysis.resumen}`).join(' | '),
+                    image_url: results[0]?.currentImage || '', // Saving first image as thumbnail for now
+                    vehicle_id: activeTrip?.truck_id
+                  });
+                  console.log('Saved to Supabase!');
+                } catch (err) {
+                  console.error('Supabase Save Error:', err);
+                }
+
                 setAnalysisResults(results);
                 setIsAnalyzing(false);
                 setView('results');
@@ -205,7 +222,7 @@ export default function App() {
                   id: Date.now(),
                   type: 'TIRE_AUDIT',
                   unit: activeTrip?.truck_id || 'UNKNOWN',
-                  status: results.some(r => r.analysis.alerta_seguridad === 'ROJA') ? 'ALERT' : 'PASSED',
+                  status: isAlert ? 'ALERT' : 'PASSED',
                   time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                 }, ...prev]);
               }}
