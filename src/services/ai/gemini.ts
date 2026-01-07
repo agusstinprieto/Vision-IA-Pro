@@ -5,14 +5,15 @@ const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || "");
 
 /**
  * AI Delta Analysis Service
- * Optimized for speed and mobile latency.
+ * Stable version with enhanced error logging for production.
  */
 export const analyzeInspectionDelta = async (
     beforeImageBase64: string,
     afterImageBase64: string,
     category: 'TIRE' | 'SEAL' | 'GAUGE'
 ): Promise<ForensicAuditResult> => {
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+    // Switching to 1.5-flash for higher stability and speed
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const prompt = `ANALIZA FOTO 1 (BASE) vs FOTO 2 (ACTUAL). ¿Es el mismo neumático?
     RESPONDE SOLO JSON:
@@ -20,10 +21,14 @@ export const analyzeInspectionDelta = async (
       "tipo_inspeccion": "TIRE_MATCH",
       "alerta_seguridad": "ROJA | AMARILLA | VERDE",
       "hallazgos": { "identidad_confirmada": boolean, "coincidencia_id": "TOTAL|PARCIAL|NULA" },
-      "razonamiento_forense": "explicación corta"
+      "razonamiento_forense": "explicación corta en español"
     }`;
 
     try {
+        if (!import.meta.env.VITE_GEMINI_API_KEY) {
+            throw new Error("Missing Gemini API Key");
+        }
+
         const result = await model.generateContent([
             prompt,
             { inlineData: { mimeType: "image/jpeg", data: beforeImageBase64 } },
@@ -32,11 +37,15 @@ export const analyzeInspectionDelta = async (
 
         const response = await result.response;
         const text = response.text();
-        const jsonStr = text.replace(/```json/g, "").replace(/```/g, "").trim();
+
+        // Robust JSON cleaning
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        const jsonStr = jsonMatch ? jsonMatch[0] : text;
+
         return JSON.parse(jsonStr) as ForensicAuditResult;
 
-    } catch (error) {
-        console.error("AI Audit Error:", error);
+    } catch (error: any) {
+        console.error("AI Audit Error Details:", error);
         return {
             tipo_inspeccion: InspectionType.CHECK_OUT,
             alerta_seguridad: SecurityAlert.AMARILLA,
@@ -44,9 +53,9 @@ export const analyzeInspectionDelta = async (
                 identidad_confirmada: false,
                 integridad_sellos: SealIntegrity.NO_VISIBLES,
                 lectura_medidor: "ERROR",
-                descripcion_anomalia: "Error técnico."
+                descripcion_anomalia: `Falla: ${error.message || "Error Desconocido"}`
             },
-            razonamiento_forense: "Error de comunicación."
+            razonamiento_forense: "Error de comunicación con el motor IA. Verifica la API KEY en Vercel."
         };
     }
 };
