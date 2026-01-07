@@ -117,6 +117,9 @@ export const SecureCamera: React.FC<SecureCameraProps> = ({ onCapture, tripId, p
             img.src = event.target?.result as string;
         };
         reader.readAsDataURL(file);
+
+        // Reset input value so the same file can be selected again if needed
+        e.target.value = '';
     };
 
     return (
