@@ -15,50 +15,57 @@ ALTER TABLE public.inspections ENABLE ROW LEVEL SECURITY;
 -- You can refine these later to restrict access based on specific roles (e.g., 'admin', 'manager').
 
 -- TIRES: Allow authenticated users to view and modify
+DROP POLICY IF EXISTS "Enable access for authenticated users" ON "public"."tires";
 CREATE POLICY "Enable access for authenticated users" ON "public"."tires"
 AS PERMISSIVE FOR ALL
-TO authenticated
+TO public
 USING (true)
 WITH CHECK (true);
 
 -- TRIPS: Allow authenticated users to view and modify
+DROP POLICY IF EXISTS "Enable access for authenticated users" ON "public"."trips";
 CREATE POLICY "Enable access for authenticated users" ON "public"."trips"
 AS PERMISSIVE FOR ALL
-TO authenticated
+TO public
 USING (true)
 WITH CHECK (true);
 
 -- UNITS: Allow authenticated users to view and modify
+DROP POLICY IF EXISTS "Enable access for authenticated users" ON "public"."units";
 CREATE POLICY "Enable access for authenticated users" ON "public"."units"
 AS PERMISSIVE FOR ALL
-TO authenticated
+TO public
 USING (true)
 WITH CHECK (true);
 
 -- WORKERS: Allow authenticated users to view and modify
+DROP POLICY IF EXISTS "Enable access for authenticated users" ON "public"."workers";
 CREATE POLICY "Enable access for authenticated users" ON "public"."workers"
 AS PERMISSIVE FOR ALL
-TO authenticated
+TO public
 USING (true)
 WITH CHECK (true);
 
 -- VEHICLES: Allow authenticated users to view and modify
+DROP POLICY IF EXISTS "Enable access for authenticated users" ON "public"."vehicles";
 CREATE POLICY "Enable access for authenticated users" ON "public"."vehicles"
 AS PERMISSIVE FOR ALL
-TO authenticated
+TO public
 USING (true)
 WITH CHECK (true);
 
 -- DAMAGE_LOGS: Allow authenticated users to view and modify
+DROP POLICY IF EXISTS "Enable access for authenticated users" ON "public"."damage_logs";
 CREATE POLICY "Enable access for authenticated users" ON "public"."damage_logs"
 AS PERMISSIVE FOR ALL
-TO authenticated
+TO public
 USING (true)
 WITH CHECK (true);
 
 -- INSPECTIONS: Allow authenticated users to view and modify
+DROP POLICY IF EXISTS "Enable access for authenticated users" ON "public"."inspections";
 CREATE POLICY "Enable access for authenticated users" ON "public"."inspections"
 AS PERMISSIVE FOR ALL
-TO authenticated
+TO public
 USING (true)
 WITH CHECK (true);
