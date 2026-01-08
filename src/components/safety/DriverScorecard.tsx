@@ -32,10 +32,10 @@ export const DriverScorecard: React.FC<DriverScorecardProps> = ({ stats, onClose
             <div className="relative w-full max-w-2xl bg-[#0A0A0B] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-[0_0_100px_rgba(234,73,46,0.1)]">
 
                 {/* Background Decoration */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-brand/5 blur-[80px]" />
+                <div className="absolute top-0 right-0 w-64 h-64 bg-brand/5 blur-[80px] pointer-events-none" />
 
                 {/* Header */}
-                <div className="p-8 border-b border-white/5 flex justify-between items-start">
+                <div className="relative z-10 p-8 border-b border-white/5 flex justify-between items-start">
                     <div>
                         <h2 className="text-3xl font-black uppercase tracking-tighter mb-1">Driver Scorecard</h2>
                         <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest">Evaluación de Rendimiento & Seguridad</p>
