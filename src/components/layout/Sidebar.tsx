@@ -13,7 +13,6 @@ import {
     X,
     Sparkles,
     Search,
-    Search,
     LayoutDashboard,
     Image,
     Images
