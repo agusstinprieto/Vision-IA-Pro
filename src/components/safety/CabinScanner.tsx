@@ -104,24 +104,27 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) 
                         <div className="max-w-sm">
                             <h3 className="text-3xl font-black uppercase tracking-tighter mb-4 italic">LISTO PARA AUDITORÍA</h3>
                             <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs leading-relaxed">
-                                SELECCIONE UN OPERADOR EN LA SIGUIENTE PESTAÑA O PRESIONE INICIAR PARA ACTIVAR EL CANAL SEGURO DE VIDEO.
+                                SELECCIONE UN OPERADOR DE LA LISTA O PRESIONE INICIAR PARA ACTIVAR EL CANAL SEGURO DE VIDEO.
                             </p>
                         </div>
 
                         <div className="w-full max-w-md space-y-4">
-                            <div className="p-4 bg-white/5 rounded-2xl border border-white/10 text-left">
+                            <div className="p-4 bg-zinc-900 rounded-2xl border border-white/10 text-left relative group hover:border-brand/50 transition-colors">
                                 <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest mb-1">OPERADOR DETECTADO</p>
                                 <select
-                                    className="w-full bg-transparent border-none text-white font-black uppercase outline-none appearance-none"
+                                    className="w-full bg-transparent border-none text-white font-black uppercase outline-none cursor-pointer"
                                     onChange={(e) => {
                                         const worker = workers.find(w => w.id === e.target.value);
                                         setSelectedDriver(worker);
                                     }}
                                     value={selectedDriver?.id || ''}
                                 >
-                                    <option value="">Seleccionar Operador...</option>
-                                    {workers.map(w => <option key={w.id} value={w.id}>{w.name}</option>)}
+                                    <option value="" className="bg-black text-zinc-500">Seleccionar Operador...</option>
+                                    {workers.map(w => <option key={w.id} value={w.id} className="bg-black text-white">{w.name}</option>)}
                                 </select>
+                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+                                </div>
                             </div>
 
                             <button

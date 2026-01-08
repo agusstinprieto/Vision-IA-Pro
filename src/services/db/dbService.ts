@@ -43,14 +43,24 @@ export const dbService = {
     },
 
     // 3. Workers (Driver Health)
-    async getWorkers() {
+    async getWorkers(): Promise<import('../../types').Worker[]> {
         const { data, error } = await supabase
             .from('workers')
             .select('*')
             .order('risk_score', { ascending: false });
 
         if (error) throw error;
-        return data;
+        return data as import('../../types').Worker[];
+    },
+
+    async createWorker(worker: Partial<import('../../types').Worker>) {
+        const { data, error } = await supabase
+            .from('workers')
+            .insert([worker])
+            .select();
+
+        if (error) throw error;
+        return data[0];
     },
 
     async updateWorkerStatus(id: string, status: DriverStatus, metrics: any) {

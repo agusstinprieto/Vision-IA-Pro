@@ -46,6 +46,48 @@ export const DriverHealthView = () => {
         pdfService.generateDriverReport(workers);
     };
 
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [newWorker, setNewWorker] = useState({
+        id: '',
+        name: '',
+        phone: '',
+        unit_assigned: ''
+    });
+
+    const handleCreateWorker = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newWorker.id || !newWorker.name) return;
+
+        try {
+            await dbService.createWorker({
+                ...newWorker,
+                photo_url: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=400&auto=format&fit=crop&q=60',
+                risk_score: 0,
+                status: DriverStatus.ALERTA, // Default
+                metrics: {
+                    fatigue: 0,
+                    stress: 0,
+                    heart_rate: 70,
+                    alcohol_probability: 0,
+                    drugs_probability: 0
+                },
+                last_check: 'Pendiente'
+            });
+
+            setShowCreateModal(false);
+            setNewWorker({ id: '', name: '', phone: '', unit_assigned: '' });
+
+            // Refresh list
+            const data = await dbService.getWorkers();
+            setWorkers(data || []);
+
+            alert("Operador registrado exitosamente");
+        } catch (error) {
+            console.error("Error creating worker:", error);
+            alert("Error al registrar operador. Verifique que el ID no esté duplicado.");
+        }
+    };
+
     return (
         <div className="p-4 lg:p-6 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -59,10 +101,10 @@ export const DriverHealthView = () => {
 
                 <div className="flex gap-4">
                     <button
-                        onClick={() => alert("Función: Importar Base de Datos de Operadores (CSV/Excel)")}
-                        className="bg-zinc-800 text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 border border-white/10 hover:bg-zinc-700 transition-all"
+                        onClick={() => setShowCreateModal(true)}
+                        className="bg-zinc-800 text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 border border-white/10 hover:bg-zinc-700 transition-all hover:border-brand/50"
                     >
-                        <Download size={16} className="rotate-180" /> Importar DB
+                        <UserX size={16} /> Nuevo Operador
                     </button>
                     <button
                         onClick={handleExportReport}
@@ -143,6 +185,12 @@ export const DriverHealthView = () => {
                         <UserX size={48} className="text-zinc-600 mb-4" />
                         <h3 className="text-xl font-bold text-zinc-400 uppercase">Sin Operadores</h3>
                         <p className="text-sm text-zinc-600">No hay datos registrados en el sistema.</p>
+                        <button
+                            onClick={() => setShowCreateModal(true)}
+                            className="mt-4 text-brand hover:underline font-bold text-xs uppercase tracking-widest"
+                        >
+                            Registrar el primero
+                        </button>
                     </div>
                 ) : (
                     sortedDrivers.slice(1).map(driver => (
@@ -200,6 +248,72 @@ export const DriverHealthView = () => {
                     ))
                 )}
             </div>
+
+            {/* Create Operator Modal */}
+            {showCreateModal && (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-[#121214] border border-white/10 rounded-3xl p-8 w-full max-w-md shadow-2xl animate-in zoom-in duration-300">
+                        <div className="flex justify-between items-center mb-6">
+                            <h3 className="text-2xl font-black uppercase tracking-tighter text-white">Nuevo Operador</h3>
+                            <button onClick={() => setShowCreateModal(false)} className="text-zinc-500 hover:text-white">
+                                <UserX size={24} className="rotate-45" />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleCreateWorker} className="space-y-4">
+                            <div>
+                                <label className="block text-[10px] uppercase font-black tracking-widest text-zinc-500 mb-1">ID (Nómina)</label>
+                                <input
+                                    type="text"
+                                    required
+                                    value={newWorker.id}
+                                    onChange={e => setNewWorker({ ...newWorker, id: e.target.value })}
+                                    className="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white font-bold focus:border-brand outline-none"
+                                    placeholder="Ej: D-101"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[10px] uppercase font-black tracking-widest text-zinc-500 mb-1">Nombre Completo</label>
+                                <input
+                                    type="text"
+                                    required
+                                    value={newWorker.name}
+                                    onChange={e => setNewWorker({ ...newWorker, name: e.target.value })}
+                                    className="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white font-bold focus:border-brand outline-none"
+                                    placeholder="Ej: Juan Pérez"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[10px] uppercase font-black tracking-widest text-zinc-500 mb-1">Teléfono</label>
+                                <input
+                                    type="tel"
+                                    value={newWorker.phone}
+                                    onChange={e => setNewWorker({ ...newWorker, phone: e.target.value })}
+                                    className="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white font-bold focus:border-brand outline-none"
+                                    placeholder="+52 871..."
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[10px] uppercase font-black tracking-widest text-zinc-500 mb-1">Unidad Asignada</label>
+                                <input
+                                    type="text"
+                                    value={newWorker.unit_assigned}
+                                    onChange={e => setNewWorker({ ...newWorker, unit_assigned: e.target.value })}
+                                    className="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white font-bold focus:border-brand outline-none"
+                                    placeholder="Ej: GMS-01"
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="w-full bg-brand text-white py-4 rounded-xl font-black uppercase tracking-widest hover:bg-brand/90 transition-all mt-4"
+                            >
+                                Registrar Operador
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
 
             {/* Scorecard Modal */}
             {selectedDriver && (

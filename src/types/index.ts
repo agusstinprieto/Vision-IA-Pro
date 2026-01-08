@@ -143,6 +143,24 @@ export interface EmergencyContact {
 }
 
 // === AUTHENTICATION & RBAC ===
+export interface Worker {
+    id: string;
+    name: string;
+    phone: string;
+    unit_assigned: string;
+    photo_url: string;
+    risk_score: number;
+    status: DriverStatus;
+    metrics: {
+        fatigue: number;
+        stress: number;
+        heart_rate: number;
+        alcohol_probability: number;
+        drugs_probability: number;
+    };
+    last_check: string;
+}
+
 export type UserRole = 'MASTER' | 'MANAGER' | 'EMPLOYEE' | 'DEVELOPER';
 
 export interface User {
