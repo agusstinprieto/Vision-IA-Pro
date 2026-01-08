@@ -4,6 +4,7 @@ import YouTube, { YouTubeProps } from 'react-youtube';
 import { telemetrySimulation, VehicleTelemetry } from '../../services/telemetry/simulation';
 import { GeofenceService } from '../../services/telemetry/geofenceService';
 import { BiometricMonitor } from './BiometricMonitor';
+import { CabinScanner } from './CabinScanner';
 
 interface CommandCenterViewProps {
     brandColor?: string;
@@ -13,6 +14,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
     const [telemetry, setTelemetry] = useState<VehicleTelemetry | null>(null);
     const [isPlaying, setIsPlaying] = useState(true);
     const [showBiometrics, setShowBiometrics] = useState(false);
+    const [showCabinAudit, setShowCabinAudit] = useState(false);
     const [camerasActive, setCamerasActive] = useState(false);
     const [cameraError, setCameraError] = useState('');
     const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
@@ -20,16 +22,17 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
     const [selectedVehicle, setSelectedVehicle] = useState({
         unitId: 'T-800',
         driver: 'J. Pérez',
+        driverId: 'USR-01',
         route: 'Monterrey → Laredo',
         status: 'En Ruta'
     });
 
     // Mock data - en producción vendría de Supabase
     const availableVehicles = [
-        { unitId: 'T-800', driver: 'J. Pérez', route: 'Monterrey → Laredo', status: 'En Ruta' },
-        { unitId: 'T-750', driver: 'M. García', route: 'Guadalajara → CDMX', status: 'En Ruta' },
-        { unitId: 'T-650', driver: 'L. Rodríguez', route: 'Querétaro → Puebla', status: 'Detenido' },
-        { unitId: 'T-900', driver: 'C. Hernández', route: 'Tijuana → Mexicali', status: 'En Ruta' },
+        { unitId: 'T-800', driver: 'J. Pérez', driverId: 'USR-01', route: 'Monterrey → Laredo', status: 'En Ruta' },
+        { unitId: 'T-750', driver: 'M. García', driverId: 'USR-02', route: 'Guadalajara → CDMX', status: 'En Ruta' },
+        { unitId: 'T-650', driver: 'L. Rodríguez', driverId: 'USR-03', route: 'Querétaro → Puebla', status: 'Detenido' },
+        { unitId: 'T-900', driver: 'C. Hernández', driverId: 'USR-04', route: 'Tijuana → Mexicali', status: 'En Ruta' },
     ];
 
     const roadPlayerRef = useRef<any>(null);
@@ -223,13 +226,25 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
                         onClick={() => setShowBiometrics(true)}
                         disabled={!camerasActive}
                         className={`h-9 px-4 rounded-xl border transition-all flex items-center gap-2 text-xs font-black tracking-wider shadow-lg ${camerasActive
-                                ? 'text-black hover:scale-[1.02] active:scale-95'
-                                : 'bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed'
+                            ? 'text-black hover:scale-[1.02] active:scale-95'
+                            : 'bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed'
                             }`}
                         style={camerasActive ? { backgroundColor: brandColor, borderColor: brandColor } : {}}
                     >
                         <Eye size={14} />
-                        ANALIZAR IA
+                        MONITOREO IA
+                    </button>
+
+                    <button
+                        onClick={() => setShowCabinAudit(true)}
+                        disabled={!camerasActive}
+                        className={`h-9 px-4 rounded-xl border transition-all flex items-center gap-2 text-xs font-black tracking-wider shadow-lg ${camerasActive
+                            ? 'bg-zinc-900 border-white/10 text-white hover:bg-zinc-800'
+                            : 'bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed'
+                            }`}
+                    >
+                        <Activity size={14} style={{ color: brandColor }} />
+                        AUDITORÍA IA
                     </button>
                 </div>
             </div>
@@ -394,6 +409,23 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
                     onClose={() => setShowBiometrics(false)}
                     externalStream={cameraStream || undefined}
                 />
+            )}
+
+            {/* Cabin Audit Modal */}
+            {showCabinAudit && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
+                    <div className="w-full max-w-4xl max-h-[90vh] overflow-hidden">
+                        <CabinScanner
+                            onClose={() => setShowCabinAudit(false)}
+                            onAlert={(result) => console.log("Alert from Command Center Audit:", result)}
+                            preselectedDriver={{
+                                id: selectedVehicle.driverId,
+                                name: selectedVehicle.driver,
+                                unit_assigned: selectedVehicle.unitId
+                            }}
+                        />
+                    </div>
+                </div>
             )}
         </div>
     );

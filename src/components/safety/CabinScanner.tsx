@@ -8,13 +8,14 @@ import { dbService } from '../../services/db/dbService';
 interface CabinScannerProps {
     onClose: () => void;
     onAlert: (result: CabinAuditResult) => void;
+    preselectedDriver?: { id: string; name: string };
 }
 
-export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) => {
-    const [mode, setMode] = useState<'START' | 'MONITOR' | 'SOS' | 'RESULT'>('START');
+export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert, preselectedDriver }) => {
+    const [mode, setMode] = useState<'START' | 'MONITOR' | 'SOS' | 'RESULT'>(preselectedDriver ? 'MONITOR' : 'START');
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [lastResult, setLastResult] = useState<CabinAuditResult | null>(null);
-    const [selectedDriver, setSelectedDriver] = useState<any>(null);
+    const [selectedDriver, setSelectedDriver] = useState<any>(preselectedDriver || null);
     const [workers, setWorkers] = useState<any[]>([]);
 
     React.useEffect(() => {
