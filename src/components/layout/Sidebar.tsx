@@ -56,6 +56,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         { id: 'tire-inventory', label: t('sidebar.tire_inventory'), icon: <History size={20} />, category: 'INVENTORY' },
 
         { id: 'map', label: t('sidebar.map'), icon: <MapIcon size={20} />, category: 'LOGISTICS' },
+        { id: 'simulation', label: 'Modo Simulación', icon: <Sparkles size={20} />, badge: 'DEMO', category: 'LOGISTICS' },
 
         { id: 'emergency', label: t('sidebar.emergency'), icon: <PhoneCall size={20} />, category: 'EMERGENCY' },
     ];
@@ -67,7 +68,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         if (userRole === 'EMPLOYEE') {
             // Employee sees Dashboard, Capture, Emergency. 
             // Also enable read-only view of Inventory and Map as requested.
-            return ['dashboard', 'capture-tires', 'capture-cabin', 'driver-health', 'emergency', 'unit-inventory', 'tire-inventory', 'map'].includes(item.id);
+            return ['dashboard', 'capture-tires', 'capture-cabin', 'driver-health', 'emergency', 'unit-inventory', 'tire-inventory', 'map', 'simulation'].includes(item.id);
         }
         return false;
     });

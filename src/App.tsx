@@ -20,6 +20,7 @@ import { TireInventoryView } from './components/inventory/TireInventoryView';
 import { SmartMapView } from './components/logistics/SmartMapView';
 import { EmergencyView } from './components/safety/EmergencyView';
 import { DriverHealthView } from './components/safety/DriverHealthView';
+import { SimulationView } from './components/safety/SimulationView';
 import { LanguageToggle } from './components/common/LanguageToggle';
 import { DashboardView } from './components/dashboard/DashboardView';
 
@@ -226,6 +227,8 @@ export default function App() {
               <EmergencyView />
             ) : view === 'driver-health' ? (
               <DriverHealthView />
+            ) : view === 'simulation' ? (
+              <SimulationView />
             ) : view === 'capture-tires' || view === 'inspection' ? (
               <div className="max-w-3xl mx-auto">
                 <button
