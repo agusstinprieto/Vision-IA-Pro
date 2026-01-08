@@ -52,7 +52,7 @@ export const analyzeInspectionDelta = async (
             if (error.message?.includes("429") || error.message?.includes("quota")) {
                 console.warn("Gemini 2.0 Quota exceeded, falling back to 1.5 Flash...");
                 // Second attempt: Gemini 1.5 Flash (Reliable fallback)
-                return await callGemini("gemini-1.5-flash");
+                return await callGemini("gemini-1.5-flash-latest");
             }
             throw error;
         }

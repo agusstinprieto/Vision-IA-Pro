@@ -54,7 +54,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
     ];
 
     return (
-        <div className="p-8 lg:p-12 space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-24">
+        <div className="p-8 lg:p-12 space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-8">
 
             {/* Welcome Header */}
             <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -179,45 +179,80 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
 
                 {/* --- NEW SECTION: ANALYTICS WIDGETS --- */}
 
-                {/* Tire Health Card */}
-                <div className="bg-[#121214] border border-white/5 rounded-[2.5rem] p-8 flex flex-col justify-between group hover:border-brand/20 transition-all">
-                    <div>
-                        <div className="flex justify-between items-start mb-6">
-                            <h3 className="text-lg font-black uppercase tracking-widest flex items-center gap-2">
-                                <Disc className="text-brand" size={24} /> Estado Llantas
-                            </h3>
-                            <span className="text-xs font-black text-zinc-500 bg-white/5 px-2 py-1 rounded-lg">{totalTires} Total</span>
+                {/* Tire Health Card (Expanded) */}
+                <div className="lg:col-span-2 bg-[#121214] border border-white/5 rounded-[2.5rem] p-8 flex flex-col justify-between group hover:border-brand/20 transition-all relative overflow-hidden shadow-2xl shadow-brand/5">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-brand/5 blur-[80px] pointer-events-none" />
+
+                    <div className="relative z-10 w-full">
+                        <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
+                            <div>
+                                <h3 className="text-2xl font-black uppercase tracking-widest flex items-center gap-3 mb-1">
+                                    <Disc className="text-brand" size={28} /> Estado de Llantas
+                                </h3>
+                                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">ANÁLISIS PREDICTIVO DE DESGASTE POR IA</p>
+                            </div>
+                            <span className="text-xs font-black text-zinc-400 bg-white/5 px-4 py-2 rounded-xl border border-white/5">{totalTires} Llantas Auditadas</span>
                         </div>
 
-                        <div className="space-y-4">
-                            <div className="space-y-1">
-                                <div className="flex justify-between text-xs font-bold text-zinc-400">
-                                    <span>Vida Útil Restante</span>
-                                    <span>{tireHealthPercentage}%</span>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                            <div className="space-y-6">
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-end">
+                                        <span className="text-xs font-black text-zinc-400 uppercase tracking-widest">Vida Útil Restante (Flota)</span>
+                                        <span className="text-3xl font-black text-brand">{tireHealthPercentage}%</span>
+                                    </div>
+                                    <div className="h-4 w-full bg-zinc-900 rounded-full overflow-hidden border border-white/5">
+                                        <div
+                                            className="h-full bg-gradient-to-r from-red-500 via-amber-500 to-emerald-500 transition-all duration-1000"
+                                            style={{ width: `${tireHealthPercentage}%` }}
+                                        />
+                                    </div>
+                                    <div className="flex justify-between text-[8px] font-black text-zinc-600 uppercase tracking-[0.2em]">
+                                        <span>Reemplazo</span>
+                                        <span>Óptimo</span>
+                                    </div>
                                 </div>
-                                <div className="h-2 w-full bg-zinc-800 rounded-full overflow-hidden">
-                                    <div className="h-full bg-gradient-to-r from-red-500 via-amber-500 to-emerald-500" style={{ width: `${tireHealthPercentage}%` }} />
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="bg-red-500/5 p-4 rounded-3xl border border-red-500/10 hover:bg-red-500/10 transition-colors">
+                                        <p className="text-3xl font-black text-red-500">{criticalTires}</p>
+                                        <p className="text-[10px] uppercase font-black text-red-400/60 leading-tight">Alerta Crítica<br />(Urgente)</p>
+                                    </div>
+                                    <div className="bg-amber-500/5 p-4 rounded-3xl border border-amber-500/10 hover:bg-amber-500/10 transition-colors">
+                                        <p className="text-3xl font-black text-amber-500">{warningTires}</p>
+                                        <p className="text-[10px] uppercase font-black text-amber-400/60 leading-tight">Atención<br />Requerida</p>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4 pt-2">
-                                <div className="bg-red-500/10 p-4 rounded-2xl border border-red-500/20">
-                                    <p className="text-2xl font-black text-red-500">{criticalTires}</p>
-                                    <p className="text-[9px] uppercase font-bold text-red-400">Críticas</p>
+                            <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-6 flex flex-col justify-center gap-4">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-2xl bg-brand/10 flex items-center justify-center text-brand">
+                                        <Activity size={24} />
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Desgaste Promedio</p>
+                                        <p className="text-xl font-black text-white">{avgDepth}mm</p>
+                                    </div>
                                 </div>
-                                <div className="bg-amber-500/10 p-4 rounded-2xl border border-amber-500/20">
-                                    <p className="text-2xl font-black text-amber-500">{warningTires}</p>
-                                    <p className="text-[9px] uppercase font-bold text-amber-400">Atención</p>
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                                        <CheckCircle2 size={24} />
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">En Buen Estado</p>
+                                        <p className="text-xl font-black text-white">{totalTires - criticalTires - warningTires}</p>
+                                    </div>
                                 </div>
+                                <button
+                                    onClick={() => onNavigate('tire-inventory')}
+                                    className="mt-2 w-full py-4 bg-brand text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-brand/10 hover:scale-[1.02] transition-all"
+                                >
+                                    Abrir Inventario Completo ↗
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <button
-                        onClick={() => onNavigate('tire-inventory')}
-                        className="mt-6 w-full py-3 bg-zinc-800 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-zinc-700 transition-colors"
-                    >
-                        Ver Inventario Llantas
-                    </button>
                 </div>
 
                 {/* Driver Health Card */}

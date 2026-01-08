@@ -9,6 +9,7 @@ import { SecurityAlert, TripData, AppSettings, CabinAuditResult, UserRole } from
 import { getPreviousTripData } from './services/db/mockDB';
 import { analyzeInspectionDelta } from './services/ai/gemini';
 import { saveInspection } from './services/auth/supabase';
+import { LogOut, Settings as SettingsIcon } from 'lucide-react';
 import { Sidebar } from './components/layout/Sidebar';
 import { useLanguage } from './context/LanguageContext';
 
@@ -120,13 +121,21 @@ export default function App() {
       <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
 
         {/* Top Header Bar */}
-        <header className="flex justify-end items-center px-6 py-4 lg:px-12 lg:py-6 border-b border-white/5 bg-[#0A0A0B]/90 backdrop-blur-sm z-30 sticky top-0">
+        <header className="flex justify-end items-center px-6 py-3 lg:px-10 lg:py-4 border-b border-white/5 bg-[#0A0A0B]/90 backdrop-blur-sm z-30 sticky top-0">
           <div className="flex gap-4">
             <button
               onClick={() => setView('settings')}
               className="bg-white/5 hover:bg-white/10 p-3 rounded-2xl border border-white/10 transition-all group"
+              title={t('sidebar.settings')}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="group-hover:rotate-90 transition-transform" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+              <SettingsIcon xmlns="http://www.w3.org/2000/svg" className="group-hover:rotate-90 transition-transform" size={20} />
+            </button>
+            <button
+              onClick={handleLogout}
+              className="bg-red-500/10 hover:bg-red-500/20 p-3 rounded-2xl border border-red-500/10 text-red-500 transition-all group"
+              title={t('sidebar.logout')}
+            >
+              <LogOut size={20} />
             </button>
             <div className="bg-[#121214] border border-[#1E1E21] px-6 py-3 rounded-2xl flex items-center gap-3">
               <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
@@ -136,7 +145,7 @@ export default function App() {
         </header>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-6 lg:p-12 scrollbar-hide">
+        <div className="flex-1 overflow-y-auto p-4 lg:p-8 scrollbar-hide">
           <div className="max-w-7xl mx-auto">
             {view === 'dashboard' ? (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -366,14 +375,9 @@ export default function App() {
             ) : null}
           </div>
 
-          {/* Footer Branding */}
-          <footer className="mt-20 pt-10 border-t border-white/5 text-center opacity-30 pb-6">
-            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-600">
-              &copy; 2026 SIMSA VISION IA &bull; IA.AGUS Industrial Systems
-            </p>
-          </footer>
         </div>
-      </main>
+    </div>
+      </main >
     </div >
   );
 }

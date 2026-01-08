@@ -237,9 +237,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         <span>{t('sidebar.logout')}</span>
                     </button>
 
-                    <div className="flex justify-center opacity-20">
-                        <p className="text-[8px] font-black tracking-widest">IA.AGUS v3.0</p>
-                    </div>
+                </div>
+
+                <div className="px-6 py-4 border-t border-white/5">
+                    <a
+                        href="https://www.ia-agus.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex flex-col items-center group/brand"
+                    >
+                        <span className="text-[8px] font-black text-zinc-600 uppercase tracking-[0.2em] group-hover/brand:text-zinc-500 transition-colors">
+                            Designed by
+                        </span>
+                        <span className="text-[10px] font-black text-brand uppercase tracking-widest group-hover/brand:scale-105 transition-all">
+                            IA.AGUS
+                        </span>
+                    </a>
                 </div>
             </aside>
 
