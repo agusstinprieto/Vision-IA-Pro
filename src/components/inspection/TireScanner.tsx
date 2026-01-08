@@ -13,6 +13,7 @@ interface TireScannerProps {
 export const TireScanner: React.FC<TireScannerProps> = ({ tripId, plateId, tireCount, onComplete }) => {
     const [currentStep, setCurrentStep] = useState(0);
     const [capturedImages, setCapturedImages] = useState<{ position: string, blob: Blob }[]>([]);
+    const [scannerStarted, setScannerStarted] = useState(false);
 
     const positions = [
         'Front Left', 'Front Right',
@@ -55,40 +56,60 @@ export const TireScanner: React.FC<TireScannerProps> = ({ tripId, plateId, tireC
                 />
             </div>
 
-            <div className="relative">
-                <SecureCamera
-                    active={true}
-                    tripId={tripId}
-                    plateId={plateId}
-                    onCapture={handleCapture}
-                />
+            <div className="relative min-h-[400px]">
+                {!scannerStarted ? (
+                    <div className="absolute inset-0 bg-zinc-900/50 backdrop-blur-md rounded-[3rem] border border-white/5 flex flex-col items-center justify-center p-12 text-center z-50 animate-in fade-in duration-500">
+                        <div className="w-20 h-20 bg-brand/10 rounded-3xl flex items-center justify-center text-brand mb-6 border border-brand/20">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+                        </div>
+                        <h3 className="text-xl font-black uppercase tracking-tighter mb-2">Canal de Video Inactivo</h3>
+                        <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest max-w-[280px] mb-8">
+                            Presione el botón para iniciar la captura segura de neumáticos.
+                        </p>
+                        <button
+                            onClick={() => setScannerStarted(true)}
+                            className="bg-brand text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest shadow-[0_15px_30px_rgba(234,73,46,0.3)] hover:scale-105 active:scale-95 transition-all"
+                        >
+                            Activar Escáner
+                        </button>
+                    </div>
+                ) : (
+                    <>
+                        <SecureCamera
+                            active={true}
+                            tripId={tripId}
+                            plateId={plateId}
+                            onCapture={handleCapture}
+                        />
 
-                {/* Driver Photography Guide */}
-                <div className="absolute inset-0 pointer-events-none flex items-center justify-center p-12">
-                    <div className="w-full h-full border-4 border-dashed border-[#EA492E]/30 rounded-[3rem] flex items-center justify-center">
-                        <div className="text-center opacity-40">
-                            <div className="w-24 h-40 border-2 border-[#EA492E] rounded-xl mx-auto mb-4 relative overflow-hidden">
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="w-16 h-16 rounded-full border border-[#EA492E]" />
+                        {/* Driver Photography Guide */}
+                        <div className="absolute inset-0 pointer-events-none flex items-center justify-center p-12">
+                            <div className="w-full h-full border-4 border-dashed border-[#EA492E]/30 rounded-[3rem] flex items-center justify-center">
+                                <div className="text-center opacity-40">
+                                    <div className="w-24 h-40 border-2 border-[#EA492E] rounded-xl mx-auto mb-4 relative overflow-hidden">
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <div className="w-16 h-16 rounded-full border border-[#EA492E]" />
+                                        </div>
+                                    </div>
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-[#EA492E]">Encuadre la Llanta Aquí</p>
                                 </div>
                             </div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-[#EA492E]">Encuadre la Llanta Aquí</p>
                         </div>
-                    </div>
-                </div>
 
-                <div className="absolute top-0 right-0 p-2 md:p-8 text-right pointer-events-none z-[60]">
-                    <div className="bg-black/60 backdrop-blur-md p-3 md:p-6 rounded-2xl md:rounded-3xl border border-white/10 shadow-2xl">
-                        <p className="text-[7px] md:text-[10px] text-[#EA492E] font-black uppercase tracking-widest mb-0.5">POSICIÓN ACTUAL</p>
-                        <p className="text-sm md:text-2xl font-black text-white uppercase tracking-tighter mb-1 md:mb-4">{positions[currentStep]}</p>
+                        <div className="absolute top-0 right-0 p-2 md:p-8 text-right pointer-events-none z-[60]">
+                            <div className="bg-black/60 backdrop-blur-md p-3 md:p-6 rounded-2xl md:rounded-3xl border border-white/10 shadow-2xl">
+                                <p className="text-[7px] md:text-[10px] text-[#EA492E] font-black uppercase tracking-widest mb-0.5">POSICIÓN ACTUAL</p>
+                                <p className="text-sm md:text-2xl font-black text-white uppercase tracking-tighter mb-1 md:mb-4">{positions[currentStep]}</p>
 
-                        <div className="hidden md:block space-y-2 text-[9px] font-bold uppercase tracking-widest text-zinc-400">
-                            <p className="flex items-center gap-2"><span className="w-1 h-1 bg-[#EA492E] rounded-full" /> Distancia: 1 Metro</p>
-                            <p className="flex items-center gap-2"><span className="w-1 h-1 bg-[#EA492E] rounded-full" /> Ángulo: Perpendicular</p>
-                            <p className="flex items-center gap-2"><span className="w-1 h-1 bg-[#EA492E] rounded-full" /> Fondo: Nítido</p>
+                                <div className="hidden md:block space-y-2 text-[9px] font-bold uppercase tracking-widest text-zinc-400">
+                                    <p className="flex items-center gap-2"><span className="w-1 h-1 bg-[#EA492E] rounded-full" /> Distancia: 1 Metro</p>
+                                    <p className="flex items-center gap-2"><span className="w-1 h-1 bg-[#EA492E] rounded-full" /> Ángulo: Perpendicular</p>
+                                    <p className="flex items-center gap-2"><span className="w-1 h-1 bg-[#EA492E] rounded-full" /> Fondo: Nítido</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    </>
+                )}
             </div>
 
             <div className="grid grid-cols-6 gap-2 mt-4">

@@ -10,9 +10,10 @@ interface CabinScannerProps {
 }
 
 export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) => {
-    const [mode, setMode] = useState<'MONITOR' | 'SOS' | 'RESULT'>('MONITOR');
+    const [mode, setMode] = useState<'START' | 'MONITOR' | 'SOS' | 'RESULT'>('START');
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [lastResult, setLastResult] = useState<CabinAuditResult | null>(null);
+    const [selectedDriverName, setSelectedDriverName] = useState<string>('');
 
     const handleCabinCapture = async (blob: Blob) => {
         setIsAnalyzing(true);
@@ -43,7 +44,7 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) 
     };
 
     return (
-        <div className="h-full flex flex-col relative bg-black">
+        <div className="flex flex-col relative bg-black rounded-[3rem] overflow-hidden border border-white/5 border-t-0 shadow-2xl">
             {/* Header */}
             <div className="p-6 flex justify-between items-center border-b border-white/5 bg-zinc-900/50 backdrop-blur-xl">
                 <div>
@@ -68,14 +69,51 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) 
                     lastResult?.nivel_riesgo === SecurityAlert.AMARILLA ? 'bg-yellow/5 opacity-100' : 'bg-brand/5 opacity-50'
                     }`} />
 
-                {mode === 'MONITOR' || mode === 'SOS' ? (
-                    <div className="h-full flex flex-col">
-                        <div className="flex-1 relative">
+                {mode === 'START' ? (
+                    <div className="p-12 text-center flex flex-col items-center justify-center space-y-8 animate-in fade-in zoom-in duration-500 min-h-[500px]">
+                        <div className="w-32 h-32 bg-brand/10 rounded-[3rem] flex items-center justify-center text-brand border-2 border-brand/20 shadow-[0_0_50px_rgba(234,73,46,0.1)]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+                        </div>
+                        <div className="max-w-sm">
+                            <h3 className="text-3xl font-black uppercase tracking-tighter mb-4 italic">LISTO PARA AUDITORÍA</h3>
+                            <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs leading-relaxed">
+                                SELECCIONE UN OPERADOR EN LA SIGUIENTE PESTAÑA O PRESIONE INICIAR PARA ACTIVAR EL CANAL SEGURO DE VIDEO.
+                            </p>
+                        </div>
+
+                        <div className="w-full max-w-md space-y-4">
+                            <div className="p-4 bg-white/5 rounded-2xl border border-white/10 text-left">
+                                <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest mb-1">OPERADOR DETECTADO</p>
+                                <select
+                                    className="w-full bg-transparent border-none text-white font-black uppercase outline-none appearance-none"
+                                    onChange={(e) => setSelectedDriverName(e.target.value)}
+                                    value={selectedDriverName}
+                                >
+                                    <option value="">Seleccionar Operador...</option>
+                                    {MOCK_DRIVERS.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
+                                </select>
+                            </div>
+
+                            <button
+                                onClick={() => setMode('MONITOR')}
+                                disabled={!selectedDriverName}
+                                className={`w-full py-6 rounded-[2rem] font-black uppercase tracking-widest transition-all ${selectedDriverName
+                                        ? 'bg-brand text-white shadow-[0_20px_40px_rgba(234,73,46,0.2)] hover:scale-[1.02] active:scale-[0.98]'
+                                        : 'bg-zinc-800 text-zinc-500 cursor-not-allowed opacity-50'
+                                    }`}
+                            >
+                                INICIAR AUDITORÍA IA
+                            </button>
+                        </div>
+                    </div>
+                ) : mode === 'MONITOR' || mode === 'SOS' ? (
+                    <div className="flex flex-col">
+                        <div className="relative aspect-video lg:aspect-square max-h-[600px]">
                             <SecureCamera
                                 active={true}
                                 onCapture={handleCabinCapture}
                                 tripId="DMS-SESSION"
-                                plateId="DRIVER-CAB"
+                                plateId={selectedDriverName || "DRIVER-CAB"}
                             />
 
                             {/* --- PREMIUM HUD OVERLAY --- */}
@@ -97,7 +135,7 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) 
                             <div className="absolute top-8 left-8 space-y-3">
                                 <div className="flex items-center gap-3 bg-black/60 backdrop-blur-xl px-5 py-3 rounded-full border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
                                     <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full shadow-[0_0_15px_#10B981] animate-pulse" />
-                                    <span className="text-[11px] font-black uppercase tracking-widest text-white">Neural Gaze: LOCKED</span>
+                                    <span className="text-[11px] font-black uppercase tracking-widest text-white">ID: {selectedDriverName}</span>
                                 </div>
                                 <div className="flex items-center gap-3 bg-black/40 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/5">
                                     <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500 italic">Encryption: AES-256</span>

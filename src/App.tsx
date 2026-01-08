@@ -263,11 +263,11 @@ export default function App() {
                 </div>
               </div>
             ) : view === 'settings' ? (
-              <div className="max-w-4xl mx-auto h-[80vh]">
+              <div className="max-w-4xl mx-auto min-h-screen">
                 <SettingsView settings={settings} onSave={handleSaveSettings} onClose={() => setView('dashboard')} />
               </div>
             ) : view === 'capture-cabin' || view === 'cabin' ? (
-              <div className="max-w-4xl mx-auto h-[80vh]">
+              <div className="max-w-4xl mx-auto">
                 <CabinScanner
                   onClose={() => setView('dashboard')}
                   onAlert={(result) => {
