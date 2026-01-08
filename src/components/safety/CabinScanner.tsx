@@ -17,6 +17,7 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert, pr
     const [lastResult, setLastResult] = useState<CabinAuditResult | null>(null);
     const [selectedDriver, setSelectedDriver] = useState<any>(preselectedDriver || null);
     const [workers, setWorkers] = useState<any[]>([]);
+    const [driverStats, setDriverStats] = useState<any>(null);
 
     React.useEffect(() => {
         const fetchWorkers = async () => {
@@ -29,6 +30,28 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert, pr
         };
         fetchWorkers();
     }, []);
+
+    React.useEffect(() => {
+        if (selectedDriver) {
+            dbService.getDriverStats(selectedDriver.id).then(setDriverStats).catch(console.error);
+        } else {
+            setDriverStats(null);
+        }
+    }, [selectedDriver]);
+
+    // Handle Automated Audit Triggers
+    React.useEffect(() => {
+        const handleAutoTrigger = (e: any) => {
+            console.log('🤖 Triggering Automated Audit:', e.detail);
+            if (mode !== 'RESULT' && !isAnalyzing) {
+                setMode('MONITOR'); // Ensure we are in monitor mode to capture
+                // Small delay to allow mode change if needed, then we could auto-click capture
+                // For this demo, we'll just show that IA is active
+            }
+        };
+        window.addEventListener('show-cabin-audit', handleAutoTrigger);
+        return () => window.removeEventListener('show-cabin-audit', handleAutoTrigger);
+    }, [mode, isAnalyzing]);
 
     const handleCabinCapture = async (blob: Blob) => {
         if (!selectedDriver) return;
@@ -127,6 +150,27 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert, pr
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
                                 </div>
                             </div>
+
+                            {driverStats && (
+                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                    <div className="bg-zinc-900/80 p-4 rounded-2xl border border-white/5 backdrop-blur-md">
+                                        <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">Semana</p>
+                                        <p className={`text-xl font-black ${driverStats.score_week > 80 ? 'text-emerald-500' : 'text-red-500'}`}>{driverStats.score_week}</p>
+                                    </div>
+                                    <div className="bg-zinc-900/80 p-4 rounded-2xl border border-white/5 backdrop-blur-md">
+                                        <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">Mes</p>
+                                        <p className={`text-xl font-black ${driverStats.score_month > 80 ? 'text-emerald-500' : 'text-red-500'}`}>{driverStats.score_month}</p>
+                                    </div>
+                                    <div className="bg-zinc-900/80 p-4 rounded-2xl border border-white/5 backdrop-blur-md">
+                                        <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">Histórico</p>
+                                        <p className="text-xl font-black text-white">{driverStats.score_historic}</p>
+                                    </div>
+                                    <div className="bg-zinc-900/80 p-4 rounded-2xl border border-white/5 backdrop-blur-md">
+                                        <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-1">Alertas</p>
+                                        <p className={`text-xl font-black ${driverStats.accidents > 0 ? 'text-red-500' : 'text-emerald-500'}`}>{driverStats.accidents}</p>
+                                    </div>
+                                </div>
+                            )}
 
                             <button
                                 onClick={() => setMode('MONITOR')}

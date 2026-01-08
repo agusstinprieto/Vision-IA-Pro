@@ -19,10 +19,11 @@ interface DriverScorecardProps {
 export const DriverScorecard: React.FC<DriverScorecardProps> = ({ stats, onClose }) => {
     // Gamification Logic
     const getBadge = (score: number) => {
-        if (score >= 95) return { label: 'LEYENDA', color: 'text-yellow', bg: 'bg-yellow/10', icon: <Star fill="currentColor" /> };
-        if (score >= 85) return { label: 'ELITE', color: 'text-purple-500', bg: 'bg-purple-500/10', icon: <Award /> };
-        if (score >= 70) return { label: 'PRO', color: 'text-emerald-500', bg: 'bg-emerald-500/10', icon: <Shield /> };
-        return { label: 'ROOKIE', color: 'text-zinc-500', bg: 'bg-zinc-800', icon: <Zap /> };
+        if (score >= 98) return { label: 'LEYENDA ABSOLUTA', color: 'text-yellow', border: 'border-yellow/50', bg: 'bg-yellow/10', icon: <Star fill="currentColor" />, message: 'MAESTRÍA TOTAL AL VOLANTE' };
+        if (score >= 90) return { label: 'ELITE PROFESIONAL', color: 'text-purple-500', border: 'border-purple-500/50', bg: 'bg-purple-500/10', icon: <Award />, message: 'EXCELENCIA EN SEGURIDAD' };
+        if (score >= 80) return { label: 'PRO (CASI PERFECTO)', color: 'text-emerald-500', border: 'border-emerald-500/50', bg: 'bg-emerald-500/10', icon: <Shield />, message: 'OPERACIÓN DE ALTO NIVEL' };
+        if (score >= 70) return { label: 'ESTÁNDAR SEGURO', color: 'text-blue-500', border: 'border-blue-500/50', bg: 'bg-blue-500/10', icon: <Shield />, message: 'CUMPLIMIENTO POSITIVO' };
+        return { label: 'BAJO REVISIÓN', color: 'text-red-500', border: 'border-red-500/50', bg: 'bg-red-500/10', icon: <Zap />, message: 'REQUIERE INTERVENCIÓN IA' };
     };
 
     const badge = getBadge(stats.safetyScore);
@@ -80,13 +81,19 @@ export const DriverScorecard: React.FC<DriverScorecardProps> = ({ stats, onClose
                         <div className="flex-1 space-y-8 w-full">
 
                             {/* Badge Display */}
-                            <div className={`flex items-center gap-4 p-4 rounded-2xl border border-white/5 ${badge.bg}`}>
-                                <div className={`p-3 rounded-xl bg-black/20 ${badge.color}`}>
-                                    {badge.icon}
+                            <div className={`flex flex-col gap-2 p-6 rounded-3xl border ${badge.border} ${badge.bg} backdrop-blur-xl animate-pulse`}>
+                                <div className="flex items-center gap-4">
+                                    <div className={`p-4 rounded-2xl bg-black/40 ${badge.color} shadow-[0_0_20px_rgba(255,255,255,0.05)]`}>
+                                        {badge.icon}
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] uppercase font-black text-white/40 tracking-[0.3em] mb-1">Status de Auditoría</p>
+                                        <h3 className={`text-3xl font-black uppercase tracking-tighter leading-none ${badge.color}`}>{badge.label}</h3>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="text-[10px] uppercase font-bold text-white/50 tracking-widest">Nivel Actual</p>
-                                    <h3 className={`text-2xl font-black uppercase tracking-tight ${badge.color}`}>{badge.label}</h3>
+                                <div className="mt-4 pt-4 border-t border-white/5">
+                                    <p className="text-[11px] font-black text-white italic tracking-widest leading-none mb-1">DICTAMEN IA:</p>
+                                    <p className="text-white text-lg font-black tracking-tighter">{badge.message}</p>
                                 </div>
                             </div>
 

@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { biometricsService, BiometricResult } from '../../services/ai/biometrics';
 import { driverScoringService } from '../../services/ai/driverScoring';
 import { Activity, Brain, AlertTriangle } from 'lucide-react';
+import { DriverScorecard } from './DriverScorecard';
+import { dbService } from '../../services/db/dbService';
 
 interface BiometricMonitorProps {
     onClose: () => void;
@@ -16,11 +18,20 @@ export const BiometricMonitor: React.FC<BiometricMonitorProps> = ({ onClose, ext
     const [savedResults, setSavedResults] = useState<BiometricResult[]>([]);
     const [sessionStart] = useState<Date>(new Date());
     const [messages, setMessages] = useState<Array<{ time: string; type: 'info' | 'warning' | 'error' | 'success'; text: string }>>([]);
+    const [showScorecard, setShowScorecard] = useState(false);
+    const [finalStats, setFinalStats] = useState<any>(null);
+    const scrollRef = useRef<HTMLDivElement>(null);
 
     const addMessage = (type: 'info' | 'warning' | 'error' | 'success', text: string) => {
         const time = new Date().toLocaleTimeString();
-        setMessages(prev => [{ time, type, text }, ...prev].slice(0, 50)); // Keep last 50 messages
+        setMessages(prev => [...prev, { time, type, text }].slice(-50)); // Keep last 50 messages, append at bottom
     };
+
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
+    }, [messages]);
 
     useEffect(() => {
         const init = async () => {
@@ -104,9 +115,19 @@ export const BiometricMonitor: React.FC<BiometricMonitorProps> = ({ onClose, ext
                         addMessage('warning', `⚠️ ALERTA: Estrés elevado detectado (${result.stressLevel}%)`);
                     }
 
-                    // Critical alert
+                    // Critical alert & Automated Audit
                     if ((result.fatigueLevel > 80 || result.stressLevel > 80) && frameCount % 60 === 0) {
                         addMessage('error', `🚨 ALERTA CRÍTICA: Detener vehículo inmediatamente`);
+
+                        // User Request Implementation: Trigger automated deep audit
+                        addMessage('error', `🤖 IA ACTIVA: Ejecutando Auditoría Profunda por riesgo de sueño...`);
+                        const event = new CustomEvent('show-cabin-audit', {
+                            detail: {
+                                reason: result.fatigueLevel > 80 ? 'CRITICAL_FATIGUE' : 'CRITICAL_STRESS',
+                                levels: result
+                            }
+                        });
+                        window.dispatchEvent(event);
                     }
                 }
             }
@@ -120,7 +141,7 @@ export const BiometricMonitor: React.FC<BiometricMonitorProps> = ({ onClose, ext
         return () => cancelAnimationFrame(animationFrameId);
     }, [isAnalyzing]);
 
-    const handleClose = () => {
+    const handleClose = async () => {
         const sessionEnd = new Date();
 
         // Calculate driver evaluation
@@ -130,37 +151,61 @@ export const BiometricMonitor: React.FC<BiometricMonitorProps> = ({ onClose, ext
             sessionEnd
         );
 
-        console.log('📊 EVALUACIÓN DEL CONDUCTOR:', {
-            'Score Final': `${evaluation.driverScore}/100`,
-            'Clasificación': evaluation.classification,
-            'Duración': `${evaluation.durationMinutes} minutos`,
-            'Frames Analizados': evaluation.framesAnalyzed,
-            'Atención': `${evaluation.attentionScore}/100`,
-            'Estado de Alerta': `${evaluation.alertnessScore}/100`,
-            'Control Emocional': `${evaluation.emotionalScore}/100`,
-            'Cumplimiento Seguridad': `${evaluation.safetyScore}/100`,
-            'Fatiga Promedio': `${evaluation.avgFatigueLevel}%`,
-            'Fatiga Máxima': `${evaluation.maxFatigueLevel}%`,
-            'Estrés Promedio': `${evaluation.avgStressLevel}%`,
-            'Estrés Máximo': `${evaluation.maxStressLevel}%`,
-            'Total Alertas': evaluation.totalAlerts,
-            'Alertas Fatiga': evaluation.fatigueAlerts,
-            'Alertas Estrés': evaluation.stressAlerts,
-            'Alertas Críticas': evaluation.criticalAlerts,
-            'Emociones': evaluation.dominantEmotions
+        // Prepare for persistence
+        const evaluationRecord = {
+            driver_id: 'D-01', // Should come from props if available
+            driver_name: 'Roberto Sanchez',
+            session_start: sessionStart.toISOString(),
+            session_end: sessionEnd.toISOString(),
+            duration_minutes: evaluation.durationMinutes,
+            frames_analyzed: evaluation.framesAnalyzed,
+            attention_score: evaluation.attentionScore,
+            alertness_score: evaluation.alertnessScore,
+            emotional_score: evaluation.emotionalScore,
+            safety_score: evaluation.safetyScore,
+            driver_score: evaluation.driverScore,
+            classification: evaluation.classification,
+            avg_fatigue_level: evaluation.avgFatigueLevel,
+            avg_stress_level: evaluation.avgStressLevel,
+            max_fatigue_level: evaluation.maxFatigueLevel,
+            max_stress_level: evaluation.maxStressLevel,
+            total_alerts: evaluation.totalAlerts,
+            fatigue_alerts: evaluation.fatigueAlerts,
+            stress_alerts: evaluation.stressAlerts,
+            critical_alerts: evaluation.criticalAlerts,
+            dominant_emotions: evaluation.dominantEmotions,
+            raw_data: {
+                max_fatigue: evaluation.maxFatigueLevel,
+                avg_stress: evaluation.avgStressLevel,
+                dominant_emotions: evaluation.dominantEmotions
+            }
+        };
+
+        setFinalStats({
+            driverId: evaluationRecord.driver_id,
+            name: evaluationRecord.driver_name,
+            safetyScore: evaluationRecord.driver_score,
+            kmDriven: Math.floor(evaluation.durationMinutes * 1.5), // Mock KM
+            fatigueEvents: evaluation.fatigueAlerts,
+            perfectTrips: evaluation.criticalAlerts === 0 ? 1 : 0
         });
 
-        // TODO: Save to Supabase
-        // await dbService.saveDriverEvaluation(evaluation);
+        try {
+            await dbService.saveDriverEvaluation(evaluationRecord);
+            addMessage('success', '📦 Evaluación guardada en la nube');
+        } catch (e) {
+            console.error('Error saving evaluation:', e);
+            addMessage('error', '❌ Error al persistir evaluación');
+        }
 
-        // Show alert with score
-        alert(`🎯 EVALUACIÓN COMPLETADA\n\nScore del Conductor: ${evaluation.driverScore}/100\nClasificación: ${evaluation.classification}\n\nRevisa la consola (F12) para ver el desglose completo.`);
-
-        onClose();
+        setShowScorecard(true);
     };
 
     return (
         <div className="fixed inset-0 z-50 bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 flex">
+            {showScorecard && finalStats && (
+                <DriverScorecard stats={finalStats} onClose={onClose} />
+            )}
             {/* Close Button */}
             <button
                 onClick={handleClose}
@@ -273,7 +318,10 @@ export const BiometricMonitor: React.FC<BiometricMonitorProps> = ({ onClose, ext
                 </h2>
 
                 {/* Messages Feed */}
-                <div className="flex-1 bg-zinc-900/50 rounded-2xl border border-white/10 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
+                <div
+                    ref={scrollRef}
+                    className="flex-1 bg-zinc-900/50 rounded-2xl border border-white/10 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent scroll-smooth"
+                >
                     {messages.length === 0 ? (
                         <div className="flex items-center justify-center h-full text-zinc-500">
                             <p className="text-sm">Esperando mensajes...</p>
@@ -284,12 +332,12 @@ export const BiometricMonitor: React.FC<BiometricMonitorProps> = ({ onClose, ext
                                 <div
                                     key={idx}
                                     className={`p-3 rounded-lg border ${msg.type === 'error'
-                                            ? 'bg-red-500/10 border-red-500/30 text-red-300'
-                                            : msg.type === 'warning'
-                                                ? 'bg-amber-500/10 border-amber-500/30 text-amber-300'
-                                                : msg.type === 'success'
-                                                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
-                                                    : 'bg-blue-500/10 border-blue-500/30 text-blue-300'
+                                        ? 'bg-red-500/10 border-red-500/30 text-red-300'
+                                        : msg.type === 'warning'
+                                            ? 'bg-amber-500/10 border-amber-500/30 text-amber-300'
+                                            : msg.type === 'success'
+                                                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                                                : 'bg-blue-500/10 border-blue-500/30 text-blue-300'
                                         }`}
                                 >
                                     <div className="flex items-start gap-2">

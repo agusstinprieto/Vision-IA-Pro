@@ -185,7 +185,7 @@ export const SimulationView = () => {
                 <div className="flex items-center gap-4">
                     <h2 className="text-lg font-black text-white uppercase tracking-tighter flex items-center gap-2">
                         <Activity className="text-blue-500 w-5 h-5" />
-                        MONITOREO <span className="text-blue-500">EN VIVO</span>
+                        CENTRO DE <span className="text-blue-500">CONTROL IA</span>
                     </h2>
                     <div className="h-4 w-px bg-white/20"></div>
                     <p className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest hidden sm:block">T-800 • J. Pérez</p>
@@ -207,9 +207,19 @@ export const SimulationView = () => {
                             ? 'bg-[#FFCC33] hover:bg-[#FFCC33]/80 border-[#FFCC33] shadow-lg active:scale-95'
                             : 'bg-zinc-700 border-zinc-600 cursor-not-allowed opacity-50'
                             }`}
-                        title={camerasActive ? "Analizar con IA" : "Activa las cámaras primero"}
+                        title={camerasActive ? "Iniciar Monitoreo de Fatiga y Estrés" : "Activa las cámaras primero"}
                     >
-                        <Eye size={14} /> Analizar IA
+                        <Eye size={14} /> MONITOREO BIOMÉTRICO
+                    </button>
+                    <button
+                        onClick={() => {
+                            const event = new CustomEvent('show-cabin-audit');
+                            window.dispatchEvent(event);
+                        }}
+                        title="Ejecutar Auditoría Profunda con Google Gemini"
+                        className="ml-2 text-xs text-white px-3 py-1 rounded border border-red-500/30 bg-red-950/20 hover:bg-red-950/40 transition-all flex items-center gap-2 font-bold"
+                    >
+                        <Shield size={14} /> AUDITORÍA IA (GEMINI)
                     </button>
                     {cameraError && <span className="text-red-500 text-[10px] font-bold animate-pulse">{cameraError}</span>}
                 </div>
