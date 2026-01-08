@@ -4,7 +4,7 @@ import { dbService } from '../../services/db/dbService';
 import { pdfService } from '../../services/reports/pdfService';
 import { DriverStatus } from '../../types';
 import { DriverScorecard } from './DriverScorecard';
-泛
+
 
 export const DriverHealthView = () => {
     const [selectedDriver, setSelectedDriver] = useState<string | null>(null);

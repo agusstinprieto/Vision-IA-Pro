@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Truck, Search, Filter, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { Truck, Search, Filter, AlertTriangle, CheckCircle2, Scan } from 'lucide-react';
 import { dbService } from '../../services/db/dbService';
 import { Unit } from '../../types';
+import { PlateScanner } from '../gate/PlateScanner';
 
 export const UnitInventoryView = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -9,6 +10,7 @@ export const UnitInventoryView = () => {
     const [filter, setFilter] = useState<'ALL' | 'ACTIVE' | 'MAINTENANCE'>('ALL');
     const [units, setUnits] = useState<Unit[]>([]);
     const [loading, setLoading] = useState(true);
+    const [showScanner, setShowScanner] = useState(false);
 
     useEffect(() => {
         const fetchUnits = async () => {
@@ -64,6 +66,14 @@ export const UnitInventoryView = () => {
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" x2="21" y1="6" y2="6" /><line x1="8" x2="21" y1="12" y2="12" /><line x1="8" x2="21" y1="18" y2="18" /><line x1="3" x2="3.01" y1="6" y2="6" /><line x1="3" x2="3.01" y1="12" y2="12" /><line x1="3" x2="3.01" y1="18" y2="18" /></svg>
                         </button>
                     </div>
+
+                    <button
+                        onClick={() => setShowScanner(true)}
+                        className="flex items-center gap-2 bg-[#FFCC33] text-black px-4 py-2 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-[#FFCC33]/80 transition-all shadow-lg active:scale-95"
+                    >
+                        <Scan size={18} />
+                        <span className="hidden sm:inline">Escanear Placa</span>
+                    </button>
 
                     <div className="relative">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
@@ -183,6 +193,16 @@ export const UnitInventoryView = () => {
                         </table>
                     </div>
                 </div>
+            )}
+            {/* ALPR Scanner Modal */}
+            {showScanner && (
+                <PlateScanner
+                    onPlateDetected={(plate) => {
+                        setSearchTerm(plate);
+                        setShowScanner(false);
+                    }}
+                    onClose={() => setShowScanner(false)}
+                />
             )}
         </div>
     );
