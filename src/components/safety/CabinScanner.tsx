@@ -3,6 +3,7 @@ import React, { useState, useRef } from 'react';
 import { SecureCamera } from '../camera/SecureCamera';
 import { analyzeCabinIntegrity } from '../../services/ai/gemini';
 import { CabinAuditResult, SecurityAlert, DriverStatus } from '../../types';
+import { MOCK_DRIVERS } from '../../services/db/mockDB';
 
 interface CabinScannerProps {
     onClose: () => void;
@@ -98,8 +99,8 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) 
                                 onClick={() => setMode('MONITOR')}
                                 disabled={!selectedDriverName}
                                 className={`w-full py-6 rounded-[2rem] font-black uppercase tracking-widest transition-all ${selectedDriverName
-                                        ? 'bg-brand text-white shadow-[0_20px_40px_rgba(234,73,46,0.2)] hover:scale-[1.02] active:scale-[0.98]'
-                                        : 'bg-zinc-800 text-zinc-500 cursor-not-allowed opacity-50'
+                                    ? 'bg-brand text-white shadow-[0_20px_40px_rgba(234,73,46,0.2)] hover:scale-[1.02] active:scale-[0.98]'
+                                    : 'bg-zinc-800 text-zinc-500 cursor-not-allowed opacity-50'
                                     }`}
                             >
                                 INICIAR AUDITORÍA IA
