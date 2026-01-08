@@ -13,7 +13,10 @@ import {
     X,
     Sparkles,
     Search,
-    LayoutDashboard
+    Search,
+    LayoutDashboard,
+    Image,
+    Images
 } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -49,6 +52,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     const navItems: NavItem[] = [
         { id: 'dashboard', label: t('sidebar.dashboard'), icon: <LayoutDashboard size={20} />, category: 'CORE' },
         { id: 'command-center', label: 'Command Center', icon: <BarChart3 size={20} />, badge: 'LIVE', category: 'CORE' },
+        { id: 'gallery', label: 'Evidencia Forense', icon: <Images size={20} />, category: 'CORE' },
         { id: 'capture-tires', label: t('sidebar.capture_tires'), icon: <Camera size={20} />, badge: 'IA+', category: 'CORE' },
         { id: 'driver-health', label: t('sidebar.driver_health'), icon: <Activity size={20} />, badge: 'ALCOHOL', category: 'CORE' },
 

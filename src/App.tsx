@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { TireScanner } from './components/inspection/TireScanner';
+import { PhotoGalleryView } from './components/gallery/PhotoGalleryView';
 import { ResultView } from './components/inspection/ResultView';
 import { SettingsView } from './components/settings/SettingsView';
 import { LoginView } from './components/auth/LoginView';
@@ -233,6 +234,8 @@ export default function App() {
               <SimulationView />
             ) : view === 'command-center' ? (
               <CommandCenterView brandColor={settings.primaryColor} />
+            ) : view === 'gallery' ? (
+              <PhotoGalleryView onClose={() => setView('dashboard')} userRole={userRole} />
             ) : view === 'capture-tires' || view === 'inspection' ? (
               <div className="max-w-3xl mx-auto">
                 <button

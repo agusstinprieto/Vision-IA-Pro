@@ -129,7 +129,7 @@ export const DriverScorecard: React.FC<DriverScorecardProps> = ({ stats, onClose
 
                 {/* Footer */}
                 <div className="p-6 bg-white/5 border-t border-white/5 text-center">
-                    <p className="text-[10px] text-zinc-500 font-mono">IA Vision PRO &bull; Gamification Engine v1.0</p>
+                    <p className="text-[10px] text-zinc-500 font-mono">VISION IA PRO &bull; Gamification Engine v1.0</p>
                 </div>
             </div>
         </div>
