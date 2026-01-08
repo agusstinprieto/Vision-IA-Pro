@@ -5,5 +5,7 @@ By IA.AGUS & Gemini 2.0
 Agustin Prieto 
 871 143 9941
 www.ia-agus.com
+agusstinprieto@gmail.com
+
 
 
