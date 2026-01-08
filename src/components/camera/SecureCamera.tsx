@@ -16,31 +16,45 @@ export const SecureCamera: React.FC<SecureCameraProps> = ({ onCapture, tripId, p
     const [stream, setStream] = useState<MediaStream | null>(null);
     const [error, setError] = useState<string | null>(null);
 
+    const mountedRef = useRef(true);
+
     useEffect(() => {
+        mountedRef.current = true;
         if (active) {
             startCamera();
         } else {
             stopCamera();
         }
-        return () => stopCamera();
+        return () => {
+            mountedRef.current = false;
+            stopCamera();
+        };
     }, [active]);
 
     const startCamera = async () => {
         try {
             const mediaStream = await navigator.mediaDevices.getUserMedia({
                 video: {
-                    facingMode: 'environment', // Rear camera for tires
+                    facingMode: 'environment',
                     width: { ideal: 1920 },
                     height: { ideal: 1080 }
                 },
                 audio: false
             });
+
+            if (!mountedRef.current || !active) {
+                mediaStream.getTracks().forEach(track => track.stop());
+                return;
+            }
+
             setStream(mediaStream);
             if (videoRef.current) {
                 videoRef.current.srcObject = mediaStream;
             }
         } catch (err) {
-            setError('Error al acceder a la cámara. Por favor asegúrese de dar permisos.');
+            if (mountedRef.current) {
+                setError('Error al acceder a la cámara. Por favor asegúrese de dar permisos.');
+            }
             console.error(err);
         }
     };
@@ -49,6 +63,10 @@ export const SecureCamera: React.FC<SecureCameraProps> = ({ onCapture, tripId, p
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
             setStream(null);
+        }
+        // Also clear video srcObject to be extra safe
+        if (videoRef.current) {
+            videoRef.current.srcObject = null;
         }
     };
 

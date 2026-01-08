@@ -374,10 +374,8 @@ export default function App() {
               </div>
             ) : null}
           </div>
-
         </div>
+      </main>
     </div>
-      </main >
-    </div >
   );
 }

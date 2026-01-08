@@ -72,6 +72,7 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) 
                     <div className="h-full flex flex-col">
                         <div className="flex-1 relative">
                             <SecureCamera
+                                active={true}
                                 onCapture={handleCabinCapture}
                                 tripId="DMS-SESSION"
                                 plateId="DRIVER-CAB"
