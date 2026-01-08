@@ -12,6 +12,13 @@ export const DriverHealthView = () => {
     const [workers, setWorkers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [showBiometrics, setShowBiometrics] = useState(false);
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [newWorker, setNewWorker] = useState({
+        id: '',
+        name: '',
+        phone: '',
+        unit_assigned: ''
+    });
 
     useEffect(() => {
         const fetchWorkers = async () => {
@@ -45,14 +52,6 @@ export const DriverHealthView = () => {
     const handleExportReport = () => {
         pdfService.generateDriverReport(workers);
     };
-
-    const [showCreateModal, setShowCreateModal] = useState(false);
-    const [newWorker, setNewWorker] = useState({
-        id: '',
-        name: '',
-        phone: '',
-        unit_assigned: ''
-    });
 
     const handleCreateWorker = async (e: React.FormEvent) => {
         e.preventDefault();

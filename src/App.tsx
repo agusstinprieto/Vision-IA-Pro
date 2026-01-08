@@ -21,6 +21,7 @@ import { SmartMapView } from './components/logistics/SmartMapView';
 import { EmergencyView } from './components/safety/EmergencyView';
 import { DriverHealthView } from './components/safety/DriverHealthView';
 import { SimulationView } from './components/safety/SimulationView';
+import { CommandCenterView } from './components/safety/CommandCenterView';
 import { LanguageToggle } from './components/common/LanguageToggle';
 import { DashboardView } from './components/dashboard/DashboardView';
 
@@ -158,8 +159,9 @@ export default function App() {
         </header>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-2 lg:p-4 scrollbar-hide pb-20">
-          <div className="max-w-7xl mx-auto">
+        {/* Scrollable Content */}
+        <div className={`flex-1 overflow-y-auto scrollbar-hide ${view === 'simulation' ? 'p-0 overflow-hidden' : 'p-2 lg:p-4 pb-20'}`}>
+          <div className={`${view === 'simulation' ? 'h-full' : 'max-w-7xl mx-auto'}`}>
             {view === 'dashboard' ? (
               <DashboardView
                 onNavigate={setView}
@@ -229,6 +231,8 @@ export default function App() {
               <DriverHealthView />
             ) : view === 'simulation' ? (
               <SimulationView />
+            ) : view === 'command-center' ? (
+              <CommandCenterView />
             ) : view === 'capture-tires' || view === 'inspection' ? (
               <div className="max-w-3xl mx-auto">
                 <button

@@ -14,7 +14,7 @@ export const pdfService = {
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(22);
         doc.setFont('helvetica', 'bold');
-        doc.text('SIMSA VISION IA', 15, 20);
+        doc.text('IA VISION PRO', 15, 20);
 
         doc.setFontSize(10);
         doc.setFont('helvetica', 'normal');

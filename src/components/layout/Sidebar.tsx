@@ -48,6 +48,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
     const navItems: NavItem[] = [
         { id: 'dashboard', label: t('sidebar.dashboard'), icon: <LayoutDashboard size={20} />, category: 'CORE' },
+        { id: 'command-center', label: 'Command Center', icon: <BarChart3 size={20} />, badge: 'LIVE', category: 'CORE' },
         { id: 'capture-tires', label: t('sidebar.capture_tires'), icon: <Camera size={20} />, badge: 'IA+', category: 'CORE' },
         { id: 'capture-cabin', label: t('sidebar.capture_cabin'), icon: <ShieldAlert size={20} />, badge: 'DMS', category: 'CORE' },
         { id: 'driver-health', label: t('sidebar.driver_health'), icon: <Activity size={20} />, badge: 'ALCOHOL', category: 'CORE' },
@@ -68,7 +69,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         if (userRole === 'EMPLOYEE') {
             // Employee sees Dashboard, Capture, Emergency. 
             // Also enable read-only view of Inventory and Map as requested.
-            return ['dashboard', 'capture-tires', 'capture-cabin', 'driver-health', 'emergency', 'unit-inventory', 'tire-inventory', 'map', 'simulation'].includes(item.id);
+            return ['dashboard', 'capture-tires', 'capture-cabin', 'driver-health', 'emergency', 'unit-inventory', 'tire-inventory', 'map', 'command-center', 'simulation'].includes(item.id);
         }
         return false;
     });
@@ -128,7 +129,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                             </div>
                             <div className="flex flex-col">
                                 <h1 className="font-black text-lg tracking-tighter leading-none" style={{ color: textColor }}>
-                                    SIMSA VISION <span className="opacity-60">IA</span>
+                                    IA VISION <span className="opacity-60">PRO</span>
                                 </h1>
                                 <p className="text-[10px] uppercase font-black tracking-widest opacity-80" style={{ color: textColor }}>
                                     {businessName || 'Control Tower'}

@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA VISION PRO - Especificaciones Técnicas de Cámaras y Costos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0a0b 0%, #1a1a1c 100%);
+            color: #e4e4e7;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px;
+            background: linear-gradient(135deg, #FFCC33 0%, #FFB800 100%);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(255, 204, 51, 0.3);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #333;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 40px 0 20px;
+            color: #FFCC33;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            border-bottom: 3px solid #FFCC33;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 30px 0 15px;
+            color: #fff;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .alert {
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: #3b82f6;
+            color: #93c5fd;
+        }
+
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: #f59e0b;
+            color: #fbbf24;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: #10b981;
+            color: #6ee7b7;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #FFCC33;
+            color: #000;
+            padding: 15px;
+            text-align: left;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: rgba(255, 204, 51, 0.05);
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #10b981;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-left: 10px;
+        }
+
+        .badge-recommended {
+            background: #10b981;
+            color: #000;
+        }
+
+        .badge-premium {
+            background: #FFCC33;
+            color: #000;
+        }
+
+        .badge-budget {
+            background: #3b82f6;
+            color: #fff;
+        }
+
+        ul,
+        ol {
+            margin: 15px 0 15px 30px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        code {
+            background: rgba(255, 204, 51, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #FFCC33;
+            font-size: 0.9em;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 204, 51, 0.2);
+            border-color: #FFCC33;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #71717a;
+            font-size: 0.9rem;
+        }
+
+        .highlight {
+            color: #FFCC33;
+            font-weight: 700;
+        }
+
+        strong {
+            color: #fff;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>IA VISION PRO</h1>
+            <p class="subtitle">Especificaciones Técnicas de Cámaras y Modelo de Negocio</p>
+        </header>
+
+        <!-- INTRODUCCIÓN -->
+        <div class="section">
+            <h2>🎯 Resumen Ejecutivo</h2>
+            <p><strong>IA VISION PRO</strong> es una plataforma integral de monitoreo de flotas que combina <span
+                    class="highlight">inteligencia artificial</span>, <span class="highlight">telemetría
+                    vehicular</span> y <span class="highlight">análisis biométrico</span> en tiempo real para maximizar
+                la seguridad y eficiencia operativa.</p>
+
+            <div class="alert alert-info">
+                <strong>🚀 Características Principales:</strong>
+                <ul>
+                    <li>Monitoreo dual de video (ADAS + DMS) en tiempo real</li>
+                    <li>Análisis biométrico de conductores con IA (fatiga, estrés, emociones)</li>
+                    <li>Telemetría vehicular completa (OBD-II + GPS)</li>
+                    <li>Sistema de calificación de conductores</li>
+                    <li>Alertas automáticas y reportes en tiempo real</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SISTEMA DE CÁMARAS -->
+        <div class="section">
+            <h2>📹 Sistema de Cámaras de Video</h2>
+
+            <h3>1. Cámara DMS (Driver Monitoring System)</h3>
+            <p>Cámara orientada hacia el conductor para análisis biométrico y detección de comportamientos riesgosos.
+            </p>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Requisitos Técnicos:</strong>
+                <ul>
+                    <li><strong>Resolución:</strong> Mínimo 720p (1280x720), recomendado 1080p (1920x1080)</li>
+                    <li><strong>Frame Rate:</strong> Mínimo 15 FPS, recomendado 30 FPS</li>
+                    <li><strong>Visión Nocturna:</strong> IR (infrarrojo) para operación 24/7</li>
+                    <li><strong>Campo de Visión:</strong> 110-130° para capturar rostro completo</li>
+                    <li><strong>Conectividad:</strong> 4G LTE o WiFi para streaming en tiempo real</li>
+                </ul>
+            </div>
+
+            <h3>2. Cámara ADAS (Advanced Driver Assistance System)</h3>
+            <p>Cámara frontal orientada hacia la carretera para detección de eventos y análisis de conducción.</p>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Requisitos Técnicos:</strong>
+                <ul>
+                    <li><strong>Resolución:</strong> Mínimo 1080p, recomendado 1440p o 4K</li>
+                    <li><strong>Frame Rate:</strong> 30 FPS</li>
+                    <li><strong>Campo de Visión:</strong> 140-170° para cobertura amplia</li>
+                    <li><strong>HDR:</strong> Sí, para condiciones de iluminación variables</li>
+                    <li><strong>Almacenamiento:</strong> Tarjeta SD local + streaming en la nube</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- HARDWARE RECOMENDADO -->
+        <div class="section">
+            <h2>🛒 Hardware Recomendado</h2>
+
+            <h3>Opción 1: Sistema Dual Integrado <span class="badge badge-recommended">RECOMENDADO</span></h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dispositivo</th>
+                        <th>Modelo</th>
+                        <th>Características</th>
+                        <th>Precio USD</th>
+                        <th>Proveedor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Dashcam Dual AI</strong></td>
+                        <td>Vantrue N4 Pro</td>
+                        <td>
+                            • 4K frontal + 1080p interior<br>
+                            • IR nocturna<br>
+                            • GPS integrado<br>
+                            • WiFi + 4G opcional
+                        </td>
+                        <td class="price">$299</td>
+                        <td>Amazon, B&H Photo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dashcam Dual AI</strong></td>
+                        <td>BlackVue DR900X-2CH Plus</td>
+                        <td>
+                            • 4K UHD frontal + Full HD interior<br>
+                            • Cloud streaming<br>
+                            • GPS + WiFi + LTE<br>
+                            • Detección de impactos
+                        </td>
+                        <td class="price">$549</td>
+                        <td>BlackVue Official, Amazon</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sistema Profesional</strong></td>
+                        <td>Samsara CM32</td>
+                        <td>
+                            • Dual HD (frontal + cabina)<br>
+                            • AI integrada<br>
+                            • 4G LTE nativo<br>
+                            • Plataforma completa
+                        </td>
+                        <td class="price">$799</td>
+                        <td>Samsara (contacto directo)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Opción 2: Cámaras Separadas <span class="badge badge-budget">ECONÓMICO</span></h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Componente</th>
+                        <th>Modelo</th>
+                        <th>Características</th>
+                        <th>Precio USD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Cámara DMS</strong></td>
+                        <td>Logitech C920 HD Pro</td>
+                        <td>1080p @ 30fps, autofocus</td>
+                        <td class="price">$79</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cámara ADAS</strong></td>
+                        <td>VIOFO A129 Pro Duo</td>
+                        <td>4K frontal, GPS, WiFi</td>
+                        <td class="price">$249</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Módulo 4G LTE</strong></td>
+                        <td>Huawei E8372h-320</td>
+                        <td>Modem USB 4G para streaming</td>
+                        <td class="price">$45</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><strong>TOTAL</strong></td>
+                        <td class="price">$373</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Telemetría Vehicular (OBD-II + GPS)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dispositivo</th>
+                        <th>Modelo</th>
+                        <th>Características</th>
+                        <th>Precio USD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>OBD-II Bluetooth</strong></td>
+                        <td>BAFX Products 34t5</td>
+                        <td>Bluetooth 4.0, compatible Android/iOS</td>
+                        <td class="price">$23</td>
+                    </tr>
+                    <tr>
+                        <td><strong>GPS Telemático</strong></td>
+                        <td>Teltonika FMB920</td>
+                        <td>GPS + GLONASS, 4G, CAN bus</td>
+                        <td class="price">$89</td>
+                    </tr>
+                    <tr>
+                        <td><strong>GPS Telemático Pro</strong></td>
+                        <td>Teltonika FMC130</td>
+                        <td>GPS + Acelerómetro + Bluetooth</td>
+                        <td class="price">$129</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- INFRAESTRUCTURA DE STREAMING -->
+        <div class="section">
+            <h2>🌐 Infraestructura de Streaming en Tiempo Real</h2>
+
+            <h3>Arquitectura del Sistema</h3>
+            <div class="grid">
+                <div class="card">
+                    <h4>📱 Cliente (Vehículo)</h4>
+                    <ul>
+                        <li>Cámaras DMS + ADAS</li>
+                        <li>Dispositivo OBD-II</li>
+                        <li>GPS Tracker</li>
+                        <li>Modem 4G LTE</li>
+                        <li>App móvil (React Native)</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>☁️ Backend (Servidor)</h4>
+                    <ul>
+                        <li>Node.js + Express</li>
+                        <li>WebRTC Media Server</li>
+                        <li>TCP Server (telemetría)</li>
+                        <li>WebSocket Server</li>
+                        <li>Supabase (PostgreSQL)</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>💻 Frontend (Dashboard)</h4>
+                    <ul>
+                        <li>React + TypeScript</li>
+                        <li>WebRTC Client</li>
+                        <li>WebSocket Client</li>
+                        <li>face-api.js (IA)</li>
+                        <li>Mapas interactivos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Protocolos de Transmisión</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Protocolo</th>
+                        <th>Uso</th>
+                        <th>Latencia</th>
+                        <th>Ancho de Banda</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>WebRTC</strong></td>
+                        <td>Streaming de video en tiempo real</td>
+                        <td>&lt; 500ms</td>
+                        <td>1-3 Mbps (720p)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>WebSocket</strong></td>
+                        <td>Telemetría y comandos</td>
+                        <td>&lt; 100ms</td>
+                        <td>&lt; 10 Kbps</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RTMP</strong></td>
+                        <td>Grabación en la nube (opcional)</td>
+                        <td>2-5 segundos</td>
+                        <td>1-5 Mbps</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TCP</strong></td>
+                        <td>Datos GPS/OBD-II</td>
+                        <td>&lt; 200ms</td>
+                        <td>&lt; 5 Kbps</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="alert alert-info">
+                <strong>💡 Recomendación:</strong> Usar <code>WebRTC</code> para video en vivo (baja latencia) y
+                <code>RTMP</code> para grabación en la nube (mayor calidad).
+            </div>
+        </div>
+
+        <!-- COSTOS OPERATIVOS -->
+        <div class="section">
+            <h2>💰 Costos Operativos Mensuales (Por Vehículo)</h2>
+
+            <h3>1. Servicios en la Nube</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Servicio</th>
+                        <th>Proveedor</th>
+                        <th>Uso</th>
+                        <th>Costo Mensual USD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Base de Datos</strong></td>
+                        <td>Supabase Pro</td>
+                        <td>8 GB storage + 100 GB bandwidth</td>
+                        <td class="price">$25</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hosting Backend</strong></td>
+                        <td>DigitalOcean Droplet</td>
+                        <td>4 GB RAM, 2 vCPUs</td>
+                        <td class="price">$24</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Media Server</strong></td>
+                        <td>AWS EC2 (t3.medium)</td>
+                        <td>WebRTC streaming</td>
+                        <td class="price">$35</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Almacenamiento Video</strong></td>
+                        <td>AWS S3</td>
+                        <td>100 GB grabaciones (7 días)</td>
+                        <td class="price">$2.30</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CDN</strong></td>
+                        <td>Cloudflare Pro</td>
+                        <td>Distribución global</td>
+                        <td class="price">$20</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><strong>SUBTOTAL CLOUD</strong></td>
+                        <td class="price">$106.30</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>2. Conectividad Celular</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Proveedor</th>
+                        <th>Plan</th>
+                        <th>Datos Incluidos</th>
+                        <th>Costo Mensual USD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Telcel (México)</strong></td>
+                        <td>Plan IoT 10 GB</td>
+                        <td>10 GB 4G LTE</td>
+                        <td class="price">$15</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AT&T (USA)</strong></td>
+                        <td>Connected Car 15 GB</td>
+                        <td>15 GB 4G LTE</td>
+                        <td class="price">$25</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hologram (Global)</strong></td>
+                        <td>IoT SIM 5 GB</td>
+                        <td>5 GB global</td>
+                        <td class="price">$12</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>3. Servicios de IA</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Servicio</th>
+                        <th>Proveedor</th>
+                        <th>Uso</th>
+                        <th>Costo Mensual USD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Análisis Facial</strong></td>
+                        <td>face-api.js (local)</td>
+                        <td>Procesamiento en navegador</td>
+                        <td class="price">$0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Google Gemini API</strong></td>
+                        <td>Google Cloud</td>
+                        <td>~1,000 análisis/mes</td>
+                        <td class="price">$5</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mapas</strong></td>
+                        <td>Google Maps API</td>
+                        <td>10,000 requests/mes</td>
+                        <td class="price">$7</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="alert alert-success">
+                <strong>📊 COSTO TOTAL POR VEHÍCULO:</strong>
+                <ul>
+                    <li><strong>Infraestructura Cloud (compartida):</strong> $106.30 / N vehículos</li>
+                    <li><strong>Conectividad 4G:</strong> $15 por vehículo</li>
+                    <li><strong>Servicios IA:</strong> $12 / N vehículos</li>
+                    <li><strong>Estimado para 10 vehículos:</strong> ~$27 USD/vehículo/mes</li>
+                    <li><strong>Estimado para 50 vehículos:</strong> ~$17 USD/vehículo/mes</li>
+                    <li><strong>Estimado para 100 vehículos:</strong> ~$16 USD/vehículo/mes</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- MODELO DE PRECIOS -->
+        <div class="section">
+            <h2>💵 Modelo de Precios Sugerido para Clientes</h2>
+
+            <h3>Estructura de Precios por Niveles</h3>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🥉 BÁSICO</h3>
+                    <p class="price">$49 USD/mes</p>
+                    <p style="font-size: 0.9rem; color: #a1a1aa;">por vehículo</p>
+                    <hr style="margin: 20px 0; border-color: rgba(255,255,255,0.1);">
+                    <ul style="font-size: 0.9rem;">
+                        <li>✅ 1 cámara (DMS o ADAS)</li>
+                        <li>✅ Telemetría básica (GPS + velocidad)</li>
+                        <li>✅ Alertas por email</li>
+                        <li>✅ Grabación 3 días</li>
+                        <li>✅ 1 usuario</li>
+                        <li>❌ Sin análisis IA</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="border: 2px solid #FFCC33;">
+                    <h3>🥈 PROFESIONAL <span class="badge badge-recommended">POPULAR</span></h3>
+                    <p class="price">$89 USD/mes</p>
+                    <p style="font-size: 0.9rem; color: #a1a1aa;">por vehículo</p>
+                    <hr style="margin: 20px 0; border-color: rgba(255,255,255,0.1);">
+                    <ul style="font-size: 0.9rem;">
+                        <li>✅ 2 cámaras (DMS + ADAS)</li>
+                        <li>✅ Telemetría completa (OBD-II + GPS)</li>
+                        <li>✅ Análisis IA básico (fatiga, distracción)</li>
+                        <li>✅ Alertas en tiempo real (email + SMS)</li>
+                        <li>✅ Grabación 7 días</li>
+                        <li>✅ 3 usuarios</li>
+                        <li>✅ Reportes semanales</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🥇 ENTERPRISE <span class="badge badge-premium">PREMIUM</span></h3>
+                    <p class="price">$149 USD/mes</p>
+                    <p style="font-size: 0.9rem; color: #a1a1aa;">por vehículo</p>
+                    <hr style="margin: 20px 0; border-color: rgba(255,255,255,0.1);">
+                    <ul style="font-size: 0.9rem;">
+                        <li>✅ 2 cámaras HD (DMS + ADAS)</li>
+                        <li>✅ Telemetría avanzada + diagnósticos</li>
+                        <li>✅ IA completa (fatiga, estrés, emociones)</li>
+                        <li>✅ Sistema de scoring de conductores</li>
+                        <li>✅ Alertas multicanal (email, SMS, WhatsApp)</li>
+                        <li>✅ Grabación 30 días + almacenamiento ilimitado</li>
+                        <li>✅ Usuarios ilimitados</li>
+                        <li>✅ API access</li>
+                        <li>✅ Soporte prioritario 24/7</li>
+                        <li>✅ Reportes personalizados</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Descuentos por Volumen</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Número de Vehículos</th>
+                        <th>Descuento</th>
+                        <th>Precio Profesional</th>
+                        <th>Precio Enterprise</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1-10 vehículos</td>
+                        <td>0%</td>
+                        <td>$89/mes</td>
+                        <td>$149/mes</td>
+                    </tr>
+                    <tr>
+                        <td>11-25 vehículos</td>
+                        <td>10%</td>
+                        <td>$80/mes</td>
+                        <td>$134/mes</td>
+                    </tr>
+                    <tr>
+                        <td>26-50 vehículos</td>
+                        <td>15%</td>
+                        <td>$76/mes</td>
+                        <td>$127/mes</td>
+                    </tr>
+                    <tr>
+                        <td>51-100 vehículos</td>
+                        <td>20%</td>
+                        <td>$71/mes</td>
+                        <td>$119/mes</td>
+                    </tr>
+                    <tr>
+                        <td>100+ vehículos</td>
+                        <td>25%</td>
+                        <td>$67/mes</td>
+                        <td>$112/mes</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Costos de Instalación (Una vez)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Concepto</th>
+                        <th>Descripción</th>
+                        <th>Precio USD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Hardware (Opción Económica)</strong></td>
+                        <td>Cámaras separadas + OBD-II + GPS</td>
+                        <td class="price">$485</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hardware (Opción Recomendada)</strong></td>
+                        <td>Sistema dual integrado + GPS</td>
+                        <td class="price">$418</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hardware (Opción Premium)</strong></td>
+                        <td>Sistema profesional Samsara-like</td>
+                        <td class="price">$918</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Instalación Profesional</strong></td>
+                        <td>Mano de obra + cableado</td>
+                        <td class="price">$150</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Configuración y Capacitación</strong></td>
+                        <td>Setup inicial + training</td>
+                        <td class="price">$100</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ANÁLISIS DE RENTABILIDAD -->
+        <div class="section">
+            <h2>📈 Análisis de Rentabilidad</h2>
+
+            <h3>Ejemplo: Flota de 50 Vehículos (Plan Profesional)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Concepto</th>
+                        <th>Cálculo</th>
+                        <th>Monto USD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Ingresos Mensuales</strong></td>
+                        <td>50 vehículos × $76/mes (15% descuento)</td>
+                        <td class="price">$3,800</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Costos Operativos</strong></td>
+                        <td>50 vehículos × $17/mes</td>
+                        <td style="color: #ef4444;">-$850</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Margen Bruto Mensual</strong></td>
+                        <td>$3,800 - $850</td>
+                        <td class="price">$2,950</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Margen %</strong></td>
+                        <td>($2,950 / $3,800) × 100</td>
+                        <td class="price">77.6%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ingresos Anuales</strong></td>
+                        <td>$3,800 × 12</td>
+                        <td class="price">$45,600</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Utilidad Anual</strong></td>
+                        <td>$2,950 × 12</td>
+                        <td class="price">$35,400</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="alert alert-success">
+                <strong>🎯 ROI Estimado:</strong>
+                <ul>
+                    <li><strong>Inversión Inicial (50 vehículos):</strong> ~$28,400 USD (hardware + instalación)</li>
+                    <li><strong>Recuperación de Inversión:</strong> ~10 meses</li>
+                    <li><strong>Margen de Ganancia:</strong> 77.6% mensual</li>
+                    <li><strong>Escalabilidad:</strong> Alta (costos fijos se diluyen con más vehículos)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- PROVEEDORES -->
+        <div class="section">
+            <h2>🏪 Proveedores Recomendados</h2>
+
+            <h3>Hardware de Cámaras</h3>
+            <ul>
+                <li><strong>Amazon.com:</strong> Amplio catálogo, envío rápido, devoluciones fáciles</li>
+                <li><strong>B&H Photo Video:</strong> Especializado en video, precios competitivos</li>
+                <li><strong>Newegg:</strong> Electrónica, buenos precios en dashcams</li>
+                <li><strong>AliExpress:</strong> Opciones económicas (tiempos de envío largos)</li>
+                <li><strong>Samsara Direct:</strong> Solución enterprise completa (contacto directo)</li>
+            </ul>
+
+            <h3>Conectividad Celular</h3>
+            <ul>
+                <li><strong>Telcel (México):</strong> Mejor cobertura nacional, planes IoT</li>
+                <li><strong>AT&T Business:</strong> Cobertura USA + México, planes corporativos</li>
+                <li><strong>Hologram.io:</strong> SIM global, facturación unificada, API completa</li>
+                <li><strong>Twilio Super SIM:</strong> IoT global, integración con plataforma</li>
+            </ul>
+
+            <h3>Servicios en la Nube</h3>
+            <ul>
+                <li><strong>Supabase:</strong> Base de datos PostgreSQL + Auth + Storage</li>
+                <li><strong>DigitalOcean:</strong> Hosting backend, precios predecibles</li>
+                <li><strong>AWS:</strong> Media streaming, S3 storage, escalabilidad global</li>
+                <li><strong>Cloudflare:</strong> CDN, protección DDoS, optimización</li>
+            </ul>
+        </div>
+
+        <!-- ROADMAP -->
+        <div class="section">
+            <h2>🗺️ Roadmap de Implementación</h2>
+
+            <h3>Fase 1: Piloto (Mes 1-2)</h3>
+            <ul>
+                <li>✅ Adquirir hardware para 5 vehículos</li>
+                <li>✅ Instalar y configurar sistema</li>
+                <li>✅ Capacitar a conductores y supervisores</li>
+                <li>✅ Validar funcionamiento y ajustar</li>
+                <li><strong>Inversión:</strong> ~$3,500 USD</li>
+            </ul>
+
+            <h3>Fase 2: Expansión (Mes 3-6)</h3>
+            <ul>
+                <li>📊 Escalar a 25 vehículos</li>
+                <li>📊 Optimizar costos operativos</li>
+                <li>📊 Implementar mejoras basadas en feedback</li>
+                <li>📊 Comenzar ventas a clientes externos</li>
+                <li><strong>Inversión:</strong> ~$14,000 USD</li>
+            </ul>
+
+            <h3>Fase 3: Producción (Mes 7+)</h3>
+            <ul>
+                <li>🚀 Escalar a 50+ vehículos</li>
+                <li>🚀 Automatizar procesos de instalación</li>
+                <li>🚀 Desarrollar integraciones con ERP/TMS</li>
+                <li>🚀 Expandir a nuevos mercados</li>
+                <li><strong>Inversión:</strong> Variable según crecimiento</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p><strong>IA VISION PRO</strong> &bull; Powered by <strong>IA.AGUS</strong></p>
+            <p style="margin-top: 10px;">Documento Técnico v1.0 &bull; Enero 2026</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;">
+                Para más información: <a href="https://www.ia-agus.com"
+                    style="color: #FFCC33; text-decoration: none;">www.ia-agus.com</a>
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

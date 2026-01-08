@@ -12,7 +12,7 @@ export const sendWhatsAppAlert = (
     if (!target.phone) return;
 
     const summary = results.map(r => `• ${r.position}: ${r.analysis.alerta_seguridad}`).join('%0A');
-    const message = `🚨 *SIMSA VISION IA - ALERTA CRÍTICA*%0A%0A` +
+    const message = `🚨 *IA VISION PRO - ALERTA CRÍTICA*%0A%0A` +
         `*Unidad:* ${unitId}%0A` +
         `*Estado:* ${isRed ? '⛔ BLOQUEO' : '⚠️ REVISIÓN'}%0A%0A` +
         `*Resultados:*%0A${summary}%0A%0A` +
