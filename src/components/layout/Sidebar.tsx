@@ -53,6 +53,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         { id: 'command-center', label: 'Command Center', icon: <BarChart3 size={20} />, badge: 'LIVE', category: 'CORE' },
         { id: 'gallery', label: 'Evidencia Forense', icon: <Images size={20} />, category: 'CORE' },
         { id: 'capture-tires', label: t('sidebar.capture_tires'), icon: <Camera size={20} />, badge: 'IA+', category: 'CORE' },
+        { id: 'ppe-dashboard', label: 'PPE Dashboard', icon: <ShieldAlert size={20} />, badge: 'NEW', category: 'CORE' },
         { id: 'driver-health', label: t('sidebar.driver_health'), icon: <Activity size={20} />, badge: 'ALCOHOL', category: 'CORE' },
 
         { id: 'unit-inventory', label: t('sidebar.unit_inventory'), icon: <Truck size={20} />, category: 'INVENTORY' },
@@ -71,7 +72,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         if (userRole === 'EMPLOYEE') {
             // Employee sees Dashboard, Capture, Emergency. 
             // Also enable read-only view of Inventory and Map as requested.
-            return ['dashboard', 'capture-tires', 'capture-cabin', 'driver-health', 'emergency', 'unit-inventory', 'tire-inventory', 'map', 'command-center', 'simulation'].includes(item.id);
+            return ['dashboard', 'capture-tires', 'capture-cabin', 'driver-health', 'emergency', 'unit-inventory', 'tire-inventory', 'map', 'command-center', 'simulation', 'ppe-dashboard'].includes(item.id);
         }
         return false;
     });

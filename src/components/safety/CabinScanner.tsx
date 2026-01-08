@@ -73,6 +73,9 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert, pr
             setMode('RESULT');
 
             // Persist to Supabase
+            // 1. Upload Evidence first
+            const imageUrl = await dbService.uploadEvidence(base64, 'operarios', selectedDriver.id);
+
             await Promise.all([
                 dbService.updateWorkerStatus(selectedDriver.id, result.estado_chofer, result.hallazgos),
                 dbService.createTrip({
@@ -81,6 +84,15 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert, pr
                     driver_id: selectedDriver.id,
                     status: 'COMPLETED',
                     alert_level: result.nivel_riesgo
+                }),
+                // Save to Unified Gallery using the uploaded URL
+                dbService.saveInspection({
+                    inspection_type: 'CABIN',
+                    created_at: new Date().toISOString(),
+                    status: result.nivel_riesgo === SecurityAlert.ROJA ? 'DAMAGE_DETECTED' : 'CLEAN',
+                    ai_summary: `${result.estado_chofer}: ${result.hallazgos.descripcion}`,
+                    image_url: imageUrl,
+                    vehicle_id: selectedDriver.unit_assigned
                 })
             ]);
 

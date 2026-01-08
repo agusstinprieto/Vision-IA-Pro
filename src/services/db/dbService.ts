@@ -177,5 +177,53 @@ export const dbService = {
 
         if (error) throw error;
         return data[0];
+    },
+
+    // 7. Storage Integration (New)
+    async uploadEvidence(file: File | Blob | string, category: 'operarios' | 'incidencias' | 'llantas', id: string) {
+        try {
+            const timestamp = Date.now();
+            // Basic extension detection or default to jpg
+            const ext = typeof file === 'string' ? 'jpg' : file.type.split('/')[1] || 'jpg';
+            const path = `${category}/${id}_${timestamp}.${ext}`;
+
+            let fileBody: File | Blob | ArrayBuffer;
+
+            if (typeof file === 'string') {
+                // Assume Base64
+                const base64Data = file.split(',')[1] || file;
+                const binaryStr = atob(base64Data);
+                const len = binaryStr.length;
+                const bytes = new Uint8Array(len);
+                for (let i = 0; i < len; i++) {
+                    bytes[i] = binaryStr.charCodeAt(i);
+                }
+                fileBody = bytes.buffer;
+            } else {
+                fileBody = file;
+            }
+
+            const { data, error } = await supabase.storage
+                .from('evidence-vault')
+                .upload(path, fileBody, {
+                    contentType: typeof file !== 'string' ? file.type : 'image/jpeg',
+                    upsert: true
+                });
+
+            if (error) throw error;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('evidence-vault')
+                .getPublicUrl(path);
+
+            return publicUrl;
+        } catch (error) {
+            console.error('Upload Error:', error);
+            // Fallback for demo/offline: Return local object URL if possible, or placeholder
+            if (typeof file !== 'string') {
+                return URL.createObjectURL(file as Blob);
+            }
+            return 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22300%22%3E%3Crect%20fill%3D%22%23333%22%20width%3D%22400%22%20height%3D%22300%22%2F%3E%3Ctext%20fill%3D%22%23fff%22%20font-family%3D%22sans-serif%22%20font-size%3D%2230%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3EUpload%20Failed%3C%2Ftext%3E%3C%2Fsvg%3E';
+        }
     }
 };

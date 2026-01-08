@@ -146,7 +146,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
     return (
         <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 p-6">
             {/* Header */}
-            <div className="mb-6 flex items-center justify-between">
+            <div className="mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
                     <div>
                         <h1 className="text-3xl font-black text-white uppercase tracking-tight flex items-center gap-3">
@@ -202,7 +202,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
                         </div>
                     </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                     <button
                         onClick={togglePlayback}
                         className="h-9 px-4 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl border border-white/5 flex items-center gap-2 transition-all text-xs font-bold shadow-lg"
@@ -226,8 +226,8 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
                         onClick={() => setShowBiometrics(true)}
                         disabled={!camerasActive}
                         className={`h-11 px-4 rounded-xl border transition-all flex items-center gap-3 text-xs font-black tracking-wider shadow-lg ${camerasActive
-                                ? 'text-black hover:scale-[1.02] active:scale-95'
-                                : 'bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed'
+                            ? 'text-black hover:scale-[1.02] active:scale-95'
+                            : 'bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed'
                             }`}
                         style={camerasActive ? { backgroundColor: brandColor, borderColor: brandColor } : {}}
                     >
@@ -242,8 +242,8 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
                         onClick={() => setShowCabinAudit(true)}
                         disabled={!camerasActive}
                         className={`h-11 px-4 rounded-xl border transition-all flex items-center gap-3 text-xs font-black tracking-wider shadow-lg ${camerasActive
-                                ? 'bg-zinc-900 border-white/10 text-white hover:bg-zinc-800'
-                                : 'bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed'
+                            ? 'bg-zinc-900 border-white/10 text-white hover:bg-zinc-800'
+                            : 'bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed'
                             }`}
                     >
                         <Activity size={16} style={{ color: brandColor }} />
@@ -256,7 +256,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
             </div>
 
             {/* Video Grid */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 {/* ADAS - Road View */}
                 <div className="relative bg-black rounded-xl overflow-hidden border border-white/10 aspect-video">
                     <div className="absolute top-3 left-3 z-10 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-emerald-500/30">
@@ -299,7 +299,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
 
             {/* Telemetry Dashboard */}
             {telemetry && (
-                <div className="grid grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                     {/* Speed */}
                     <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-xl p-4">
                         <div className="flex items-center gap-2 mb-2">
@@ -346,7 +346,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
 
             {/* Secondary Metrics */}
             {telemetry && (
-                <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-xl p-4">
                         <div className="flex items-center justify-between">
                             <div>

@@ -5,7 +5,8 @@ import { Shield, Lock, Search, Filter, Download, ExternalLink, Calendar, Truck, 
 import { useLanguage } from '../../context/LanguageContext';
 
 import { dbService } from '../../services/db/dbService';
-import { Worker } from '../../types';
+import { Worker, Unit } from '../../types';
+import simulatedTireImg from '../../assets/simulated_tire_damage.png';
 
 interface Inspection {
     id: string;
@@ -19,28 +20,38 @@ interface Inspection {
 
 interface PhotoGalleryViewProps {
     onClose: () => void;
-    userRole: string; // 'ADMIN' | 'MANAGER' | 'EMPLOYEE'
+    userRole?: string;
 }
 
 export const PhotoGalleryView: React.FC<PhotoGalleryViewProps> = ({ onClose, userRole }) => {
+    const { t } = useLanguage();
     const [inspections, setInspections] = useState<Inspection[]>([]);
+    const [filteredInspections, setFilteredInspections] = useState<Inspection[]>([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('');
+    const [filterType, setFilterType] = useState('ALL');
+    const [dateFilter, setDateFilter] = useState('');
+    const [selectedDriver, setSelectedDriver] = useState('');
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [sortMode, setSortMode] = useState<'date' | 'severity'>('date');
-    const [dateFilter, setDateFilter] = useState('');
+
     const [drivers, setDrivers] = useState<Worker[]>([]);
-    const [selectedDriver, setSelectedDriver] = useState<string>('');
-    const { t } = useLanguage();
+    const [units, setUnits] = useState<Unit[]>([]);
 
     useEffect(() => {
         fetchInspections();
         fetchDrivers();
+        fetchUnits();
     }, []);
+
+    const fetchUnits = async () => {
+        const data = await dbService.getUnits();
+        if (data) setUnits(data);
+    };
 
     const fetchDrivers = async () => {
         const data = await dbService.getWorkers();
-        setDrivers(data || []);
+        if (data) setDrivers(data);
     };
 
     const fetchInspections = async () => {
@@ -49,76 +60,101 @@ export const PhotoGalleryView: React.FC<PhotoGalleryViewProps> = ({ onClose, use
             const { data, error } = await supabase
                 .from('inspections')
                 .select('*')
-                .order('created_at', { ascending: false })
-                .limit(50); // Initial batch
+                .order('created_at', { ascending: false });
 
             if (error) throw error;
             setInspections(data || []);
-        } catch (err) {
-            console.error('Error fetching inspections:', err);
+            setFilteredInspections(data || []);
+        } catch (error) {
+            console.error('Error fetching gallery:', error);
         } finally {
             setLoading(false);
         }
     };
 
-    const filteredInspections = inspections
-        .filter(i => {
-            const matchesText =
-                i.vehicle_id?.toLowerCase().includes(filter.toLowerCase()) ||
-                i.ai_summary?.toLowerCase().includes(filter.toLowerCase()) ||
-                i.status?.toLowerCase().includes(filter.toLowerCase());
+    // Filter Logic
+    useEffect(() => {
+        let result = [...inspections];
 
-            const matchesDate = dateFilter
-                ? i.created_at.startsWith(dateFilter)
-                : true;
+        // 0. Filter out invalid inspections (no image or invalid vehicle_id)
+        result = result.filter(i =>
+            i.image_url &&
+            i.image_url.trim() !== '' &&
+            i.image_url !== 'UNKNOWN' &&
+            i.vehicle_id &&
+            i.vehicle_id !== 'UNKNOWN'
+        );
 
-            const matchesDriver = selectedDriver
-                ? i.vehicle_id === drivers.find(d => d.id === selectedDriver)?.unit_assigned
-                : true;
+        // 1. Text Search
+        if (filter) {
+            const lower = filter.toLowerCase();
+            result = result.filter(i =>
+                (i.vehicle_id && i.vehicle_id.toLowerCase().includes(lower)) ||
+                (i.ai_summary && i.ai_summary.toLowerCase().includes(lower)) ||
+                (i.status && i.status.toLowerCase().includes(lower))
+            );
+        }
 
-            return matchesText && matchesDate && matchesDriver;
-        })
-        .sort((a, b) => {
-            if (sortMode === 'date') {
-                return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-            } else {
-                // Severity Sort: DAMAGE_DETECTED > ALL OTHERS
-                const getScore = (status: string) => status === 'DAMAGE_DETECTED' ? 2 : 1;
-                return getScore(b.status) - getScore(a.status);
+        // 2. Category Filter (Tire vs Cabin)
+        if (filterType !== 'ALL') {
+            result = result.filter(i => i.inspection_type === filterType);
+        }
+
+        // 3. Date Filter
+        if (dateFilter) {
+            result = result.filter(i => i.created_at.startsWith(dateFilter));
+        }
+
+        // 4. Driver Filter (Indirect via Unit)
+        if (selectedDriver) {
+            const driver = drivers.find(d => d.id === selectedDriver);
+            if (driver && driver.unit_assigned) {
+                result = result.filter(i => i.vehicle_id === driver.unit_assigned);
             }
-        });
+        }
 
-    // Security Check (Frontend Level)
-    if (userRole !== 'MASTER' && userRole !== 'MANAGER' && userRole !== 'ADMIN') {
+        // 5. Sorting
+        if (sortMode === 'date') {
+            result.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        } else if (sortMode === 'severity') {
+            result.sort((a, b) => getScore(b.status) - getScore(a.status));
+        }
+
+        setFilteredInspections(result);
+    }, [filter, inspections, filterType, dateFilter, selectedDriver, sortMode, drivers]);
+
+    // Severity Sort: DAMAGE_DETECTED > ALL OTHERS
+    const getScore = (status: string) => status === 'DAMAGE_DETECTED' ? 10 : 1;
+
+    // Security Check
+    if (userRole !== 'MASTER' && userRole !== 'MANAGER' && userRole !== 'DEVELOPER') {
         return (
-            <div className="flex flex-col items-center justify-center h-[60vh] text-center p-8">
-                <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mb-6 border border-red-500/20">
-                    <Lock size={32} className="text-red-500" />
-                </div>
-                <h2 className="text-2xl font-black uppercase tracking-tight text-white mb-2">Acceso Restringido</h2>
-                <p className="text-zinc-500 max-w-md">
-                    Esta vista contiene evidencia forense sensible. Solo personal autorizado (Gerencia y Administración) tiene acceso a la galería de evidencia.
+            <div className="flex flex-col items-center justify-center h-screen bg-[#0F1012] text-white p-6 text-center">
+                <Shield size={64} className="text-[#EA492E] mb-6" />
+                <h2 className="text-3xl font-black uppercase tracking-tighter mb-4">Acceso Restringido</h2>
+                <p className="text-zinc-500 max-w-md mb-8">
+                    Esta bóveda contiene evidencia forense legalmente sensible.
+                    Solo personal acreditado (Admin/Manager) puede acceder.
                 </p>
-                <button
-                    onClick={onClose}
-                    className="mt-8 px-6 py-3 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 text-xs font-bold uppercase tracking-widest transition-all"
-                >
-                    Volver al Dashboard
+                <button onClick={onClose} className="px-8 py-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-all font-bold uppercase tracking-widest text-xs">
+                    Regresar
                 </button>
             </div>
         );
     }
 
     return (
-        <div className="p-4 lg:p-8 max-w-7xl mx-auto min-h-screen">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
+        <div className="min-h-screen bg-[#0F1012] p-6 md:p-12 pb-32">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
                 <div>
-                    <h1 className="text-3xl font-black uppercase tracking-tighter text-white flex items-center gap-3">
-                        <Shield className="text-brand" />
-                        Galería Forense
+                    <h1 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter mb-2 flex items-center gap-4">
+                        <Lock size={32} className="text-brand" />
+                        Evidencia <span className="text-brand">Forense</span>
                     </h1>
-                    <p className="text-zinc-500 mt-2 font-mono text-sm">
-                        VISION IA PRO / EVIDENCE VAULT / v1.0
+                    <p className="text-zinc-500 font-mono text-sm max-w-2xl">
+                        Bóveda segura de auditorías visuales (Llantas, Cabina, Daños).
+                        <span className="text-red-500 ml-2 font-bold uppercase text-[10px] border border-red-500/20 px-2 py-0.5 rounded">Rigor Legal</span>
                     </p>
                 </div>
 
@@ -140,11 +176,20 @@ export const PhotoGalleryView: React.FC<PhotoGalleryViewProps> = ({ onClose, use
                     </div>
 
                     {/* Controls */}
-                    <div className="flex flex-wrap gap-2 w-full md:w-auto">
+                    <div className="flex flex-col md:flex-row flex-wrap gap-2 w-full md:w-auto">
+                        <select
+                            value={filterType}
+                            onChange={(e) => setFilterType(e.target.value)}
+                            className="w-full md:w-auto bg-[#121214] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand/50"
+                        >
+                            <option value="ALL">Todo Tipo</option>
+                            <option value="TIRE">Llantas</option>
+                            <option value="CABIN">Cabina (Driver)</option>
+                        </select>
                         <select
                             value={selectedDriver}
                             onChange={(e) => setSelectedDriver(e.target.value)}
-                            className="bg-[#121214] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand/50 max-w-[150px]"
+                            className="w-full md:w-auto bg-[#121214] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand/50"
                         >
                             <option value="">Todos los Choferes</option>
                             {drivers.map(d => (
@@ -155,26 +200,105 @@ export const PhotoGalleryView: React.FC<PhotoGalleryViewProps> = ({ onClose, use
                             type="date"
                             value={dateFilter}
                             onChange={(e) => setDateFilter(e.target.value)}
-                            className="bg-[#121214] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand/50"
+                            className="w-full md:w-auto bg-[#121214] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand/50"
                         />
                         <button
                             onClick={() => setSortMode(prev => prev === 'date' ? 'severity' : 'date')}
-                            className={`flex items-center gap-2 px-4 py-3 rounded-xl border border-white/10 transition-all text-xs font-bold uppercase tracking-wider ${sortMode === 'severity' ? 'bg-brand text-white' : 'bg-[#121214] text-zinc-400 hover:text-white'}`}
+                            className={`w-full md:w-auto flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-white/10 transition-all text-xs font-bold uppercase tracking-wider whitespace-nowrap ${sortMode === 'severity' ? 'bg-brand text-white' : 'bg-[#121214] text-zinc-400 hover:text-white'}`}
                         >
                             {sortMode === 'severity' ? <ArrowDownWideNarrow size={16} /> : <Calendar size={16} />}
                             {sortMode === 'severity' ? 'Mayor Incidencia' : 'Más Recientes'}
                         </button>
-                    </div>
 
-                    <div className="relative flex-1 md:w-64">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
-                        <input
-                            type="text"
-                            placeholder="Buscar..."
-                            value={filter}
-                            onChange={(e) => setFilter(e.target.value)}
-                            className="w-full bg-[#121214] border border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-brand/50"
-                        />
+                        {/* Simulation Button - Only for MASTER/DEVELOPER */}
+                        {(userRole === 'MASTER' || userRole === 'DEVELOPER') && (
+                            <button
+                                onClick={async () => {
+                                    try {
+                                        setLoading(true);
+                                        // 1. Convert local asset to Blob for real upload test
+                                        const response = await fetch(simulatedTireImg);
+                                        const blob = await response.blob();
+
+                                        // 2. FETCH REAL DATA (Mimic Production Logic)
+                                        const freshDrivers = await dbService.getWorkers();
+                                        const freshUnits = await dbService.getUnits();
+
+                                        let validUnitId: string = "";
+
+                                        // Priority 1: Use a Driver's assigned unit (Proven in CabinScanner)
+                                        if (freshDrivers && freshDrivers.length > 0 && freshDrivers[0].unit_assigned) {
+                                            validUnitId = freshDrivers[0].unit_assigned;
+                                            console.log("Using Driver's Assigned Unit (Real):", validUnitId);
+                                        }
+                                        // Priority 2: Use a Unit's Plate ID directly
+                                        else if (freshUnits && freshUnits.length > 0) {
+                                            validUnitId = freshUnits[0].plate_id || freshUnits[0].pipe_number || freshUnits[0].id;
+                                            console.log("Using Unit Plate (Fallback):", validUnitId);
+                                        }
+                                        else {
+                                            alert("⚠️ Error: No hay datos reales (Choferes o Unidades) para asociar la inspección.\n\nEl sistema requiere un vehículo real registrado.");
+                                            setLoading(false);
+                                            return;
+                                        }
+
+                                        // 2.2 RESOLVE DATA (UUID for DB, Plate for Storage)
+                                        let dbUUID: string = "";       // For 'inspections' table (Must be UUID)
+                                        let storagePlate: string = ""; // For 'storage' buckets (Can be "PR-901")
+
+                                        // Strategy:
+                                        // 1. If we have units, use the first unit's real UUID and its Plate.
+                                        // 2. This satisfies the FK constraint (UUID) AND keeps folder organization (Plate).
+
+                                        if (freshUnits && freshUnits.length > 0) {
+                                            dbUUID = freshUnits[0].id; // The UUID
+                                            storagePlate = freshUnits[0].plate_id || "UNKNOWN_PLATE";
+                                            console.log("✅ Using Real Unit:", { dbUUID, storagePlate });
+                                        }
+                                        else {
+                                            alert("⚠️ Error: No hay unidades registradas en el sistema para simular.");
+                                            setLoading(false);
+                                            return;
+                                        }
+
+                                        // 3. Upload to Supabase Storage (Using Plate for Folder Name is fine/preferred)
+                                        const publicUrl = await dbService.uploadEvidence(blob, 'llantas', storagePlate);
+
+                                        // 4. Save Record
+                                        await dbService.saveInspection({
+                                            inspection_type: 'TIRE',
+                                            created_at: new Date().toISOString(),
+                                            status: 'DAMAGE_DETECTED',
+                                            ai_summary: 'CRITICAL: Severe sidewall bulge and rupture detected. Imminent failure risk.',
+                                            image_url: publicUrl,
+                                            vehicle_id: dbUUID // <--- SENDING REAL UUID HERE
+                                        });
+
+                                        fetchInspections();
+                                    } catch (e: any) {
+                                        console.error("Simulation failed", e);
+                                        alert(`Error simulando: ${e.message || JSON.stringify(e)}`);
+                                    } finally {
+                                        setLoading(false);
+                                    }
+                                }}
+                                className="w-full md:w-auto px-4 py-3 bg-red-500/20 hover:bg-red-500/30 text-red-500 rounded-xl border border-red-500/20 text-xs font-bold uppercase tracking-wider transition-all"
+                            >
+                                + Simular
+                            </button>
+                        )}
+
+                        {/* Search Input */}
+                        <div className="relative w-full md:flex-1 md:w-64">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
+                            <input
+                                type="text"
+                                placeholder="Buscar..."
+                                value={filter}
+                                onChange={(e) => setFilter(e.target.value)}
+                                className="w-full bg-[#121214] border border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-brand/50"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -194,7 +318,7 @@ export const PhotoGalleryView: React.FC<PhotoGalleryViewProps> = ({ onClose, use
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     loading="lazy"
                                     onError={(e) => {
-                                        (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x300?text=No+Image';
+                                        (e.target as HTMLImageElement).src = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22300%22%3E%3Crect%20fill%3D%22%232d2d2d%22%20width%3D%22400%22%20height%3D%22300%22%2F%3E%3Ctext%20fill%3D%22%23666%22%20font-family%3D%22sans-serif%22%20font-size%3D%2224%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3ENo%20Image%3C%2Ftext%3E%3C%2Fsvg%3E';
                                     }}
                                 />
                                 <div className="absolute top-3 right-3">
@@ -264,7 +388,7 @@ export const PhotoGalleryView: React.FC<PhotoGalleryViewProps> = ({ onClose, use
                                                 src={item.image_url}
                                                 alt="Thumb"
                                                 className="w-full h-full object-cover"
-                                                onError={(e) => (e.target as HTMLImageElement).src = 'https://via.placeholder.com/100x100?text=Error'}
+                                                onError={(e) => (e.target as HTMLImageElement).src = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Crect%20fill%3D%22%23333%22%20width%3D%22100%22%20height%3D%22100%22%2F%3E%3Ctext%20fill%3D%22%23fff%22%20font-size%3D%2212%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3EError%3C%2Ftext%3E%3C%2Fsvg%3E'}
                                             />
                                         </div>
                                     </td>

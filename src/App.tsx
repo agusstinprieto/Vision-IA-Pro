@@ -25,6 +25,7 @@ import { SimulationView } from './components/safety/SimulationView';
 import { CommandCenterView } from './components/safety/CommandCenterView';
 import { LanguageToggle } from './components/common/LanguageToggle';
 import { DashboardView } from './components/dashboard/DashboardView';
+import { PPEDashboard } from './components/safety/PPEDashboard';
 
 // Standard Audit Entry Type
 interface AuditEntry {
@@ -236,6 +237,8 @@ export default function App() {
               <CommandCenterView brandColor={settings.primaryColor} />
             ) : view === 'gallery' ? (
               <PhotoGalleryView onClose={() => setView('dashboard')} userRole={userRole} />
+            ) : view === 'ppe-dashboard' ? (
+              <PPEDashboard />
             ) : view === 'capture-tires' || view === 'inspection' ? (
               <div className="max-w-3xl mx-auto">
                 <button
