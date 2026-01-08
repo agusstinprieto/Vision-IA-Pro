@@ -5,7 +5,11 @@ import { telemetrySimulation, VehicleTelemetry } from '../../services/telemetry/
 import { GeofenceService } from '../../services/telemetry/geofenceService';
 import { BiometricMonitor } from './BiometricMonitor';
 
-export const CommandCenterView = () => {
+interface CommandCenterViewProps {
+    brandColor?: string;
+}
+
+export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor = '#FFCC33' }) => {
     const [telemetry, setTelemetry] = useState<VehicleTelemetry | null>(null);
     const [isPlaying, setIsPlaying] = useState(true);
     const [showBiometrics, setShowBiometrics] = useState(false);
@@ -143,7 +147,7 @@ export const CommandCenterView = () => {
                 <div className="flex items-center gap-4">
                     <div>
                         <h1 className="text-3xl font-black text-white uppercase tracking-tight flex items-center gap-3">
-                            <Truck className="text-[#FFCC33]" size={32} />
+                            <Truck style={{ color: brandColor }} size={32} />
                             Command Center
                         </h1>
                         <div className="flex items-center gap-3 mt-2">
@@ -155,7 +159,8 @@ export const CommandCenterView = () => {
                                         const vehicle = availableVehicles.find(v => v.unitId === e.target.value);
                                         if (vehicle) setSelectedVehicle(vehicle);
                                     }}
-                                    className="appearance-none bg-zinc-900 text-[#FFCC33] pl-3 pr-8 py-2 rounded-xl border border-[#FFCC33]/30 text-sm font-black uppercase tracking-tighter hover:border-[#FFCC33] transition-all cursor-pointer outline-none shadow-lg"
+                                    style={{ color: brandColor, borderColor: `${brandColor}4D` }}
+                                    className="appearance-none bg-zinc-900 pl-3 pr-8 py-2 rounded-xl border text-sm font-black uppercase tracking-tighter hover:border-white/30 transition-all cursor-pointer outline-none shadow-lg"
                                 >
                                     {availableVehicles.map(v => (
                                         <option key={v.unitId} value={v.unitId} className="bg-zinc-900 text-white">
@@ -163,7 +168,7 @@ export const CommandCenterView = () => {
                                         </option>
                                     ))}
                                 </select>
-                                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#FFCC33]">
+                                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: brandColor }}>
                                     ▼
                                 </div>
                             </div>
@@ -194,32 +199,37 @@ export const CommandCenterView = () => {
                         </div>
                     </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                     <button
                         onClick={togglePlayback}
-                        className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg border border-white/10 flex items-center gap-2 transition-colors"
+                        className="h-9 px-4 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl border border-white/5 flex items-center gap-2 transition-all text-xs font-bold shadow-lg"
                     >
-                        {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-                        {isPlaying ? 'Pausar' : 'Reproducir'}
+                        {isPlaying ? <Pause size={14} style={{ color: brandColor }} /> : <Play size={14} style={{ color: brandColor }} />}
+                        {isPlaying ? 'PAUSAR' : 'REPRODUCIR'}
                     </button>
+
                     <button
                         onClick={toggleCameras}
-                        className={`px-4 py-2 rounded-lg border transition-colors flex items-center gap-2 ${camerasActive
-                            ? 'bg-red-600 hover:bg-red-700 border-red-500/30 text-white'
-                            : 'bg-zinc-800 hover:bg-zinc-700 border-white/10 text-white'
+                        className={`h-9 px-4 rounded-xl border transition-all flex items-center gap-2 text-xs font-bold shadow-lg ${camerasActive
+                            ? 'bg-red-500/10 border-red-500/50 text-red-500 hover:bg-red-500/20'
+                            : 'bg-zinc-800 hover:bg-zinc-700 border-white/5 text-white'
                             }`}
                     >
-                        {camerasActive ? '🔴 Desactivar' : '📸 Activar'} Cámaras
+                        <div className={`w-2 h-2 rounded-full ${camerasActive ? 'bg-red-500 animate-pulse' : 'bg-zinc-500'}`} />
+                        {camerasActive ? 'DESACTIVAR' : 'ACTIVAR'}
                     </button>
+
                     <button
                         onClick={() => setShowBiometrics(true)}
                         disabled={!camerasActive}
-                        className={`px-4 py-2 rounded-lg border transition-all flex items-center gap-2 font-bold ${camerasActive
-                            ? 'bg-[#FFCC33] hover:bg-[#FFCC33]/80 border-[#FFCC33] text-black shadow-lg'
-                            : 'bg-zinc-700 border-zinc-600 text-zinc-400 cursor-not-allowed opacity-50'
+                        className={`h-9 px-4 rounded-xl border transition-all flex items-center gap-2 text-xs font-black tracking-wider shadow-lg ${camerasActive
+                                ? 'text-black hover:scale-[1.02] active:scale-95'
+                                : 'bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed'
                             }`}
+                        style={camerasActive ? { backgroundColor: brandColor, borderColor: brandColor } : {}}
                     >
-                        <Eye size={16} /> Analizar IA
+                        <Eye size={14} />
+                        ANALIZAR IA
                     </button>
                 </div>
             </div>

@@ -232,7 +232,7 @@ export default function App() {
             ) : view === 'simulation' ? (
               <SimulationView />
             ) : view === 'command-center' ? (
-              <CommandCenterView />
+              <CommandCenterView brandColor={settings.primaryColor} />
             ) : view === 'capture-tires' || view === 'inspection' ? (
               <div className="max-w-3xl mx-auto">
                 <button
