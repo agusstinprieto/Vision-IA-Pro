@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Propuesta Comercial - SIMSA VISION IA</title>
+    <title>Propuesta Comercial - IA VISION PRO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=JetBrains+Mono:wght@400;700&display=swap"
@@ -20,11 +20,11 @@
         }
 
         .text-yellow {
-            color: #FFCC33;
+            color: #EA492E;
         }
 
         .bg-yellow {
-            background-color: #FFCC33;
+            background-color: #EA492E;
         }
 
         #protection-overlay {
@@ -60,19 +60,16 @@
             const esElements = document.querySelectorAll('.lang-es');
             const enElements = document.querySelectorAll('.lang-en');
 
-            if (lang === 'en') {
-                esElements.forEach(el => el.style.display = 'none');
-                enElements.forEach(el => el.style.display = 'block');
-                localStorage.setItem('simsa_lang', 'en');
-            } else {
-                esElements.forEach(el => el.style.display = 'block');
-                enElements.forEach(el => el.style.display = 'none');
-                localStorage.setItem('simsa_lang', 'es');
-            }
+            localStorage.setItem('vp_lang', 'en');
+        } else {
+            esElements.forEach(el => el.style.display = 'block');
+            enElements.forEach(el => el.style.display = 'none');
+            localStorage.setItem('vp_lang', 'es');
+        }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('simsa_lang') || 'es';
+            const savedLang = localStorage.getItem('vp_lang') || 'es';
             toggleLanguage(savedLang);
         });
     </script>
@@ -84,16 +81,16 @@
     <div id="protection-overlay">
         <div class="max-w-md w-full p-10 bg-[#0A0A0B] rounded-[2.5rem] border border-white/5 text-center shadow-2xl">
             <div
-                class="w-16 h-16 bg-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(220,38,38,0.3)]">
+                class="w-16 h-16 bg-[#EA492E] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(234,73,46,0.3)]">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
             </div>
-            <h2 class="text-2xl font-black text-white uppercase tracking-tighter mb-2">Simsa Vision IA</h2>
+            <h2 class="text-2xl font-black text-white uppercase tracking-tighter mb-2">IA VISION PRO</h2>
             <p class="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em] mb-8">Acceso Privado Cliente</p>
             <input type="password" id="password-input" placeholder="Clave de Acceso / Access Key"
-                class="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-center text-white placeholder:text-zinc-800 focus:outline-none focus:border-red-600 mb-6 font-mono">
+                class="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-center text-white placeholder:text-zinc-800 focus:outline-none focus:border-[#EA492E] mb-6 font-mono">
             <button onclick="checkPassword()"
                 class="w-full bg-white text-black py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-zinc-200 transition-all">
                 <span class="lang-es">Desbloquear</span>
@@ -110,10 +107,10 @@
         <nav
             class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-lg border-b border-white/5 px-8 py-4 flex justify-between items-center">
             <div class="flex items-center gap-2">
-                <div class="w-6 h-6 bg-red-600 rounded flex items-center justify-center">
-                    <span class="text-white font-black text-[10px]">C</span>
+                <div class="w-6 h-6 bg-[#EA492E] rounded flex items-center justify-center">
+                    <span class="text-white font-black text-[10px]">VP</span>
                 </div>
-                <span class="font-black text-white uppercase tracking-tighter text-sm">SIMSA VISION IA <span
+                <span class="font-black text-white uppercase tracking-tighter text-sm">IA VISION PRO <span
                         class="text-zinc-500">/
                         <span class="lang-es">Propuesta Tecnológica</span>
                         <span class="lang-en">Tech Proposal</span>
@@ -129,7 +126,7 @@
                         class="text-[10px] font-black uppercase hover:text-white text-zinc-400 px-2">EN</button>
                 </div>
                 <button onclick="exportPDF()"
-                    class="bg-red-600 hover:bg-red-700 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-lg transition-all flex items-center gap-2">
+                    class="bg-[#EA492E] hover:bg-[#EA492E]/80 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-lg transition-all flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -154,7 +151,8 @@
                     <span class="lang-en">Artificial Vision <br /><span
                             class="text-blue-500">Infrastructure</span></span>
                 </h1>
-                <p class="text-zinc-500 font-mono text-sm">Target: Grupo SIMSA | Terminales: 12 | Flota: 1,500</p>
+                <p class="text-zinc-500 font-mono text-sm">Target: Empresas de Transporte | Terminales: 12 | Flota:
+                    1,500</p>
             </header>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">
@@ -174,7 +172,7 @@
                         <div class="bg-[#0A0A0B] p-8 rounded-[2.5rem] border border-white/5 relative overflow-hidden">
                             <div class="absolute top-0 right-0 w-32 h-32 bg-yellow/5 blur-[50px] rounded-full"></div>
                             <h3 class="text-sm font-black text-white uppercase mb-6 flex items-center gap-2">
-                                <span class="text-yellow">⛟</span>
+                                <span class="text-[#EA492E]">⛟</span>
                                 <span class="lang-es">Unidades Motrices (Tractores)</span>
                                 <span class="lang-en">Power Units (Tractors)</span>
                             </h3>
@@ -335,7 +333,7 @@
                                                     Availability guarantee for startup.</span>
                                             </span>
                                         </td>
-                                        <td class="p-6 text-right font-black text-xl text-yellow">$35,400.00</td>
+                                        <td class="p-6 text-right font-black text-xl text-[#EA492E]">$35,400.00</td>
                                     </tr>
                                     <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
                                         <td class="p-6 text-white font-bold">01 / Mar / 2026</td>
@@ -421,7 +419,7 @@
                                         <span class="lang-es">Inversión A1</span>
                                         <span class="lang-en">Inv. Y1</span>
                                     </span>
-                                    <span class="text-3xl font-black text-yellow tracking-tighter">$593,400</span>
+                                    <span class="text-3xl font-black text-[#EA492E] tracking-tighter">$593,400</span>
                                 </div>
                             </div>
 
@@ -513,7 +511,7 @@
                                     <span id="label-tractors" class="text-sm font-mono text-white">1,500</span>
                                 </div>
                                 <input type="range" id="input-tractors" min="500" max="3000" step="50" value="1500"
-                                    class="w-full h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-yellow">
+                                    class="w-full h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-[#EA492E]">
                             </div>
 
                             <div class="space-y-4">
@@ -843,7 +841,7 @@
                                 class="absolute top-0 right-0 bg-emerald-500 text-black text-[9px] font-black px-3 py-1 uppercase">
                                 App Lista</div>
                             <p class="text-sm text-zinc-300 leading-relaxed">
-                                La aplicación <strong>SIMSA VISION IA</strong> está operativa al 100%.
+                                La aplicación <strong>IA VISION PRO</strong> está operativa al 100%.
                                 Se inicia la capacitación de monitoristas. El sistema detecta entradas/salidas y calcula
                                 tiempos en "Modo Sombra" (sin alertas activas).
                             </p>
@@ -871,16 +869,16 @@
                     <!-- Day 60 -->
                     <div class="relative pl-12">
                         <div
-                            class="absolute -left-[9px] top-0 w-4 h-4 bg-yellow border-2 border-yellow rounded-full shadow-[0_0_20px_rgba(255,204,51,0.5)]">
+                            class="absolute -left-[9px] top-0 w-4 h-4 bg-[#EA492E] border-2 border-[#EA492E] rounded-full shadow-[0_0_20px_rgba(234,73,46,0.5)]">
                         </div>
                         <div class="flex items-center gap-4 mb-2">
-                            <h3 class="text-2xl font-black text-yellow uppercase">Día 60: GO LIVE OFICIAL</h3>
+                            <h3 class="text-2xl font-black text-[#EA492E] uppercase">Día 60: GO LIVE OFICIAL</h3>
                             <span
-                                class="bg-yellow/20 text-yellow border border-yellow/30 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest font-mono">1
+                                class="bg-[#EA492E]/20 text-[#EA492E] border border-[#EA492E]/30 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest font-mono">1
                                 Abr 2026</span>
                         </div>
                         <div
-                            class="bg-gradient-to-r from-yellow/10 to-transparent p-8 rounded-2xl border border-yellow/20 relative overflow-hidden">
+                            class="bg-gradient-to-r from-[#EA492E]/10 to-transparent p-8 rounded-2xl border border-[#EA492E]/20 relative overflow-hidden">
                             <div
                                 class="absolute top-0 right-0 bg-green-600/20 border-l border-b border-green-500/30 px-3 py-1 rounded-bl-xl">
                                 <span
@@ -907,13 +905,13 @@
 
             <!-- Plan de Implementación por Etapas (Resumen Financiero) -->
             <section class="mb-20">
-                <h2 class="text-xs font-black text-yellow uppercase tracking-[0.4em] mb-12 text-center">Cronograma de
+                <h2 class="text-xs font-black text-[#EA492E] uppercase tracking-[0.4em] mb-12 text-center">Cronograma de
                     Despliegue Estratégico</h2>
                 <div class="space-y-4">
                     <!-- Etapa 1 -->
                     <div
                         class="bg-gradient-to-r from-[#0A0A0B] to-zinc-900 p-10 rounded-[2.5rem] border border-white/5 flex flex-col md:flex-row gap-10 items-center">
-                        <div class="w-20 h-20 bg-yellow flex items-center justify-center rounded-3xl shrink-0">
+                        <div class="w-20 h-20 bg-[#EA492E] flex items-center justify-center rounded-3xl shrink-0">
                             <span class="text-black font-black text-2xl italic">E1</span>
                         </div>
                         <div class="flex-1">
@@ -926,7 +924,7 @@
                         </div>
                         <div class="text-right">
                             <p class="text-[10px] font-black text-zinc-600 uppercase mb-1">Monto de Entrada</p>
-                            <p class="text-3xl font-black text-yellow">$45,000.00</p>
+                            <p class="text-3xl font-black text-[#EA492E]">$45,000.00</p>
                             <p class="text-[9px] text-zinc-500 font-bold uppercase">Setup + Hardware Piloto</p>
                         </div>
                     </div>
@@ -1485,7 +1483,7 @@
                         <span class="lang-en">Note: AI costs can be optimized using lightweight models for OCR and
                             only sending doubtful cases (Delta Match < 80%) to Gemini Pro.</span>
             </p>
-            <div class="h-1 w-24 bg-red-600/20 mx-auto"></div>
+            <div class="h-1 w-24 bg-[#EA492E]/20 mx-auto"></div>
             <p class="text-[10px] text-zinc-500 uppercase tracking-widest font-black italic">
                 <span class="lang-es">CONFIDENCIAL: No compartir fuera del equipo de IA.AGUS</span>
                 <span class="lang-en">CONFIDENTIAL: Do not share outside IA.AGUS team</span>
@@ -1588,7 +1586,7 @@
 
             const opt = {
                 margin: 0,
-                filename: 'Propuesta_Negocios_SIMSA_VISION_IA.pdf',
+                filename: 'Propuesta_Negocios_IA_VISION_PRO.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: {
                     scale: 2,

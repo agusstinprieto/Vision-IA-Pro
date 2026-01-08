@@ -29,9 +29,9 @@
             text-align: center;
             margin-bottom: 60px;
             padding: 40px;
-            background: linear-gradient(135deg, #FFCC33 0%, #FFB800 100%);
+            background: linear-gradient(135deg, #EA492E 0%, #900 100%);
             border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(255, 204, 51, 0.3);
+            box-shadow: 0 20px 60px rgba(234, 73, 46, 0.3);
         }
 
         h1 {
@@ -55,10 +55,10 @@
             font-size: 2rem;
             font-weight: 800;
             margin: 40px 0 20px;
-            color: #FFCC33;
+            color: #EA492E;
             text-transform: uppercase;
             letter-spacing: -1px;
-            border-bottom: 3px solid #FFCC33;
+            border-bottom: 3px solid #EA492E;
             padding-bottom: 10px;
         }
 
@@ -113,8 +113,8 @@
         }
 
         th {
-            background: #FFCC33;
-            color: #000;
+            background: #EA492E;
+            color: #fff;
             padding: 15px;
             text-align: left;
             font-weight: 800;
@@ -159,8 +159,8 @@
         }
 
         .badge-premium {
-            background: #FFCC33;
-            color: #000;
+            background: #EA492E;
+            color: #fff;
         }
 
         .badge-budget {
@@ -178,11 +178,11 @@
         }
 
         code {
-            background: rgba(255, 204, 51, 0.1);
+            background: rgba(234, 73, 46, 0.1);
             padding: 2px 8px;
             border-radius: 4px;
             font-family: 'Courier New', monospace;
-            color: #FFCC33;
+            color: #EA492E;
             font-size: 0.9em;
         }
 
@@ -203,8 +203,8 @@
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(255, 204, 51, 0.2);
-            border-color: #FFCC33;
+            box-shadow: 0 10px 30px rgba(234, 73, 46, 0.2);
+            border-color: #EA492E;
         }
 
         .footer {
@@ -217,13 +217,37 @@
         }
 
         .highlight {
-            color: #FFCC33;
+            color: #EA492E;
             font-weight: 700;
         }
 
         strong {
             color: #fff;
             font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            header {
+                margin-bottom: 30px;
+                padding: 25px 20px;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+                margin: 30px 0 15px;
+            }
+
+            .section {
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -633,7 +657,7 @@
             <div class="grid">
                 <div class="card">
                     <h3>🥉 BÁSICO</h3>
-                    <p class="price">$49 USD/mes</p>
+                    <p class="price">$25 USD/mes</p>
                     <p style="font-size: 0.9rem; color: #a1a1aa;">por vehículo</p>
                     <hr style="margin: 20px 0; border-color: rgba(255,255,255,0.1);">
                     <ul style="font-size: 0.9rem;">
@@ -646,15 +670,15 @@
                     </ul>
                 </div>
 
-                <div class="card" style="border: 2px solid #FFCC33;">
+                <div class="card" style="border: 2px solid #EA492E;">
                     <h3>🥈 PROFESIONAL <span class="badge badge-recommended">POPULAR</span></h3>
-                    <p class="price">$89 USD/mes</p>
+                    <p class="price">$65 USD/mes</p>
                     <p style="font-size: 0.9rem; color: #a1a1aa;">por vehículo</p>
                     <hr style="margin: 20px 0; border-color: rgba(255,255,255,0.1);">
                     <ul style="font-size: 0.9rem;">
                         <li>✅ 2 cámaras (DMS + ADAS)</li>
                         <li>✅ Telemetría completa (OBD-II + GPS)</li>
-                        <li>✅ Análisis IA básico (fatiga, distracción)</li>
+                        <li>✅ Análisis IA Forense (Gemini 2.0)</li>
                         <li>✅ Alertas en tiempo real (email + SMS)</li>
                         <li>✅ Grabación 7 días</li>
                         <li>✅ 3 usuarios</li>
@@ -664,13 +688,13 @@
 
                 <div class="card">
                     <h3>🥇 ENTERPRISE <span class="badge badge-premium">PREMIUM</span></h3>
-                    <p class="price">$149 USD/mes</p>
+                    <p class="price">$85 USD/mes</p>
                     <p style="font-size: 0.9rem; color: #a1a1aa;">por vehículo</p>
                     <hr style="margin: 20px 0; border-color: rgba(255,255,255,0.1);">
                     <ul style="font-size: 0.9rem;">
                         <li>✅ 2 cámaras HD (DMS + ADAS)</li>
                         <li>✅ Telemetría avanzada + diagnósticos</li>
-                        <li>✅ IA completa (fatiga, estrés, emociones)</li>
+                        <li>✅ IA Forense Total + Biometría (Salud AI)</li>
                         <li>✅ Sistema de scoring de conductores</li>
                         <li>✅ Alertas multicanal (email, SMS, WhatsApp)</li>
                         <li>✅ Grabación 30 días + almacenamiento ilimitado</li>
