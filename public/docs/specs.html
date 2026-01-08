@@ -99,31 +99,33 @@
                 <section>
                     <h2
                         class="text-xl font-black text-white uppercase tracking-widest mb-6 border-l-4 border-yellow pl-4">
-                        Stack de Inteligencia Avanzada (Fase 7) [LIVE]</h2>
+                        Stack de Inteligencia Avanzada (S-Tier) [LIVE]</h2>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                         <div class="bg-[#1A1C1E] p-8 rounded-3xl border border-yellow/20">
-                            <h3 class="text-sm font-black text-yellow uppercase tracking-widest mb-4">1. ALPR (Placas)
+                            <h3 class="text-sm font-black text-yellow uppercase tracking-widest mb-4">1. Monitoreo
+                                Biométrico
                             </h3>
                             <p class="text-[11px] text-zinc-400 mb-4 leading-relaxed">
-                                Procesamiento local en navegador (Edge) para identificación vehicular instantánea.
+                                Análisis de micro-expresiones faciales en tiempo real para prevención de accidentes.
                             </p>
                             <ul class="text-[10px] space-y-2 font-mono text-zinc-500 uppercase">
-                                <li>- Motor: <span class="text-white">Tesseract.js OCR</span></li>
-                                <li>- Latencia: &lt; 200ms (Client-Side)</li>
-                                <li>- Auto-relleno en Inventario</li>
+                                <li>- Motor: <span class="text-white">Face-API.js (TensorFlow Edge)</span></li>
+                                <li>- Detección: Microsueños, Estrés, Distracción</li>
+                                <li>- Latencia: &lt; 100ms (Client-Side)</li>
                             </ul>
                         </div>
                         <div class="bg-[#1A1C1E] p-8 rounded-3xl border border-blue-500/20">
-                            <h3 class="text-sm font-black text-blue-400 uppercase tracking-widest mb-4">2. Biometría IA
+                            <h3 class="text-sm font-black text-blue-400 uppercase tracking-widest mb-4">2. Auditoría
+                                Multimodal Gemini
                             </h3>
                             <p class="text-[11px] text-zinc-400 mb-4 leading-relaxed">
-                                Análisis de micro-expresiones faciales para salud ocupacional.
+                                Inspección clínica profunda de cabina y entorno mediante IA Generativa.
                             </p>
                             <ul class="text-[10px] space-y-2 font-mono text-zinc-500 uppercase">
-                                <li>- Motor: <span class="text-white">Face-API.js (TensorFlow)</span></li>
-                                <li>- Detección: Fatiga, Estrés (Ira/Miedo)</li>
-                                <li>- HUD: Visualización en Tiempo Real</li>
+                                <li>- Motor: <span class="text-white">Google Gemini 1.5 Pro</span></li>
+                                <li>- Análisis: Integridad, Objetos prohibidos, Salud</li>
+                                <li>- Output: Reportes Forenses en Lenguaje Natural</li>
                             </ul>
                         </div>
                     </div>
@@ -156,21 +158,23 @@
                 <section>
                     <h2
                         class="text-xl font-black text-white uppercase tracking-widest mb-6 border-l-4 border-yellow pl-4">
-                        Arquitectura Modular (Etapas A/B)</h2>
+                        Torre de Control Centralizada</h2>
                     <div class="mermaid bg-zinc-900/50 p-8 rounded-3xl border border-white/5">
                         graph TD
-                        subgraph "MÓDULO A: AUDITORÍA EXTERNA (LLANTAS)"
-                        A1[Gate Scan 4K] -->|Tire Delta| A2[Gemini Vision Engine]
-                        A2 -->|Detección Desgaste| A3[Alerta Supervisor]
+                        subgraph "INPUT: COMBUGAS GATE / CABIN"
+                        A1[Fleet Telemetry] -->|Context| CC[Command Center Hub]
+                        A2[Live Video Stream] -->|Driver Feed| CC
                         end
 
-                        subgraph "MÓDULO B: AUDITORÍA INTERNA (CABINA)"
-                        B1[DMS Capture] -->|Biometría Chofer| B2[Gemini Safety Engine]
-                        B2 -->|Fatiga/Asalto| B3[Protocolo SOS / Alerta Gerente]
+                        subgraph "IA PROCESSING LAYERS"
+                        CC -->|Edge TensorFlow| M1[Monitoreo: Fatiga/Estrés]
+                        CC -->|Cloud Gemini 1.5| M2[Auditoría: Integridad/Riesgo]
                         end
 
-                        A3 --> C[Simsa Hub Dashboard]
-                        B3 --> C
+                        subgraph "OUTPUT & ALERTS"
+                        M1 -->|Real-time Alert| D[Dashboard / SOS]
+                        M2 -->|Forensic Report| D
+                        end
                     </div>
                 </section>
 

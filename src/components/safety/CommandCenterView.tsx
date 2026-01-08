@@ -225,26 +225,32 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
                     <button
                         onClick={() => setShowBiometrics(true)}
                         disabled={!camerasActive}
-                        className={`h-9 px-4 rounded-xl border transition-all flex items-center gap-2 text-xs font-black tracking-wider shadow-lg ${camerasActive
-                            ? 'text-black hover:scale-[1.02] active:scale-95'
-                            : 'bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed'
+                        className={`h-11 px-4 rounded-xl border transition-all flex items-center gap-3 text-xs font-black tracking-wider shadow-lg ${camerasActive
+                                ? 'text-black hover:scale-[1.02] active:scale-95'
+                                : 'bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed'
                             }`}
                         style={camerasActive ? { backgroundColor: brandColor, borderColor: brandColor } : {}}
                     >
-                        <Eye size={14} />
-                        MONITOREO IA
+                        <Eye size={16} />
+                        <div className="text-left">
+                            <p className="leading-tight">MONITOREO IA</p>
+                            <p className="text-[8px] opacity-70 font-bold uppercase tracking-tighter">Fatiga y Estrés</p>
+                        </div>
                     </button>
 
                     <button
                         onClick={() => setShowCabinAudit(true)}
                         disabled={!camerasActive}
-                        className={`h-9 px-4 rounded-xl border transition-all flex items-center gap-2 text-xs font-black tracking-wider shadow-lg ${camerasActive
-                            ? 'bg-zinc-900 border-white/10 text-white hover:bg-zinc-800'
-                            : 'bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed'
+                        className={`h-11 px-4 rounded-xl border transition-all flex items-center gap-3 text-xs font-black tracking-wider shadow-lg ${camerasActive
+                                ? 'bg-zinc-900 border-white/10 text-white hover:bg-zinc-800'
+                                : 'bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed'
                             }`}
                     >
-                        <Activity size={14} style={{ color: brandColor }} />
-                        AUDITORÍA IA
+                        <Activity size={16} style={{ color: brandColor }} />
+                        <div className="text-left">
+                            <p className="leading-tight">AUDITORÍA IA</p>
+                            <p className="text-[8px] text-zinc-500 font-bold uppercase tracking-tighter">Integridad Cabina</p>
+                        </div>
                     </button>
                 </div>
             </div>
