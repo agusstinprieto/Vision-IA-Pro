@@ -48,7 +48,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     onToggle,
     onLogout,
     userRole
-    userRole
 }) => {
     const { language, setLanguage, t } = useLanguage();
 

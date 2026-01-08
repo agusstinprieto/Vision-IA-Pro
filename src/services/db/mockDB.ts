@@ -74,7 +74,6 @@ export interface MockDriver {
     name: string;
     phone: string; // [NEW] Phone number
     unit_assigned: string;
-    unit_assigned: string;
     photo_url: string;
     risk_score: number; // 0-100
     status: DriverStatus; // ALERTA, FATIGA, DISTRACCION, PELIGRO, NORMAL (Need to check types)
@@ -94,7 +93,6 @@ export const MOCK_DRIVERS: MockDriver[] = [
         name: 'Roberto Sanchez',
         phone: '+52 871 123 4567',
         unit_assigned: 'PR-901',
-        unit_assigned: 'PR-901',
         photo_url: 'https://randomuser.me/api/portraits/men/32.jpg',
         risk_score: 92,
         status: DriverStatus.PELIGRO,
@@ -112,7 +110,6 @@ export const MOCK_DRIVERS: MockDriver[] = [
         name: 'Carlos Mendez',
         phone: '+52 871 987 6543',
         unit_assigned: 'PR-904',
-        unit_assigned: 'PR-904',
         photo_url: 'https://randomuser.me/api/portraits/men/45.jpg',
         risk_score: 75,
         status: DriverStatus.FATIGA,
@@ -129,7 +126,6 @@ export const MOCK_DRIVERS: MockDriver[] = [
         id: 'D-03',
         name: 'Luis Hernandez',
         phone: '+52 871 555 1212',
-        unit_assigned: 'PR-910',
         unit_assigned: 'PR-910',
         photo_url: 'https://randomuser.me/api/portraits/men/22.jpg',
         risk_score: 15,
