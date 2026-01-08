@@ -157,18 +157,80 @@
                 </section>
             </div>
 
-            <!-- Footer IA.AGUS -->
-            <footer class="mt-24 pt-12 border-t border-white/5 text-center">
-                <div class="flex flex-col items-center">
-                    <h3 class="text-2xl font-black text-white mb-1">IA.AGUS</h3>
-                    <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.4em] mb-8">AI-Powered Auditing
-                        Solutions</p>
-                    <p class="text-[9px] text-zinc-600 uppercase tracking-[0.5em] font-black italic">
-                        © 2026 SIMSA VISION IA &bull; IA.AGUS Industrial Systems
-                    </p>
+            <section>
+                <h2 class="text-xl font-black text-white uppercase tracking-widest mb-6 border-l-4 border-yellow pl-4">
+                    Hardware Infrastructure (Phase 6)</h2>
+
+                <div class="bg-[#1A1C1E] p-8 rounded-3xl border border-white/5 mb-8">
+                    <img src="../../images/infrastructure_diagram.png" alt="Hardware Architecture Diagram"
+                        class="w-full h-auto rounded-2xl border border-white/10 mb-6 shadow-2xl">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-sm font-black text-yellow uppercase tracking-widest mb-2">1. Site Edge
+                                (Depot)</h3>
+                            <p class="text-[11px] text-zinc-400 mb-4 leading-relaxed">
+                                Heavy local processing for 24/7 zero-latency analysis.
+                            </p>
+                            <ul class="text-[10px] space-y-1 font-mono text-zinc-500">
+                                <li><span class="text-white font-bold">» Server:</span> Industrial Mini PC (NVIDIA
+                                    Jetson)</li>
+                                <li><span class="text-white font-bold">» Cameras:</span> IP CCTV via PoE Ethernet
+                                    connection</li>
+                                <li><span class="text-white font-bold">» Function:</span> RTSP Ingest -> AI Analysis ->
+                                    Alert-Only Sync</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-black text-yellow uppercase tracking-widest mb-2">2. Mobile Edge
+                                (On-Road)</h3>
+                            <p class="text-[11px] text-zinc-400 mb-4 leading-relaxed">
+                                Lightweight monitoring using existing devices.
+                            </p>
+                            <ul class="text-[10px] space-y-1 font-mono text-zinc-500">
+                                <li><span class="text-white font-bold">» Option A:</span> SIMSA App on Phone (Local Face
+                                    Detection)</li>
+                                <li><span class="text-white font-bold">» Option B:</span> 4G AI Dashcam (Clips on
+                                    demand)</li>
+                                <li><span class="text-white font-bold">» Function:</span> In-Cab Audio Alert + Push to
+                                    Control Tower</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-6 border-t border-white/5">
+                        <h3 class="text-sm font-black text-red-500 uppercase tracking-widest mb-2">Resilience Protocol
+                            (Backup)</h3>
+                        <p class="text-[11px] text-zinc-400 leading-relaxed">
+                            <strong>Offline-First</strong> architecture designed for contingencies:
+                        </p>
+                        <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3 text-[10px] font-mono text-zinc-500">
+                            <li class="bg-black/20 p-3 rounded-xl border border-white/5">
+                                <span class="text-white font-bold block mb-1">Level 1: App (IndexedDB)</span>
+                                If network fails, data is encrypted locally on device and auto-syncs upon reconnection.
+                            </li>
+                            <li class="bg-black/20 p-3 rounded-xl border border-white/5">
+                                <span class="text-white font-bold block mb-1">Level 2: Server (Cold Storage)</span>
+                                Physical video backup on local HDD (30-day loop) independent of cloud status.
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </footer>
-        </main>
+            </section>
+    </div>
+
+    <!-- Footer IA.AGUS -->
+    <footer class="mt-24 pt-12 border-t border-white/5 text-center">
+        <div class="flex flex-col items-center">
+            <h3 class="text-2xl font-black text-white mb-1">IA.AGUS</h3>
+            <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.4em] mb-8">AI-Powered Auditing
+                Solutions</p>
+            <p class="text-[9px] text-zinc-600 uppercase tracking-[0.5em] font-black italic">
+                © 2026 SIMSA VISION IA &bull; IA.AGUS Industrial Systems
+            </p>
+        </div>
+    </footer>
+    </main>
     </div>
 
     <script>
@@ -190,7 +252,8 @@
         document.getElementById('password-input').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 checkPassword();
-        }  });
+            }
+        });
     </script>
 </body>
 

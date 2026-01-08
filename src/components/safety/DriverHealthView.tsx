@@ -1,22 +1,47 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Activity, AlertTriangle, AlertOctagon, Phone, UserX, Download, HeartPulse, Gauge, Eye, Zap, Award } from 'lucide-react';
-import { MOCK_DRIVERS } from '../../services/db/mockDB';
+import { dbService } from '../../services/db/dbService';
+import { pdfService } from '../../services/reports/pdfService';
 import { DriverStatus } from '../../types';
 import { DriverScorecard } from './DriverScorecard';
+泛
 
 export const DriverHealthView = () => {
     const [selectedDriver, setSelectedDriver] = useState<string | null>(null);
+    const [workers, setWorkers] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchWorkers = async () => {
+            try {
+                const data = await dbService.getWorkers();
+                setWorkers(data);
+            } catch (error) {
+                console.error('Error fetching workers:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchWorkers();
+    }, []);
 
     // Sort drivers by Risk Score DESC
-    const sortedDrivers = [...MOCK_DRIVERS].sort((a, b) => b.risk_score - a.risk_score);
+    const sortedDrivers = [...workers].sort((a, b) => (b.risk_score || 0) - (a.risk_score || 0));
+
+    if (loading) {
+        return (
+            <div className="h-full w-full flex items-center justify-center">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-brand"></div>
+            </div>
+        );
+    }
 
     const handleAction = (action: string, driverName: string) => {
         alert(`Acción "${action}" ejecutada para ${driverName}`);
     };
 
     const handleExportReport = () => {
-        alert("Generando Reporte Forense de Salud (PDF)...");
+        pdfService.generateDriverReport(workers);
     };
 
     return (
@@ -166,10 +191,10 @@ export const DriverHealthView = () => {
                     onClose={() => setSelectedDriver(null)}
                     stats={{
                         driverId: selectedDriver,
-                        name: MOCK_DRIVERS.find(d => d.id === selectedDriver)?.name || 'Unknown',
-                        safetyScore: 100 - (MOCK_DRIVERS.find(d => d.id === selectedDriver)?.risk_score || 0),
+                        name: workers.find(d => d.id === selectedDriver)?.name || 'Unknown',
+                        safetyScore: 100 - (workers.find(d => d.id === selectedDriver)?.risk_score || 0),
                         kmDriven: Math.floor(Math.random() * 10000) + 5000,
-                        fatigueEvents: Math.floor((MOCK_DRIVERS.find(d => d.id === selectedDriver)?.risk_score || 0) / 10),
+                        fatigueEvents: Math.floor((workers.find(d => d.id === selectedDriver)?.risk_score || 0) / 10),
                         perfectTrips: Math.floor(Math.random() * 50) + 10
                     }}
                 />

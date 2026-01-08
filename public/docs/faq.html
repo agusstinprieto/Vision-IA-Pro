@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIMSA VISION IA - Centro de Soporte & FAQ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --simsa-yellow: #FFCC33;
+            --simsa-purple: #A855F7;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #0F1012;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .text-yellow {
+            color: var(--simsa-yellow);
+        }
+
+        .bg-yellow {
+            background-color: var(--simsa-yellow);
+        }
+
+        .text-purple {
+            color: var(--simsa-purple);
+        }
+
+        #protection-overlay {
+            position: fixed;
+            inset: 0;
+            background: #0F1012;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body class="text-zinc-300 bg-[#0F1012]">
+
+    <!-- Password Protection -->
+    <div id="protection-overlay">
+        <div class="max-w-md w-full p-10 bg-[#1A1C1E] rounded-[2.5rem] border border-white/5 text-center shadow-2xl">
+            <div class="w-16 h-16 bg-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+            </div>
+            <h2 class="text-2xl font-black text-white uppercase tracking-tighter mb-2">Centro de Soporte</h2>
+            <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-2">Acceso para Personal Técnico</p>
+            <p class="text-[10px] text-zinc-600 font-mono mb-8">(Clave: admin)</p>
+            <input type="password" id="password-input" placeholder="Contraseña"
+                class="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-center text-white placeholder:text-zinc-700 focus:outline-none focus:border-purple-500 mb-6">
+            <button onclick="checkPassword()"
+                class="w-full bg-purple-500 py-4 rounded-xl text-white font-black uppercase tracking-widest text-xs hover:bg-purple-600 transition-all">Acceder</button>
+            <p id="error-msg" class="text-red-500 text-[10px] font-black uppercase tracking-widest mt-4 hidden">
+                Contraseña Incorrecta</p>
+        </div>
+    </div>
+
+    <div id="main-content" class="hidden">
+        <nav
+            class="fixed top-0 w-full z-50 bg-[#0F1012]/80 backdrop-blur-lg border-b border-white/5 px-8 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-[#FFCC33] rounded-lg flex items-center justify-center">
+                    <span class="text-black font-black text-sm">S</span>
+                </div>
+                <span class="font-black text-white uppercase tracking-tighter">SIMSA <span class="text-yellow">VISION
+                        IA</span></span>
+            </a>
+            <span
+                class="text-[10px] font-black text-purple-500 uppercase border border-purple-500/30 px-3 py-1 rounded-full">Support
+                Hub</span>
+        </nav>
+
+        <main class="max-w-4xl mx-auto px-6 pt-32 pb-24">
+            <header class="mb-16">
+                <h1 class="text-6xl font-black text-white uppercase tracking-tighter mb-4">Preguntas <br /><span
+                        class="text-purple-500">Técnicas</span></h1>
+                <p class="text-zinc-500 font-mono text-sm leading-relaxed">Protocolos de Automatización, Fallas de
+                    Hardware y Matriz de Escalación.</p>
+            </header>
+
+            <div class="space-y-12">
+
+                <!-- Section 1 -->
+                <section>
+                    <h2
+                        class="text-xl font-black text-white uppercase tracking-widest mb-6 border-l-4 border-purple-500 pl-4">
+                        1. Fallas de Hardware (Cámaras/Sensores)</h2>
+
+                    <div class="grid gap-6">
+                        <div class="bg-[#1A1C1E] p-8 rounded-3xl border border-white/5">
+                            <h3 class="text-sm font-black text-purple-400 uppercase tracking-widest mb-3">¿Qué pasa si
+                                una cámara se daña?</h3>
+                            <p class="text-zinc-400 text-sm leading-relaxed mb-4">
+                                El sistema usa un monitor de "Latidos" (Heartbeat). Si el Servidor Local no recibe
+                                respuesta de una cámara por <strong>1.5 minutos</strong> (3 pings fallidos), la marca
+                                automátiamente como <span class="text-red-500 font-mono text-xs">OFFLINE</span>.
+                            </p>
+                            <div class="bg-black/30 p-4 rounded-xl border-l-2 border-red-500">
+                                <p class="text-[10px] text-zinc-500 font-mono uppercase">Acción Automática:</p>
+                                <p class="text-xs text-white mt-1">Generación de evento <span
+                                        class="font-mono text-red-500">DEVICE_HEALTH_ALERT</span> -> Envío a Supabase ->
+                                    Notificación Dashboard.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#1A1C1E] p-8 rounded-3xl border border-white/5">
+                            <h3 class="text-sm font-black text-purple-400 uppercase tracking-widest mb-3">¿Cómo se
+                                entera soporte técnico?</h3>
+                            <p class="text-zinc-400 text-sm leading-relaxed mb-4">
+                                No se requiere reporte humano. Supabase dispara un <strong>Webhook</strong> directo a su
+                                sistema de tickets (Jira/Zendesk) o envía un correo urgente a <span
+                                    class="text-white underline">soporte@simsa.com</span>.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2 -->
+                <section>
+                    <h2
+                        class="text-xl font-black text-white uppercase tracking-widest mb-6 border-l-4 border-purple-500 pl-4">
+                        2. Automatización & Mantenimiento</h2>
+
+                    <div class="bg-[#1A1C1E] p-8 rounded-3xl border border-white/5">
+                        <ul class="space-y-6">
+                            <li>
+                                <h3 class="text-sm font-black text-white uppercase tracking-widest mb-2">Mantenimiento
+                                    Preventivo</h3>
+                                <p class="text-zinc-400 text-xs">El sistema cuenta horas de operación y sugiere limpieza
+                                    de lentes automáticamente cada 8,000 horas.</p>
+                            </li>
+                            <li class="border-t border-white/5 pt-6">
+                                <h3 class="text-sm font-black text-white uppercase tracking-widest mb-2">Cortes de
+                                    Energía</h3>
+                                <p class="text-zinc-400 text-xs">El servidor (con UPS) envía una señal de "Power Loss"
+                                    antes de apagarse de forma segura para evitar corrupción de datos.</p>
+                            </li>
+                            <li class="border-t border-white/5 pt-6">
+                                <h3 class="text-sm font-black text-white uppercase tracking-widest mb-2">Internet Lento
+                                </h3>
+                                <p class="text-zinc-400 text-xs">Priorización de tráfico (QoS). Las Alertas Críticas
+                                    (JSON ligero) salen primero. El video evidencia se pausa hasta recuperar ancho de
+                                    banda.</p>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Section 3 -->
+                <section>
+                    <h2
+                        class="text-xl font-black text-white uppercase tracking-widest mb-6 border-l-4 border-purple-500 pl-4">
+                        3. Matriz de Escalación</h2>
+
+                    <div class="overflow-hidden rounded-3xl border border-white/5">
+                        <table class="w-full text-left text-[11px]">
+                            <thead class="bg-white/5 text-white uppercase font-black tracking-widest">
+                                <tr>
+                                    <th class="p-4">Incidente</th>
+                                    <th class="p-4">Respuesta Automática</th>
+                                    <th class="p-4">Tiempo Respuesta</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/5 text-zinc-400 bg-[#1A1C1E] font-mono">
+                                <tr>
+                                    <td class="p-4 text-yellow-500">Cámara Offline</td>
+                                    <td class="p-4">Email a Soporte IT Local</td>
+                                    <td class="p-4">24 Horas</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 text-red-500">Servidor Offline</td>
+                                    <td class="p-4">SMS/WhatsApp a Gerente IT</td>
+                                    <td class="p-4 text-white font-bold">Inmediato</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 text-blue-400">Falla Disco Duro</td>
+                                    <td class="p-4">Alerta Amarilla en Dashboard</td>
+                                    <td class="p-4">Próximo Servicio</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 text-red-600 font-bold">Sabotaje Detectado</td>
+                                    <td class="p-4">Bloqueo de Accesos + Alerta Roja</td>
+                                    <td class="p-4 text-white font-bold">Inmediato</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- Footer IA.AGUS -->
+            <footer class="mt-24 pt-12 border-t border-white/5 text-center">
+                <div class="flex flex-col items-center">
+                    <h3 class="text-2xl font-black text-white mb-1">IA.AGUS</h3>
+                    <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.4em] mb-8">Soluciones de
+                        Auditoría con Inteligencia Artificial</p>
+                    <p class="text-[9px] text-zinc-600 uppercase tracking-[0.5em] font-black italic">
+                        © 2026 SIMSA VISION IA &bull; IA.AGUS Industrial Systems
+                    </p>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        function checkPassword() {
+            const input = document.getElementById('password-input');
+            const pass = input.value.trim();
+            if (pass === 'admin' || pass === 'ia.agus') {
+                document.getElementById('protection-overlay').style.display = 'none';
+                document.getElementById('main-content').classList.remove('hidden');
+                document.getElementById('main-content').style.display = 'block';
+            } else {
+                document.getElementById('error-msg').classList.remove('hidden');
+                input.value = '';
+            }
+        }
+        document.getElementById('password-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') checkPassword();
+        });
+    </script>
+</body>
+
+</html>

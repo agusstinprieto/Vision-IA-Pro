@@ -15,8 +15,8 @@ import {
     Disc // [NEW] Icon
 } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
-import { MOCK_TIRES, MOCK_DRIVERS } from '../../services/db/mockDB';
-import { SecurityAlert, DriverStatus } from '../../types';
+import { dbService } from '../../services/db/dbService';
+import { SecurityAlert, DriverStatus, InventoryTire, Unit, TripData } from '../../types';
 
 interface DashboardViewProps {
     onNavigate: (view: string) => void;
@@ -25,33 +25,68 @@ interface DashboardViewProps {
 
 export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandColor }) => {
     const { t } = useLanguage();
+    const [tires, setTires] = React.useState<InventoryTire[]>([]);
+    const [workers, setWorkers] = React.useState<any[]>([]);
+    const [trips, setTrips] = React.useState<TripData[]>([]);
+    const [loading, setLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [tiresData, workersData, tripsData] = await Promise.all([
+                    dbService.getTires(),
+                    dbService.getWorkers(),
+                    dbService.getTrips()
+                ]);
+                setTires(tiresData);
+                setWorkers(workersData);
+                setTrips(tripsData);
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="h-full w-full flex items-center justify-center">
+                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-brand"></div>
+            </div>
+        );
+    }
 
     // --- Statistics Calculations ---
 
     // 1. Tire Stats
-    const totalTires = MOCK_TIRES.length;
-    const criticalTires = MOCK_TIRES.filter(t => t.status === SecurityAlert.ROJA).length;
-    const warningTires = MOCK_TIRES.filter(t => t.status === SecurityAlert.AMARILLA).length;
-    const avgDepth = (MOCK_TIRES.reduce((acc, t) => acc + t.depth_mm, 0) / totalTires).toFixed(1);
-    const tireHealthPercentage = Math.round((MOCK_TIRES.reduce((acc, t) => acc + t.depth_mm, 0) / (totalTires * 20)) * 100); // Assuming 20mm is new
+    const totalTires = tires.length || 1; // Avoid division by zero
+    const criticalTires = tires.filter(t => t.status === SecurityAlert.ROJA).length;
+    const warningTires = tires.filter(t => t.status === SecurityAlert.AMARILLA).length;
+    const avgDepth = (tires.reduce((acc, t) => acc + (t.depth_mm || 0), 0) / totalTires).toFixed(1);
+    const tireHealthPercentage = Math.round((tires.reduce((acc, t) => acc + (t.depth_mm || 0), 0) / (totalTires * 20)) * 100);
 
     // 2. Driver Stats
-    const totalDrivers = MOCK_DRIVERS.length;
-    const alertDrivers = MOCK_DRIVERS.filter(d => d.risk_score > 50 || d.metrics.alcohol_probability > 0 || d.metrics.fatigue > 50).length;
-    const criticalDrivers = MOCK_DRIVERS.filter(d => d.status === DriverStatus.PELIGRO || d.status === DriverStatus.FATIGA).length;
+    const totalDrivers = workers.length;
+    const alertDrivers = workers.filter(d => (d.risk_score || 0) > 50 || (d.metrics?.alcohol_probability || 0) > 0 || (d.metrics?.fatigue || 0) > 50).length;
+    const criticalDrivers = workers.filter(d => d.status === DriverStatus.PELIGRO || d.status === DriverStatus.FATIGA).length;
 
     const kpis = [
         { label: 'Eficiencia de Auditoría', value: '98.4%', trend: '+2.1%', icon: <Zap size={20} />, color: 'emerald' },
-        { label: 'Alertas Críticas (24h)', value: '03', trend: '-15%', icon: <AlertCircle size={20} />, color: 'red' },
+        { label: 'Alertas Críticas (24h)', value: criticalTires.toString().padStart(2, '0'), trend: '-15%', icon: <AlertCircle size={20} />, color: 'red' },
         { label: 'Unidades en Ruta', value: '184', trend: 'Estable', icon: <Truck size={20} />, color: 'blue' },
         { label: 'Tire Life Index', value: `${avgDepth}mm`, trend: `${tireHealthPercentage}% Vida`, icon: <Activity size={20} />, color: 'amber' },
     ];
 
-    const recentAudits = [
-        { id: 'TX-402', unit: 'GMS-01', type: 'LLANTAS', status: 'GREEN', time: 'hace 5 min' },
-        { id: 'TX-405', unit: 'GMS-04', type: 'CABINA', status: 'RED', time: 'hace 12 min' },
-        { id: 'TX-409', unit: 'GMS-09', type: 'LLANTAS', status: 'GREEN', time: 'hace 25 min' },
-    ];
+    const recentAudits = trips.slice(0, 5).map(trip => ({
+        id: trip.id,
+        unit: trip.truck_id,
+        type: 'AUDIT',
+        status: trip.alert_level === SecurityAlert.ROJA ? 'RED' : 'GREEN',
+        time: new Date(trip.start_time).toLocaleTimeString()
+    }));
 
     return (
         <div className="p-4 lg:p-6 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-8">

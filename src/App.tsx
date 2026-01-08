@@ -6,9 +6,9 @@ import { SettingsView } from './components/settings/SettingsView';
 import { LoginView } from './components/auth/LoginView';
 import { CabinScanner } from './components/safety/CabinScanner';
 import { SecurityAlert, TripData, AppSettings, CabinAuditResult, UserRole } from './types';
-import { getPreviousTripData } from './services/db/mockDB';
+// [REMOVED MOCK IMPORTS]
 import { analyzeInspectionDelta } from './services/ai/gemini';
-import { saveInspection } from './services/auth/supabase';
+import { dbService } from './services/db/dbService';
 import { LogOut, Settings as SettingsIcon, MenuIcon } from 'lucide-react';
 import { Sidebar } from './components/layout/Sidebar';
 import { useLanguage } from './context/LanguageContext';
@@ -339,7 +339,7 @@ export default function App() {
                     const isAlert = results.some(r => r.analysis.alerta_seguridad === 'ROJA');
 
                     try {
-                      await saveInspection({
+                      await dbService.saveInspection({
                         inspection_type: 'ENTRY',
                         status: isAlert ? 'DAMAGE_DETECTED' : 'CLEAN',
                         ai_summary: results.map(r => `${r.position}: ${r.analysis.alerta_seguridad}`).join(' | '),

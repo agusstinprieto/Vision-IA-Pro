@@ -1,13 +1,37 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Map as MapIcon, Truck, AlertTriangle, Navigation, Locate } from 'lucide-react';
-import { MOCK_UNITS } from '../../services/db/mockDB';
+import { dbService } from '../../services/db/dbService';
+import { Unit } from '../../types';
 
 export const SmartMapView = () => {
     const [filterAlerts, setFilterAlerts] = useState(false);
+    const [units, setUnits] = useState<Unit[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchUnits = async () => {
+            try {
+                const data = await dbService.getUnits();
+                setUnits(data);
+            } catch (error) {
+                console.error('Error fetching units for map:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchUnits();
+    }, []);
 
     // Filter logic
-    const visibleUnits = MOCK_UNITS.filter(u => !filterAlerts || !u.is_active); // Mock "alert" as inactive for now
+    const visibleUnits = units.filter(u => !filterAlerts || !u.is_active);
+
+    if (loading) {
+        return (
+            <div className="h-full w-full flex items-center justify-center">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-brand"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="p-8 lg:p-12 h-screen flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700">

@@ -143,6 +143,26 @@
                             <li>- SOS Video Forense (Asaltos)</li>
                             <li>- Dashboard Bienestar Ocupacional</li>
                         </ul>
+
+                        <div class="mt-6 pt-6 border-t border-white/5">
+                            <h3 class="text-sm font-black text-red-500 uppercase tracking-widest mb-2">Protocolo de
+                                Resiliencia (Backup)</h3>
+                            <p class="text-[11px] text-zinc-400 leading-relaxed">
+                                Arquitectura <strong>Offline-First</strong> diseñada para contingencias:
+                            </p>
+                            <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3 text-[10px] font-mono text-zinc-500">
+                                <li class="bg-black/20 p-3 rounded-xl border border-white/5">
+                                    <span class="text-white font-bold block mb-1">Nivel 1: App (IndexedDB)</span>
+                                    Si cae la red, los datos se encriptan localmente en el dispositivo y se sincronizan
+                                    al recuperar conexión.
+                                </li>
+                                <li class="bg-black/20 p-3 rounded-xl border border-white/5">
+                                    <span class="text-white font-bold block mb-1">Nivel 2: Servidor (Cold
+                                        Storage)</span>
+                                    Respaldo físico de video en HDD local (Loop 30 días) independiente de la nube.
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </section>
 

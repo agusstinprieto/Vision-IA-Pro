@@ -1,16 +1,32 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Filter, AlertTriangle, CheckCircle2, History, AlertOctagon, Download } from 'lucide-react';
-import { MOCK_TIRES } from '../../services/db/mockDB';
-import { SecurityAlert } from '../../types';
+import { dbService } from '../../services/db/dbService';
+import { pdfService } from '../../services/reports/pdfService';
+import { SecurityAlert, InventoryTire } from '../../types';
 import { predictTireLife } from '../../services/ai/predictive';
 
 export const TireInventoryView = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [viewMode, setViewMode] = useState<'GRID' | 'LIST'>('GRID');
     const [statusFilter, setStatusFilter] = useState<'ALL' | 'CRITICAL' | 'WARNING' | 'GOOD'>('ALL');
+    const [tires, setTires] = useState<InventoryTire[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const filteredTires = MOCK_TIRES.filter(tire => {
+    useEffect(() => {
+        const fetchTires = async () => {
+            try {
+                const data = await dbService.getTires();
+                setTires(data);
+            } catch (error) {
+                console.error('Error fetching tires:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchTires();
+    }, []);
+
+    const filteredTires = tires.filter(tire => {
         const matchesSearch = tire.unit_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
             tire.brand.toLowerCase().includes(searchTerm.toLowerCase());
 
@@ -22,10 +38,22 @@ export const TireInventoryView = () => {
         return matchesSearch && statusMatch;
     });
 
-    const handleExportPDF = () => {
-        alert('Generando Reporte PDF de Salud de Llantas... (Simulado)');
-        // In real app: import jsPDF or use window.print
-        // window.print();
+    if (loading) {
+        return (
+            <div className="h-full w-full flex items-center justify-center">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-brand"></div>
+            </div>
+        );
+    }
+
+    const handleExportPDF = async () => {
+        try {
+            const units = await dbService.getUnits();
+            pdfService.generateTireReport(filteredTires, units);
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            alert('Error al generar el reporte PDF.');
+        }
     };
 
     return (

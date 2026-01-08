@@ -3,7 +3,7 @@ import React, { useState, useRef } from 'react';
 import { SecureCamera } from '../camera/SecureCamera';
 import { analyzeCabinIntegrity } from '../../services/ai/gemini';
 import { CabinAuditResult, SecurityAlert, DriverStatus } from '../../types';
-import { MOCK_DRIVERS } from '../../services/db/mockDB';
+import { dbService } from '../../services/db/dbService';
 
 interface CabinScannerProps {
     onClose: () => void;
@@ -14,9 +14,23 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) 
     const [mode, setMode] = useState<'START' | 'MONITOR' | 'SOS' | 'RESULT'>('START');
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [lastResult, setLastResult] = useState<CabinAuditResult | null>(null);
-    const [selectedDriverName, setSelectedDriverName] = useState<string>('');
+    const [selectedDriver, setSelectedDriver] = useState<any>(null);
+    const [workers, setWorkers] = useState<any[]>([]);
+
+    React.useEffect(() => {
+        const fetchWorkers = async () => {
+            try {
+                const data = await dbService.getWorkers();
+                setWorkers(data);
+            } catch (error) {
+                console.error('Error fetching workers for scanner:', error);
+            }
+        };
+        fetchWorkers();
+    }, []);
 
     const handleCabinCapture = async (blob: Blob) => {
+        if (!selectedDriver) return;
         setIsAnalyzing(true);
 
         try {
@@ -33,6 +47,18 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) 
             const result = await analyzeCabinIntegrity(base64);
             setLastResult(result);
             setMode('RESULT');
+
+            // Persist to Supabase
+            await Promise.all([
+                dbService.updateWorkerStatus(selectedDriver.id, result.estado_chofer, result.hallazgos),
+                dbService.createTrip({
+                    id: `AUD-${Date.now()}`,
+                    truck_id: selectedDriver.unit_assigned,
+                    driver_id: selectedDriver.id,
+                    status: 'COMPLETED',
+                    alert_level: result.nivel_riesgo
+                })
+            ]);
 
             if (result.nivel_riesgo === SecurityAlert.ROJA) {
                 onAlert(result);
@@ -87,18 +113,21 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) 
                                 <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest mb-1">OPERADOR DETECTADO</p>
                                 <select
                                     className="w-full bg-transparent border-none text-white font-black uppercase outline-none appearance-none"
-                                    onChange={(e) => setSelectedDriverName(e.target.value)}
-                                    value={selectedDriverName}
+                                    onChange={(e) => {
+                                        const worker = workers.find(w => w.id === e.target.value);
+                                        setSelectedDriver(worker);
+                                    }}
+                                    value={selectedDriver?.id || ''}
                                 >
                                     <option value="">Seleccionar Operador...</option>
-                                    {MOCK_DRIVERS.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
+                                    {workers.map(w => <option key={w.id} value={w.id}>{w.name}</option>)}
                                 </select>
                             </div>
 
                             <button
                                 onClick={() => setMode('MONITOR')}
-                                disabled={!selectedDriverName}
-                                className={`w-full py-6 rounded-[2rem] font-black uppercase tracking-widest transition-all ${selectedDriverName
+                                disabled={!selectedDriver}
+                                className={`w-full py-6 rounded-[2rem] font-black uppercase tracking-widest transition-all ${selectedDriver
                                     ? 'bg-brand text-white shadow-[0_20px_40px_rgba(234,73,46,0.2)] hover:scale-[1.02] active:scale-[0.98]'
                                     : 'bg-zinc-800 text-zinc-500 cursor-not-allowed opacity-50'
                                     }`}
@@ -114,7 +143,7 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) 
                                 active={true}
                                 onCapture={handleCabinCapture}
                                 tripId="DMS-SESSION"
-                                plateId={selectedDriverName || "DRIVER-CAB"}
+                                plateId={selectedDriver?.id || "DRIVER-CAB"}
                             />
 
                             {/* --- PREMIUM HUD OVERLAY --- */}
@@ -136,7 +165,7 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) 
                             <div className="absolute top-8 left-8 space-y-3">
                                 <div className="flex items-center gap-3 bg-black/60 backdrop-blur-xl px-5 py-3 rounded-full border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
                                     <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full shadow-[0_0_15px_#10B981] animate-pulse" />
-                                    <span className="text-[11px] font-black uppercase tracking-widest text-white">ID: {selectedDriverName}</span>
+                                    <span className="text-[11px] font-black uppercase tracking-widest text-white">ID: {selectedDriver?.name}</span>
                                 </div>
                                 <div className="flex items-center gap-3 bg-black/40 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/5">
                                     <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500 italic">Encryption: AES-256</span>
