@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Activity, AlertTriangle, AlertOctagon, Phone, UserX, Download, HeartPulse, Gauge, Eye, Zap, Award } from 'lucide-react';
+import { Activity, AlertTriangle, AlertOctagon, Phone, UserX, Download, HeartPulse, Gauge, Eye, Zap, Award, X } from 'lucide-react';
 import { dbService } from '../../services/db/dbService';
 import { pdfService } from '../../services/reports/pdfService';
 import { DriverStatus } from '../../types';
@@ -254,8 +254,8 @@ export const DriverHealthView = () => {
                     <div className="bg-[#121214] border border-white/10 rounded-3xl p-8 w-full max-w-md shadow-2xl animate-in zoom-in duration-300">
                         <div className="flex justify-between items-center mb-6">
                             <h3 className="text-2xl font-black uppercase tracking-tighter text-white">Nuevo Operador</h3>
-                            <button onClick={() => setShowCreateModal(false)} className="text-zinc-500 hover:text-white">
-                                <UserX size={24} className="rotate-45" />
+                            <button onClick={() => setShowCreateModal(false)} className="text-zinc-500 hover:text-white transition-colors">
+                                <X size={24} />
                             </button>
                         </div>
 
