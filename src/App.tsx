@@ -9,7 +9,7 @@ import { SecurityAlert, TripData, AppSettings, CabinAuditResult, UserRole } from
 import { getPreviousTripData } from './services/db/mockDB';
 import { analyzeInspectionDelta } from './services/ai/gemini';
 import { saveInspection } from './services/auth/supabase';
-import { LogOut, Settings as SettingsIcon } from 'lucide-react';
+import { LogOut, Settings as SettingsIcon, MenuIcon } from 'lucide-react';
 import { Sidebar } from './components/layout/Sidebar';
 import { useLanguage } from './context/LanguageContext';
 
@@ -19,6 +19,7 @@ import { TireInventoryView } from './components/inventory/TireInventoryView';
 import { SmartMapView } from './components/logistics/SmartMapView';
 import { EmergencyView } from './components/safety/EmergencyView';
 import { DriverHealthView } from './components/safety/DriverHealthView';
+import { LanguageToggle } from './components/common/LanguageToggle';
 
 // Standard Audit Entry Type
 interface AuditEntry {
@@ -113,7 +114,6 @@ export default function App() {
         brandColor={settings.primaryColor}
         isOpen={isSidebarOpen}
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
-        onLogout={handleLogout}
         userRole={userRole}
       />
 
@@ -121,8 +121,17 @@ export default function App() {
       <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
 
         {/* Top Header Bar */}
-        <header className="flex justify-end items-center px-6 py-3 lg:px-10 lg:py-4 border-b border-white/5 bg-[#0A0A0B]/90 backdrop-blur-sm z-30 sticky top-0">
-          <div className="flex gap-4">
+        <header className="flex justify-between items-center px-6 py-3 lg:px-10 lg:py-4 border-b border-white/5 bg-[#0A0A0B]/90 backdrop-blur-sm z-30 sticky top-0">
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="lg:hidden p-2 text-zinc-500 hover:text-white"
+          >
+            <MenuIcon size={24} />
+          </button>
+
+          <div className="flex items-center gap-4">
+            <LanguageToggle />
+
             <button
               onClick={() => setView('settings')}
               className="bg-white/5 hover:bg-white/10 p-3 rounded-2xl border border-white/10 transition-all group"
@@ -137,7 +146,7 @@ export default function App() {
             >
               <LogOut size={20} />
             </button>
-            <div className="bg-[#121214] border border-[#1E1E21] px-6 py-3 rounded-2xl flex items-center gap-3">
+            <div className="hidden sm:flex bg-[#121214] border border-[#1E1E21] px-6 py-3 rounded-2xl items-center gap-3">
               <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
               <span className="text-xs font-black uppercase tracking-widest text-zinc-400">Panel: {currentUser} ({userRole})</span>
             </div>
@@ -145,7 +154,7 @@ export default function App() {
         </header>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-4 lg:p-8 scrollbar-hide">
+        <div className="flex-1 overflow-y-auto p-2 lg:p-4 scrollbar-hide pb-20">
           <div className="max-w-7xl mx-auto">
             {view === 'dashboard' ? (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

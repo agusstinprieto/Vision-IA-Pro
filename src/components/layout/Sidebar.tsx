@@ -9,8 +9,6 @@ import {
     Map as MapIcon,
     PhoneCall,
     History,
-    Settings,
-    LogOut,
     Menu,
     X,
     Sparkles,
@@ -26,9 +24,7 @@ interface SidebarProps {
     brandColor: string;
     isOpen: boolean;
     onToggle: () => void;
-    onToggle: () => void;
-    onLogout: () => void;
-    userRole: string; // Simplified for import issues, or import UserRole if possible. Let's use string for now or import.
+    userRole: string;
 }
 
 interface NavItem {
@@ -46,10 +42,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
     brandColor,
     isOpen,
     onToggle,
-    onLogout,
     userRole
 }) => {
-    const { language, setLanguage, t } = useLanguage();
+    const { t } = useLanguage();
 
     const navItems: NavItem[] = [
         { id: 'dashboard', label: t('sidebar.dashboard'), icon: <LayoutDashboard size={20} />, category: 'CORE' },
@@ -202,42 +197,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
                 </nav>
 
-                {/* User / Settings Section */}
-                {/* User / Settings Section */}
-                <div className="p-4 border-t border-white/5 space-y-2">
-                    <div className="flex gap-2">
-                        <button
-                            onClick={() => onNavigate('settings')}
-                            className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-zinc-500 hover:text-white hover:bg-white/[0.03] transition-all border border-transparent hover:border-white/5 ${activeView === 'settings' ? 'text-white bg-zinc-900' : ''}`}
-                        >
-                            <Settings size={16} />
-                            <span className="text-xs font-bold">{t('sidebar.settings')}</span>
-                        </button>
-                        <div className="flex bg-zinc-900 rounded-xl p-0.5 border border-white/5">
-                            <button
-                                onClick={() => setLanguage('es')}
-                                className={`px-3 py-1 rounded-lg text-[10px] font-black transition-colors ${language === 'es' ? 'bg-white/10 text-white' : 'text-zinc-500 hover:text-white'}`}
-                            >
-                                ES
-                            </button>
-                            <button
-                                onClick={() => setLanguage('en')}
-                                className={`px-3 py-1 rounded-lg text-[10px] font-black transition-colors ${language === 'en' ? 'bg-white/10 text-white' : 'text-zinc-500 hover:text-white'}`}
-                            >
-                                EN
-                            </button>
-                        </div>
-                    </div>
-
-                    <button
-                        onClick={onLogout}
-                        className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-red-500/80 hover:text-red-500 hover:bg-red-500/10 transition-all font-bold text-xs"
-                    >
-                        <LogOut size={16} />
-                        <span>{t('sidebar.logout')}</span>
-                    </button>
-
-                </div>
 
                 <div className="px-6 py-4 border-t border-white/5">
                     <a

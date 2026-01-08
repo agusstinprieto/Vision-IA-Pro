@@ -29,7 +29,7 @@ export const TireInventoryView = () => {
     };
 
     return (
-        <div className="p-8 lg:p-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="p-4 lg:p-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div>
                     <h2 className="text-3xl font-black uppercase tracking-tighter mb-2">Inventario de Llantas</h2>
