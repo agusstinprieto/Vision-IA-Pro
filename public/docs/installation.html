@@ -32,10 +32,107 @@
                 linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
             background-size: 20px 20px;
         }
+
+        @media print {
+            @page {
+                margin: 1.5cm;
+            }
+
+            body {
+                background-color: white !important;
+                background-image: none !important;
+                color: black !important;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .glass {
+                background: white !important;
+                border: 2px solid #000 !important;
+                color: black !important;
+                box-shadow: none !important;
+                backdrop-filter: none !important;
+            }
+
+            .text-white {
+                color: black !important;
+            }
+
+            .text-zinc-400,
+            .text-zinc-500 {
+                color: #444 !important;
+            }
+
+            .bg-zinc-800,
+            .bg-zinc-900,
+            .bg-black\/40 {
+                background-color: #f4f4f5 !important;
+                border: 1px solid #000 !important;
+                color: black !important;
+            }
+
+            .border-white\/10,
+            .border-white\/5 {
+                border-color: #000 !important;
+            }
+
+            /* Hide non-print elements */
+            nav,
+            .no-print {
+                display: none !important;
+            }
+
+            /* Show print elements */
+            .print-only {
+                display: block !important;
+            }
+
+            /* Watermark */
+            .watermark-container {
+                position: fixed;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: -10;
+                opacity: 0.1;
+                pointer-events: none;
+            }
+
+            .watermark-text {
+                font-size: 8rem;
+                font-weight: 900;
+                color: #000;
+                transform: rotate(-45deg);
+                text-transform: uppercase;
+                border: 8px solid #000;
+                padding: 1rem 4rem;
+            }
+        }
+
+        .print-only {
+            display: none;
+        }
     </style>
 </head>
 
-<body class="tech-grid min-h-screen">
+<body class="tech-grid min-h-screen relative">
+
+    <!-- Print Watermark (Hidden on screen) -->
+    <div class="print-only watermark-container">
+        <div class="watermark-text">CONFIDENCIAL</div>
+    </div>
+
+    <!-- Print Button -->
+    <button onclick="window.print()"
+        class="no-print fixed bottom-8 right-8 z-50 bg-white text-black px-6 py-4 rounded-full font-black uppercase tracking-widest shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:scale-110 transition-transform flex items-center gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9V2h12v7" />
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+            <path d="M6 14h12v8H6z" />
+        </svg>
+        Imprimir PDF
+    </button>
     <nav class="fixed top-0 w-full z-50 glass border-b border-white/5 px-8 py-4 flex justify-between items-center">
         <div class="flex items-center gap-3">
             <div class="w-8 h-8 bg-[#EA492E] rounded-lg flex items-center justify-center">
