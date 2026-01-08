@@ -198,7 +198,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </nav>
 
 
-                <div className="px-6 py-4 border-t border-white/5">
+                <div className="px-6 py-8 border-t border-white/10 mt-auto">
                     <a
                         href="https://www.ia-agus.com"
                         target="_blank"
