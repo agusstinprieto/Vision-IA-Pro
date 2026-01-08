@@ -17,7 +17,7 @@ export const DriverHealthView = () => {
         const fetchWorkers = async () => {
             try {
                 const data = await dbService.getWorkers();
-                setWorkers(data);
+                setWorkers(data || []);
             } catch (error) {
                 console.error('Error fetching workers:', error);
             } finally {
@@ -80,7 +80,7 @@ export const DriverHealthView = () => {
             </header>
 
             {/* High Priority Alerts Section */}
-            {sortedDrivers[0].risk_score > 80 && (
+            {sortedDrivers.length > 0 && sortedDrivers[0].risk_score > 80 && (
                 <div className="bg-red-500/10 border border-red-500 rounded-[2rem] p-8 relative overflow-hidden animate-pulse-slow">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-red-500/10 blur-[100px] pointer-events-none" />
 
@@ -138,59 +138,67 @@ export const DriverHealthView = () => {
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {sortedDrivers.slice(1).map(driver => (
-                    <div key={driver.id} className="bg-[#121214] border border-white/5 rounded-3xl p-6 group hover:border-brand/20 transition-all">
-                        <div className="flex items-start justify-between mb-6">
-                            <div className="flex items-center gap-4">
-                                <div className="w-16 h-16 rounded-2xl overflow-hidden border border-white/10">
-                                    <img src={driver.photo_url} alt={driver.name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
-                                </div>
-                                <div>
-                                    <h4 className="font-black text-lg text-white leading-tight">{driver.name}</h4>
-                                    <span className={`text-[10px] uppercase font-black tracking-widest px-2 py-0.5 rounded-md ${driver.risk_score > 50 ? 'bg-amber-500/10 text-amber-500' : 'bg-emerald-500/10 text-emerald-500'
-                                        }`}>
-                                        Riesgo: {driver.risk_score}%
-                                    </span>
-                                    <p className="text-[10px] text-zinc-500 font-bold mt-1 flex items-center gap-1">
-                                        <Phone size={10} /> {driver.phone}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="text-right">
-                                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Unidad</p>
-                                <p className="text-white font-mono font-bold">{driver.unit_assigned}</p>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-2 mb-6">
-                            <div className="bg-black/40 p-3 rounded-xl border border-white/5 text-center">
-                                <Activity size={16} className="mx-auto mb-2 text-zinc-500" />
-                                <p className="text-xl font-black text-white">{driver.metrics.heart_rate}</p>
-                                <p className="text-[8px] text-zinc-600 font-black uppercase">BPM</p>
-                            </div>
-                            <div className="bg-black/40 p-3 rounded-xl border border-white/5 text-center">
-                                <Eye size={16} className="mx-auto mb-2 text-zinc-500" />
-                                <p className={`text-xl font-black ${driver.metrics.fatigue > 50 ? 'text-amber-500' : 'text-emerald-500'}`}>{driver.metrics.fatigue}%</p>
-                                <p className="text-[8px] text-zinc-600 font-black uppercase">Fatiga</p>
-                            </div>
-                            <div className="bg-black/40 p-3 rounded-xl border border-white/5 text-center">
-                                <Gauge size={16} className="mx-auto mb-2 text-zinc-500" />
-                                <p className="text-xl font-black text-white">{driver.metrics.stress}%</p>
-                                <p className="text-[8px] text-zinc-600 font-black uppercase">Estrés</p>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-between items-center pt-4 border-t border-white/5">
-                            <span className="text-[10px] text-zinc-600 font-bold">Ult. Chequeo: {driver.last_check}</span>
-                            <button
-                                onClick={() => setSelectedDriver(driver.id)}
-                                className="text-[10px] font-black uppercase tracking-widest text-brand hover:underline flex items-center gap-1"
-                            >
-                                <Award size={12} /> Ver Scorecard
-                            </button>
-                        </div>
+                {sortedDrivers.length === 0 ? (
+                    <div className="col-span-full flex flex-col items-center justify-center p-12 bg-white/5 rounded-3xl border border-white/5 border-dashed">
+                        <UserX size={48} className="text-zinc-600 mb-4" />
+                        <h3 className="text-xl font-bold text-zinc-400 uppercase">Sin Operadores</h3>
+                        <p className="text-sm text-zinc-600">No hay datos registrados en el sistema.</p>
                     </div>
-                ))}
+                ) : (
+                    sortedDrivers.slice(1).map(driver => (
+                        <div key={driver.id} className="bg-[#121214] border border-white/5 rounded-3xl p-6 group hover:border-brand/20 transition-all">
+                            <div className="flex items-start justify-between mb-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-16 h-16 rounded-2xl overflow-hidden border border-white/10">
+                                        <img src={driver.photo_url} alt={driver.name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-black text-lg text-white leading-tight">{driver.name}</h4>
+                                        <span className={`text-[10px] uppercase font-black tracking-widest px-2 py-0.5 rounded-md ${driver.risk_score > 50 ? 'bg-amber-500/10 text-amber-500' : 'bg-emerald-500/10 text-emerald-500'
+                                            }`}>
+                                            Riesgo: {driver.risk_score}%
+                                        </span>
+                                        <p className="text-[10px] text-zinc-500 font-bold mt-1 flex items-center gap-1">
+                                            <Phone size={10} /> {driver.phone}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Unidad</p>
+                                    <p className="text-white font-mono font-bold">{driver.unit_assigned}</p>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-2 mb-6">
+                                <div className="bg-black/40 p-3 rounded-xl border border-white/5 text-center">
+                                    <Activity size={16} className="mx-auto mb-2 text-zinc-500" />
+                                    <p className="text-xl font-black text-white">{driver.metrics.heart_rate}</p>
+                                    <p className="text-[8px] text-zinc-600 font-black uppercase">BPM</p>
+                                </div>
+                                <div className="bg-black/40 p-3 rounded-xl border border-white/5 text-center">
+                                    <Eye size={16} className="mx-auto mb-2 text-zinc-500" />
+                                    <p className={`text-xl font-black ${driver.metrics.fatigue > 50 ? 'text-amber-500' : 'text-emerald-500'}`}>{driver.metrics.fatigue}%</p>
+                                    <p className="text-[8px] text-zinc-600 font-black uppercase">Fatiga</p>
+                                </div>
+                                <div className="bg-black/40 p-3 rounded-xl border border-white/5 text-center">
+                                    <Gauge size={16} className="mx-auto mb-2 text-zinc-500" />
+                                    <p className="text-xl font-black text-white">{driver.metrics.stress}%</p>
+                                    <p className="text-[8px] text-zinc-600 font-black uppercase">Estrés</p>
+                                </div>
+                            </div>
+
+                            <div className="flex justify-between items-center pt-4 border-t border-white/5">
+                                <span className="text-[10px] text-zinc-600 font-bold">Ult. Chequeo: {driver.last_check}</span>
+                                <button
+                                    onClick={() => setSelectedDriver(driver.id)}
+                                    className="text-[10px] font-black uppercase tracking-widest text-brand hover:underline flex items-center gap-1"
+                                >
+                                    <Award size={12} /> Ver Scorecard
+                                </button>
+                            </div>
+                        </div>
+                    ))
+                )}
             </div>
 
             {/* Scorecard Modal */}

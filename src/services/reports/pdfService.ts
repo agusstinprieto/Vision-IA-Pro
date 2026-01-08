@@ -1,15 +1,10 @@
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 import { InventoryTire, Unit } from '../../types';
 
-// Extend jsPDF with autoTable for TypeScript
-interface jsPDFWithAutoTable extends jsPDF {
-    autoTable: (options: any) => jsPDF;
-}
-
 export const pdfService = {
-    generateTireReport: (tires: InventoryTire[], units: Unit[]) => {
-        const doc = new jsPDF() as jsPDFWithAutoTable;
+    generateTireReport: (tires: InventoryTire[], _units: Unit[] = []) => {
+        const doc = new jsPDF();
         const brandColor = [234, 73, 46]; // #EA492E
 
         // 1. Header & Branding
@@ -51,7 +46,7 @@ export const pdfService = {
             t.status
         ]);
 
-        doc.autoTable({
+        autoTable(doc, {
             startY: 85,
             head: [['UNIDAD', 'POSICIÓN', 'MARCA/MODELO', 'PROFUNDIDAD', 'ESTADO']],
             body: tableData,

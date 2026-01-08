@@ -48,11 +48,13 @@ export const TireInventoryView = () => {
 
     const handleExportPDF = async () => {
         try {
-            const units = await dbService.getUnits();
-            pdfService.generateTireReport(filteredTires, units);
+            // Units are not strictly needed for this report version
+            pdfService.generateTireReport(filteredTires);
         } catch (error) {
             console.error('Error generating PDF:', error);
-            alert('Error al generar el reporte PDF.');
+            // Show more detailed error if possible
+            const msg = error instanceof Error ? error.message : 'Unknown error';
+            alert(`Error al generar el reporte PDF: ${msg}`);
         }
     };
 

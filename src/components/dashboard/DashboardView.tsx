@@ -9,7 +9,6 @@ import {
     Activity,
     Zap,
     ShieldCheck,
-    ShieldCheck,
     Truck,
     HeartPulse, // [NEW] Icon
     Disc // [NEW] Icon
@@ -94,10 +93,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
             {/* Welcome Header */}
             <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                    <h2 className="text-4xl font-black uppercase tracking-tighter mb-2">
-                        Torre de <span className="text-brand">Control IA</span>
-                    </h2>
-                    <p className="text-zinc-500 font-bold uppercase tracking-[0.2em] text-[10px]">Ecosistema Integrado de Logs & Biometría</p>
+                    <h2 className="text-4xl font-black mb-4 uppercase tracking-tighter leading-tight">CONTROL TOWER <br /><span className="text-blue-500">FIXED GATE IA</span></h2>
+                    <p className="text-zinc-500 text-lg max-w-sm font-medium">Monitoreo automático de arcos perimetrales. Captura desatendida SIN intervención del chofer.</p>
                 </div>
                 <div className="flex gap-4">
                     <button
@@ -106,6 +103,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
                     >
                         Nueva Auditoría
                     </button>
+                    {/* Gate Status Badge */}
+                    <div className="px-6 py-3 bg-blue-500/10 border border-blue-500/20 rounded-2xl hidden xl:block">
+                        <p className="text-[10px] text-blue-500 font-bold uppercase tracking-widest">GATE STATUS</p>
+                        <p className="text-white font-black">12/12 ONLINE</p>
+                    </div>
                 </div>
             </header>
 
@@ -152,7 +154,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
                                     // Simulated values for chart
                                     const h = [40, 65, 45, 80, 55, 30, 20][i];
                                     return (
-                                        <div key={day} className="flex flex-col items-center gap-2 group w-full">
+                                        <div key={`${day}-${i}`} className="flex flex-col items-center gap-2 group w-full">
                                             <div className="w-full bg-zinc-800 rounded-t-xl relative h-full flex items-end overflow-hidden group-hover:bg-zinc-700 transition-colors">
                                                 <div
                                                     style={{ height: `${h}%` }}
@@ -184,7 +186,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
                 {/* Live Feed */}
                 <div className="bg-[#121214] border border-white/5 rounded-[3rem] p-10 flex flex-col">
                     <div className="flex justify-between items-center mb-10">
-                        <h3 className="text-lg font-black uppercase tracking-widest">Actividad Live</h3>
+                        <h3 className="text-lg font-black uppercase tracking-widest">ACTIVIDAD</h3>
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-red-500 rounded-full animate-ping" />
                             <span className="text-[10px] font-black text-zinc-600">LIVE FEED</span>

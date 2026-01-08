@@ -83,15 +83,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
     const textColor = getContrastColor(brandColor);
 
     const getCategoryLabel = (cat: string) => {
-        const getCategoryLabel = (cat: string) => {
-            switch (cat) {
-                case 'CORE': return t('sidebar.category_core');
-                case 'INVENTORY': return t('sidebar.category_inventory');
-                case 'LOGISTICS': return t('sidebar.category_logistics');
-                case 'EMERGENCY': return t('sidebar.category_support');
-                default: return cat;
-            }
-        };
+        switch (cat) {
+            case 'CORE': return t('sidebar.category_core');
+            case 'INVENTORY': return t('sidebar.category_inventory');
+            case 'LOGISTICS': return t('sidebar.category_logistics');
+            case 'EMERGENCY': return t('sidebar.category_support');
+            default: return cat;
+        }
     };
 
     return (
@@ -205,10 +203,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         rel="noopener noreferrer"
                         className="flex flex-col items-center group/brand"
                     >
-                        <span className="text-[8px] font-black text-zinc-600 uppercase tracking-[0.2em] group-hover/brand:text-zinc-500 transition-colors">
+                        <span className="text-[8px] font-black text-zinc-500 uppercase tracking-[0.2em] group-hover/brand:text-zinc-400 transition-colors">
                             Designed by
                         </span>
-                        <span className="text-[10px] font-black text-brand uppercase tracking-widest group-hover/brand:scale-105 transition-all">
+                        <span className="text-[10px] font-black text-blue-500 uppercase tracking-widest group-hover/brand:scale-105 transition-all">
                             IA.AGUS
                         </span>
                     </a>

@@ -21,6 +21,7 @@ import { SmartMapView } from './components/logistics/SmartMapView';
 import { EmergencyView } from './components/safety/EmergencyView';
 import { DriverHealthView } from './components/safety/DriverHealthView';
 import { LanguageToggle } from './components/common/LanguageToggle';
+import { DashboardView } from './components/dashboard/DashboardView';
 
 // Standard Audit Entry Type
 interface AuditEntry {
@@ -159,88 +160,10 @@ export default function App() {
         <div className="flex-1 overflow-y-auto p-2 lg:p-4 scrollbar-hide pb-20">
           <div className="max-w-7xl mx-auto">
             {view === 'dashboard' ? (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Main Action Card */}
-                <div className="lg:col-span-2 space-y-8">
-                  <div className="bg-[#121214] border border-[#1E1E21] rounded-[2.5rem] p-10 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-brand/5 blur-[100px] -z-10 group-hover:bg-brand/10 transition-all" />
-
-                    <h2 className="text-4xl font-black mb-4 uppercase tracking-tighter leading-tight">{t('dashboard.control_tower')} <br /><span className="text-blue-500">{t('dashboard.fixed_gate')}</span></h2>
-                    <p className="text-zinc-500 text-lg mb-10 max-w-sm font-medium">{t('dashboard.monitoring_desc')}</p>
-
-                    <div className="flex flex-col md:flex-row gap-4 items-center">
-                      {/* Button removed as per user request */}
-                      <div className="px-6 py-3 bg-blue-500/10 border border-blue-500/20 rounded-2xl hidden xl:block">
-                        <p className="text-[10px] text-blue-500 font-bold uppercase tracking-widest">{t('dashboard.gate_status')}</p>
-                        <p className="text-white font-black">12/12 ONLINE</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Safety Cabin Card [NEW] */}
-                  <div
-                    onClick={() => setView('capture-cabin')}
-                    className="bg-zinc-900 border border-white/5 rounded-[2.5rem] p-8 flex items-center justify-between group cursor-pointer hover:border-brand/30 transition-all relative overflow-hidden"
-                  >
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-brand/5 blur-[50px]" />
-                    <div className="flex items-center gap-6">
-                      <div className="w-16 h-16 bg-brand/10 rounded-2xl flex items-center justify-center text-brand border border-brand/20 group-hover:scale-110 transition-transform">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-black uppercase tracking-tighter">{t('dashboard.safety_cabin')} <span className="text-brand">IA</span></h3>
-                        <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest">{t('dashboard.protocol_desc')}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500">{t('dashboard.active')}</span>
-                    </div>
-                  </div>
-
-                  {/* Stats Grid */}
-                  <div className="grid grid-cols-3 gap-6">
-                    {[
-                      { label: t('dashboard.utilization'), val: '84%', color: 'blue-500' },
-                      { label: t('dashboard.tire_alerts'), val: '03', color: 'red-500' },
-                      { label: t('dashboard.traffic_24h'), val: '128', color: 'zinc' },
-                    ].map((stat, i) => (
-                      <div key={i} className="bg-[#121214] border border-[#1E1E21] p-8 rounded-[2rem]">
-                        <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest mb-4">{stat.label}</p>
-                        <p className={`text-4xl font-black text-${stat.color}`}>{stat.val}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Sidebar / Audit Log */}
-                <div className="bg-[#121214] border border-[#1E1E21] rounded-[2.5rem] p-10 flex flex-col">
-                  <div className="flex justify-between items-center mb-10">
-                    <h3 className="text-lg font-black uppercase tracking-widest">{t('dashboard.activity_log')}</h3>
-                    <span className="text-[10px] bg-zinc-800 px-3 py-1 rounded-full text-zinc-400 font-bold">LIVE</span>
-                  </div>
-
-                  <div className="space-y-6 flex-1 overflow-y-auto">
-                    {auditLog.map(item => (
-                      <div key={item.id} className="flex gap-4 p-4 rounded-2xl hover:bg-white/[0.02] transition-colors border border-transparent hover:border-white/5 group">
-                        <div className={`w-2 h-12 rounded-full ${item.status === 'PASSED' ? 'bg-emerald-500' : 'bg-brand'}`} />
-                        <div>
-                          <p className="text-xs font-black uppercase tracking-widest mb-1 group-hover:text-brand transition-colors tracking-tighter">{item.type}</p>
-                          <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest leading-none mb-1">UNIT: {item.unit}</p>
-                          <p className="text-[9px] text-zinc-600 font-medium uppercase tracking-widest">{item.time}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <button
-                    onClick={() => alert(t('common.coming_soon'))}
-                    className="mt-8 text-xs font-black uppercase tracking-widest text-brand hover:opacity-80 transition-opacity"
-                  >
-                    {t('dashboard.view_history')} ↗
-                  </button>
-                </div>
-              </div>
+              <DashboardView
+                onNavigate={setView}
+                brandColor={settings.primaryColor}
+              />
             ) : view === 'qr-scan' ? (
               <div className="max-w-3xl mx-auto text-center">
                 <button
