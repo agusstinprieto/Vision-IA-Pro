@@ -9,7 +9,8 @@ import { SecurityAlert, TripData, AppSettings, CabinAuditResult, UserRole } from
 import { getPreviousTripData } from './services/db/mockDB';
 import { analyzeInspectionDelta } from './services/ai/gemini';
 import { saveInspection } from './services/auth/supabase';
-import { Sidebar } from './components/layout/Sidebar'; // [NEW] Import Sidebar
+import { Sidebar } from './components/layout/Sidebar';
+import { useLanguage } from './context/LanguageContext';
 
 import { sendWhatsAppAlert } from './services/reports/alertService';
 import { UnitInventoryView } from './components/inventory/UnitInventoryView';
@@ -43,7 +44,8 @@ export default function App() {
   const [activeTrip, setActiveTrip] = useState<TripData | null>(null);
   const [analysisResults, setAnalysisResults] = useState<any[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // [NEW] Sidebar state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { t } = useLanguage();
 
   const [auditLog, setAuditLog] = useState<AuditEntry[]>([
     { id: 'EV-901', type: 'ENTRY', unit: 'GMS-01', status: 'PASSED', time: '10:30 AM' },
@@ -143,20 +145,13 @@ export default function App() {
                   <div className="bg-[#121214] border border-[#1E1E21] rounded-[2.5rem] p-10 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-brand/5 blur-[100px] -z-10 group-hover:bg-brand/10 transition-all" />
 
-                    <h2 className="text-4xl font-black mb-4 uppercase tracking-tighter leading-tight">Control Tower <br /><span className="text-blue-500">Fixed Gate IA</span></h2>
-                    <p className="text-zinc-500 text-lg mb-10 max-w-sm font-medium">Monitoreo automático de arcos perimetrales. Captura desatendida SIN intervención del chofer.</p>
+                    <h2 className="text-4xl font-black mb-4 uppercase tracking-tighter leading-tight">{t('dashboard.control_tower')} <br /><span className="text-blue-500">{t('dashboard.fixed_gate')}</span></h2>
+                    <p className="text-zinc-500 text-lg mb-10 max-w-sm font-medium">{t('dashboard.monitoring_desc')}</p>
 
                     <div className="flex flex-col md:flex-row gap-4 items-center">
-                      <button
-                        onClick={() => setView('qr-scan')}
-                        className="w-full md:w-auto bg-brand hover:scale-[1.02] text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest transition-all shadow-[0_0_30px_var(--brand-color)] flex items-center justify-center gap-3"
-                        style={{ color: settings.primaryColor === '#FFFFFF' ? '#000' : '#FFF' }}
-                      >
-                        <span>Simular Escaneo</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                      </button>
+                      {/* Button removed as per user request */}
                       <div className="px-6 py-3 bg-blue-500/10 border border-blue-500/20 rounded-2xl hidden xl:block">
-                        <p className="text-[10px] text-blue-500 font-bold uppercase tracking-widest">Estado Arcos</p>
+                        <p className="text-[10px] text-blue-500 font-bold uppercase tracking-widest">{t('dashboard.gate_status')}</p>
                         <p className="text-white font-black">12/12 ONLINE</p>
                       </div>
                     </div>
@@ -173,22 +168,22 @@ export default function App() {
                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
                       </div>
                       <div>
-                        <h3 className="text-xl font-black uppercase tracking-tighter">Safety Cabín <span className="text-brand">IA</span></h3>
-                        <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest">Protocolo de Fatiga & Asalto</p>
+                        <h3 className="text-xl font-black uppercase tracking-tighter">{t('dashboard.safety_cabin')} <span className="text-brand">IA</span></h3>
+                        <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest">{t('dashboard.protocol_desc')}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500">Activo</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500">{t('dashboard.active')}</span>
                     </div>
                   </div>
 
                   {/* Stats Grid */}
                   <div className="grid grid-cols-3 gap-6">
                     {[
-                      { label: 'Utilización Promedio', val: '84%', color: 'blue-500' },
-                      { label: 'Alertas Llantas', val: '03', color: 'red-500' },
-                      { label: 'Tráfico 24h', val: '128', color: 'zinc' },
+                      { label: t('dashboard.utilization'), val: '84%', color: 'blue-500' },
+                      { label: t('dashboard.tire_alerts'), val: '03', color: 'red-500' },
+                      { label: t('dashboard.traffic_24h'), val: '128', color: 'zinc' },
                     ].map((stat, i) => (
                       <div key={i} className="bg-[#121214] border border-[#1E1E21] p-8 rounded-[2rem]">
                         <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest mb-4">{stat.label}</p>
@@ -201,7 +196,7 @@ export default function App() {
                 {/* Sidebar / Audit Log */}
                 <div className="bg-[#121214] border border-[#1E1E21] rounded-[2.5rem] p-10 flex flex-col">
                   <div className="flex justify-between items-center mb-10">
-                    <h3 className="text-lg font-black uppercase tracking-widest">Actividad</h3>
+                    <h3 className="text-lg font-black uppercase tracking-widest">{t('dashboard.activity_log')}</h3>
                     <span className="text-[10px] bg-zinc-800 px-3 py-1 rounded-full text-zinc-400 font-bold">LIVE</span>
                   </div>
 
@@ -218,7 +213,12 @@ export default function App() {
                     ))}
                   </div>
 
-                  <button className="mt-8 text-xs font-black uppercase tracking-widest text-brand hover:opacity-80 transition-opacity">Ver todo el historial ↗</button>
+                  <button
+                    onClick={() => alert(t('common.coming_soon'))}
+                    className="mt-8 text-xs font-black uppercase tracking-widest text-brand hover:opacity-80 transition-opacity"
+                  >
+                    {t('dashboard.view_history')} ↗
+                  </button>
                 </div>
               </div>
             ) : view === 'qr-scan' ? (

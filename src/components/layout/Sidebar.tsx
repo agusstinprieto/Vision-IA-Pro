@@ -17,6 +17,7 @@ import {
     Search,
     LayoutDashboard
 } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface SidebarProps {
     activeView: string;
@@ -47,19 +48,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
     onToggle,
     onLogout,
     userRole
+    userRole
 }) => {
+    const { language, setLanguage, t } = useLanguage();
+
     const navItems: NavItem[] = [
-        { id: 'dashboard', label: 'Dashboard Inteligente', icon: <LayoutDashboard size={20} />, category: 'CORE' },
-        { id: 'capture-tires', label: 'Captura de Llantas', icon: <Camera size={20} />, badge: 'IA+', category: 'CORE' },
-        { id: 'capture-cabin', label: 'Safety Cabín', icon: <ShieldAlert size={20} />, badge: 'DMS', category: 'CORE' },
-        { id: 'driver-health', label: 'Salud Operador', icon: <Activity size={20} />, badge: 'ALCOHOL', category: 'CORE' },
+        { id: 'dashboard', label: t('sidebar.dashboard'), icon: <LayoutDashboard size={20} />, category: 'CORE' },
+        { id: 'capture-tires', label: t('sidebar.capture_tires'), icon: <Camera size={20} />, badge: 'IA+', category: 'CORE' },
+        { id: 'capture-cabin', label: t('sidebar.capture_cabin'), icon: <ShieldAlert size={20} />, badge: 'DMS', category: 'CORE' },
+        { id: 'driver-health', label: t('sidebar.driver_health'), icon: <Activity size={20} />, badge: 'ALCOHOL', category: 'CORE' },
 
-        { id: 'unit-inventory', label: 'Unidades / Pipas', icon: <Truck size={20} />, category: 'INVENTORY' },
-        { id: 'tire-inventory', label: 'Inventario Llantas', icon: <History size={20} />, category: 'INVENTORY' },
+        { id: 'unit-inventory', label: t('sidebar.unit_inventory'), icon: <Truck size={20} />, category: 'INVENTORY' },
+        { id: 'tire-inventory', label: t('sidebar.tire_inventory'), icon: <History size={20} />, category: 'INVENTORY' },
 
-        { id: 'map', label: 'Mapa Logístico', icon: <MapIcon size={20} />, category: 'LOGISTICS' },
+        { id: 'map', label: t('sidebar.map'), icon: <MapIcon size={20} />, category: 'LOGISTICS' },
 
-        { id: 'emergency', label: 'Emergencias', icon: <PhoneCall size={20} />, category: 'EMERGENCY' },
+        { id: 'emergency', label: t('sidebar.emergency'), icon: <PhoneCall size={20} />, category: 'EMERGENCY' },
     ];
 
     // Role-based filtering
@@ -85,13 +89,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
     const textColor = getContrastColor(brandColor);
 
     const getCategoryLabel = (cat: string) => {
-        switch (cat) {
-            case 'CORE': return 'Operaciones IA';
-            case 'INVENTORY': return 'Inventario';
-            case 'LOGISTICS': return 'Logística';
-            case 'EMERGENCY': return 'Soporte';
-            default: return cat;
-        }
+        const getCategoryLabel = (cat: string) => {
+            switch (cat) {
+                case 'CORE': return t('sidebar.category_core');
+                case 'INVENTORY': return t('sidebar.category_inventory');
+                case 'LOGISTICS': return t('sidebar.category_logistics');
+                case 'EMERGENCY': return t('sidebar.category_support');
+                default: return cat;
+            }
+        };
     };
 
     return (
@@ -143,7 +149,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
 
                 {/* Navigation Content */}
-                <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-8 scrollbar-hide">
+                <nav className="flex-1 overflow-y-auto py-2 px-4 space-y-4 scrollbar-hide">
 
                     {/* Nav Categories */}
                     {['CORE', 'INVENTORY', 'LOGISTICS', 'EMERGENCY'].map(cat => (
@@ -198,35 +204,42 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </nav>
 
                 {/* User / Settings Section */}
-                <div className="p-6 border-t border-white/5 space-y-4">
-                    <button
-                        onClick={() => onNavigate('settings')}
-                        className={`
-              w-full flex items-center gap-4 px-4 py-3 rounded-2xl
-              text-zinc-500 hover:text-white hover:bg-white/[0.03] transition-all
-              ${activeView === 'settings' ? 'text-white bg-zinc-900' : ''}
-            `}
-                    >
-                        <Settings size={20} />
-                        <span className="text-sm font-bold">Configuración</span>
-                    </button>
-
-                    <div className="flex bg-zinc-900 rounded-xl p-1 mb-2 border border-white/5">
-                        <button className="flex-1 py-2 rounded-lg text-xs font-black bg-white/10 text-white">ES</button>
-                        <button className="flex-1 py-2 rounded-lg text-xs font-black text-zinc-500 hover:text-white transition-colors">EN</button>
+                {/* User / Settings Section */}
+                <div className="p-4 border-t border-white/5 space-y-2">
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => onNavigate('settings')}
+                            className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-zinc-500 hover:text-white hover:bg-white/[0.03] transition-all border border-transparent hover:border-white/5 ${activeView === 'settings' ? 'text-white bg-zinc-900' : ''}`}
+                        >
+                            <Settings size={16} />
+                            <span className="text-xs font-bold">{t('sidebar.settings')}</span>
+                        </button>
+                        <div className="flex bg-zinc-900 rounded-xl p-0.5 border border-white/5">
+                            <button
+                                onClick={() => setLanguage('es')}
+                                className={`px-3 py-1 rounded-lg text-[10px] font-black transition-colors ${language === 'es' ? 'bg-white/10 text-white' : 'text-zinc-500 hover:text-white'}`}
+                            >
+                                ES
+                            </button>
+                            <button
+                                onClick={() => setLanguage('en')}
+                                className={`px-3 py-1 rounded-lg text-[10px] font-black transition-colors ${language === 'en' ? 'bg-white/10 text-white' : 'text-zinc-500 hover:text-white'}`}
+                            >
+                                EN
+                            </button>
+                        </div>
                     </div>
 
                     <button
                         onClick={onLogout}
-                        className="w-full flex items-center gap-4 px-4 py-3 rounded-2xl text-red-500/80 hover:text-red-500 hover:bg-red-500/10 transition-all font-bold text-sm"
+                        className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-red-500/80 hover:text-red-500 hover:bg-red-500/10 transition-all font-bold text-xs"
                     >
-                        <LogOut size={20} />
-                        <span>CERRAR SESIÓN</span>
+                        <LogOut size={16} />
+                        <span>{t('sidebar.logout')}</span>
                     </button>
 
-                    <div className="mt-6 flex flex-col items-center opacity-20">
-                        <p className="text-[10px] font-black tracking-widest">IA.AGUS SYSTEMS</p>
-                        <p className="text-[8px] font-bold">V 3.0 REDESIGN</p>
+                    <div className="flex justify-center opacity-20">
+                        <p className="text-[8px] font-black tracking-widest">IA.AGUS v3.0</p>
                     </div>
                 </div>
             </aside>

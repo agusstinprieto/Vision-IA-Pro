@@ -30,12 +30,20 @@ export const DriverHealthView = () => {
                     <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">Biometría & Detección de Sustancias (IA)</p>
                 </div>
 
-                <button
-                    onClick={handleExportReport}
-                    className="bg-brand text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 shadow-[0_0_20px_rgba(234,73,46,0.3)] hover:scale-105 transition-all"
-                >
-                    <Download size={16} /> Reporte S.O.S.
-                </button>
+                <div className="flex gap-4">
+                    <button
+                        onClick={() => alert("Función: Importar Base de Datos de Operadores (CSV/Excel)")}
+                        className="bg-zinc-800 text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 border border-white/10 hover:bg-zinc-700 transition-all"
+                    >
+                        <Download size={16} className="rotate-180" /> Importar DB
+                    </button>
+                    <button
+                        onClick={handleExportReport}
+                        className="bg-brand text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 shadow-[0_0_20px_rgba(234,73,46,0.3)] hover:scale-105 transition-all"
+                    >
+                        <Download size={16} /> Reporte S.O.S.
+                    </button>
+                </div>
             </header>
 
             {/* High Priority Alerts Section */}
@@ -110,6 +118,9 @@ export const DriverHealthView = () => {
                                         }`}>
                                         Riesgo: {driver.risk_score}%
                                     </span>
+                                    <p className="text-[10px] text-zinc-500 font-bold mt-1 flex items-center gap-1">
+                                        <Phone size={10} /> {driver.phone}
+                                    </p>
                                 </div>
                             </div>
                             <div className="text-right">

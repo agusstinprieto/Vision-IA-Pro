@@ -72,6 +72,8 @@ export const MOCK_TIRES: InventoryTire[] = [
 export interface MockDriver {
     id: string;
     name: string;
+    phone: string; // [NEW] Phone number
+    unit_assigned: string;
     unit_assigned: string;
     photo_url: string;
     risk_score: number; // 0-100
@@ -90,6 +92,8 @@ export const MOCK_DRIVERS: MockDriver[] = [
     {
         id: 'D-01',
         name: 'Roberto Sanchez',
+        phone: '+52 871 123 4567',
+        unit_assigned: 'PR-901',
         unit_assigned: 'PR-901',
         photo_url: 'https://randomuser.me/api/portraits/men/32.jpg',
         risk_score: 92,
@@ -106,6 +110,8 @@ export const MOCK_DRIVERS: MockDriver[] = [
     {
         id: 'D-02',
         name: 'Carlos Mendez',
+        phone: '+52 871 987 6543',
+        unit_assigned: 'PR-904',
         unit_assigned: 'PR-904',
         photo_url: 'https://randomuser.me/api/portraits/men/45.jpg',
         risk_score: 75,
@@ -122,6 +128,8 @@ export const MOCK_DRIVERS: MockDriver[] = [
     {
         id: 'D-03',
         name: 'Luis Hernandez',
+        phone: '+52 871 555 1212',
+        unit_assigned: 'PR-910',
         unit_assigned: 'PR-910',
         photo_url: 'https://randomuser.me/api/portraits/men/22.jpg',
         risk_score: 15,

@@ -9,8 +9,14 @@ import {
     Activity,
     Zap,
     ShieldCheck,
-    Truck
+    ShieldCheck,
+    Truck,
+    HeartPulse, // [NEW] Icon
+    Disc // [NEW] Icon
 } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
+import { MOCK_TIRES, MOCK_DRIVERS } from '../../services/db/mockDB';
+import { SecurityAlert, DriverStatus } from '../../types';
 
 interface DashboardViewProps {
     onNavigate: (view: string) => void;
@@ -18,11 +24,27 @@ interface DashboardViewProps {
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandColor }) => {
+    const { t } = useLanguage();
+
+    // --- Statistics Calculations ---
+
+    // 1. Tire Stats
+    const totalTires = MOCK_TIRES.length;
+    const criticalTires = MOCK_TIRES.filter(t => t.status === SecurityAlert.ROJA).length;
+    const warningTires = MOCK_TIRES.filter(t => t.status === SecurityAlert.AMARILLA).length;
+    const avgDepth = (MOCK_TIRES.reduce((acc, t) => acc + t.depth_mm, 0) / totalTires).toFixed(1);
+    const tireHealthPercentage = Math.round((MOCK_TIRES.reduce((acc, t) => acc + t.depth_mm, 0) / (totalTires * 20)) * 100); // Assuming 20mm is new
+
+    // 2. Driver Stats
+    const totalDrivers = MOCK_DRIVERS.length;
+    const alertDrivers = MOCK_DRIVERS.filter(d => d.risk_score > 50 || d.metrics.alcohol_probability > 0 || d.metrics.fatigue > 50).length;
+    const criticalDrivers = MOCK_DRIVERS.filter(d => d.status === DriverStatus.PELIGRO || d.status === DriverStatus.FATIGA).length;
+
     const kpis = [
         { label: 'Eficiencia de Auditoría', value: '98.4%', trend: '+2.1%', icon: <Zap size={20} />, color: 'emerald' },
         { label: 'Alertas Críticas (24h)', value: '03', trend: '-15%', icon: <AlertCircle size={20} />, color: 'red' },
         { label: 'Unidades en Ruta', value: '184', trend: 'Estable', icon: <Truck size={20} />, color: 'blue' },
-        { label: 'Tire Life Index', value: '7.2', trend: '-0.3', icon: <Activity size={20} />, color: 'amber' },
+        { label: 'Tire Life Index', value: `${avgDepth}mm`, trend: `${tireHealthPercentage}% Vida`, icon: <Activity size={20} />, color: 'amber' },
     ];
 
     const recentAudits = [
@@ -152,6 +174,85 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
                         className="mt-10 py-5 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-white/10 transition-all"
                     >
                         Explorar Historial Full ↗
+                    </button>
+                </div>
+
+                {/* --- NEW SECTION: ANALYTICS WIDGETS --- */}
+
+                {/* Tire Health Card */}
+                <div className="bg-[#121214] border border-white/5 rounded-[2.5rem] p-8 flex flex-col justify-between group hover:border-brand/20 transition-all">
+                    <div>
+                        <div className="flex justify-between items-start mb-6">
+                            <h3 className="text-lg font-black uppercase tracking-widest flex items-center gap-2">
+                                <Disc className="text-brand" size={24} /> Estado Llantas
+                            </h3>
+                            <span className="text-xs font-black text-zinc-500 bg-white/5 px-2 py-1 rounded-lg">{totalTires} Total</span>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div className="space-y-1">
+                                <div className="flex justify-between text-xs font-bold text-zinc-400">
+                                    <span>Vida Útil Restante</span>
+                                    <span>{tireHealthPercentage}%</span>
+                                </div>
+                                <div className="h-2 w-full bg-zinc-800 rounded-full overflow-hidden">
+                                    <div className="h-full bg-gradient-to-r from-red-500 via-amber-500 to-emerald-500" style={{ width: `${tireHealthPercentage}%` }} />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 pt-2">
+                                <div className="bg-red-500/10 p-4 rounded-2xl border border-red-500/20">
+                                    <p className="text-2xl font-black text-red-500">{criticalTires}</p>
+                                    <p className="text-[9px] uppercase font-bold text-red-400">Críticas</p>
+                                </div>
+                                <div className="bg-amber-500/10 p-4 rounded-2xl border border-amber-500/20">
+                                    <p className="text-2xl font-black text-amber-500">{warningTires}</p>
+                                    <p className="text-[9px] uppercase font-bold text-amber-400">Atención</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => onNavigate('tire-inventory')}
+                        className="mt-6 w-full py-3 bg-zinc-800 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-zinc-700 transition-colors"
+                    >
+                        Ver Inventario Llantas
+                    </button>
+                </div>
+
+                {/* Driver Health Card */}
+                <div className="bg-[#121214] border border-white/5 rounded-[2.5rem] p-8 flex flex-col justify-between group hover:border-brand/20 transition-all">
+                    <div>
+                        <div className="flex justify-between items-start mb-6">
+                            <h3 className="text-lg font-black uppercase tracking-widest flex items-center gap-2">
+                                <HeartPulse className="text-brand" size={24} /> Salud Operadores
+                            </h3>
+                            <span className="text-xs font-black text-zinc-500 bg-white/5 px-2 py-1 rounded-lg">{totalDrivers} Activos</span>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-center py-4 relative">
+                                {/* Simple Visualization Circle using border */}
+                                <div className="w-32 h-32 rounded-full border-8 border-zinc-800 flex items-center justify-center relative">
+                                    <div className="absolute inset-0 rounded-full border-8 border-l-red-500 border-t-transparent border-r-transparent border-b-transparent rotate-45" />
+                                    <div className="text-center">
+                                        <p className="text-3xl font-black text-white">{alertDrivers}</p>
+                                        <p className="text-[8px] uppercase font-bold text-zinc-500">Alertas</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex justify-between items-center text-xs font-bold border-t border-white/5 pt-4">
+                                <span className="text-red-500 flex items-center gap-1"><AlertCircle size={12} /> {criticalDrivers} Críticos</span>
+                                <span className="text-emerald-500 flex items-center gap-1"><CheckCircle2 size={12} /> {totalDrivers - alertDrivers} Aptos</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => onNavigate('driver-health')}
+                        className="mt-6 w-full py-3 bg-zinc-800 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-zinc-700 transition-colors"
+                    >
+                        Monitorear Salud
                     </button>
                 </div>
 

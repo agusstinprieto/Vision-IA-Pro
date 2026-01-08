@@ -132,6 +132,38 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, onSave, on
                         </div>
                     </div>
                 </section>
+
+                {/* Data Management Section */}
+                <section className="space-y-4">
+                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-500 mb-6 italic">Gestión de Datos</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button
+                            onClick={() => alert('Importar Base de Datos de UNIDADES desde Excel/CSV')}
+                            className="bg-white/5 border border-white/10 p-6 rounded-2xl flex items-center justify-between group hover:bg-white/10 transition-all"
+                        >
+                            <div className="text-left">
+                                <h4 className="font-bold text-sm uppercase">Importar Unidades</h4>
+                                <p className="text-[10px] text-zinc-500">Cargar Excel / CSV</p>
+                            </div>
+                            <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-brand group-hover:text-white transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="rotate-180"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                            </div>
+                        </button>
+
+                        <button
+                            onClick={() => alert('Importar Base de Datos de OPERADORES desde Excel/CSV')}
+                            className="bg-white/5 border border-white/10 p-6 rounded-2xl flex items-center justify-between group hover:bg-white/10 transition-all"
+                        >
+                            <div className="text-left">
+                                <h4 className="font-bold text-sm uppercase">Importar Operadores</h4>
+                                <p className="text-[10px] text-zinc-500">Cargar Excel / CSV</p>
+                            </div>
+                            <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-brand group-hover:text-white transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="rotate-180"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                            </div>
+                        </button>
+                    </div>
+                </section>
             </div>
 
             {/* Footer Actions */}
