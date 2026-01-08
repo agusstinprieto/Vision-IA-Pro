@@ -43,7 +43,7 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) 
     };
 
     return (
-        <div className="fixed inset-0 bg-black z-50 flex flex-col">
+        <div className="h-full flex flex-col relative bg-black">
             {/* Header */}
             <div className="p-6 flex justify-between items-center border-b border-white/5 bg-zinc-900/50 backdrop-blur-xl">
                 <div>
@@ -65,7 +65,7 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) 
             <div className="flex-1 relative overflow-hidden bg-[#050505]">
                 {/* Background Ambient Glow */}
                 <div className={`absolute inset-0 transition-opacity duration-1000 ${lastResult?.nivel_riesgo === SecurityAlert.ROJA ? 'bg-red-500/5 opacity-100' :
-                        lastResult?.nivel_riesgo === SecurityAlert.AMARILLA ? 'bg-yellow/5 opacity-100' : 'bg-brand/5 opacity-50'
+                    lastResult?.nivel_riesgo === SecurityAlert.AMARILLA ? 'bg-yellow/5 opacity-100' : 'bg-brand/5 opacity-50'
                     }`} />
 
                 {mode === 'MONITOR' || mode === 'SOS' ? (
@@ -125,8 +125,8 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) 
                         {/* Premium Result Card */}
                         <div className="w-full max-w-lg bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-[3rem] p-10 flex flex-col items-center shadow-[0_50px_100px_rgba(0,0,0,0.5)]">
                             <div className={`w-28 h-28 rounded-[2.5rem] flex items-center justify-center mb-8 shadow-2xl transition-transform duration-1000 hover:rotate-6 ${lastResult?.nivel_riesgo === SecurityAlert.ROJA ? 'bg-red-500 shadow-red-500/20' :
-                                    lastResult?.nivel_riesgo === SecurityAlert.AMARILLA ? 'bg-yellow shadow-yellow/20 text-black' :
-                                        'bg-emerald-500 shadow-emerald-500/20 text-white'
+                                lastResult?.nivel_riesgo === SecurityAlert.AMARILLA ? 'bg-yellow shadow-yellow/20 text-black' :
+                                    'bg-emerald-500 shadow-emerald-500/20 text-white'
                                 }`}>
                                 {lastResult?.nivel_riesgo === SecurityAlert.ROJA ? (
                                     <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
@@ -148,13 +148,13 @@ export const CabinScanner: React.FC<CabinScannerProps> = ({ onClose, onAlert }) 
                                     <div className="flex justify-between items-end">
                                         <span className="text-[10px] font-black uppercase text-zinc-500 tracking-widest">Nivel de Estrés Cortisol-IA</span>
                                         <span className={`text-xl font-black ${(lastResult?.hallazgos.stress_level || 0) > 7 ? 'text-red-500' :
-                                                (lastResult?.hallazgos.stress_level || 0) > 4 ? 'text-yellow' : 'text-emerald-500'
+                                            (lastResult?.hallazgos.stress_level || 0) > 4 ? 'text-yellow' : 'text-emerald-500'
                                             }`}>{lastResult?.hallazgos.stress_level}/10</span>
                                     </div>
                                     <div className="w-full h-2.5 bg-zinc-900 rounded-full overflow-hidden p-[2px]">
                                         <div
                                             className={`h-full rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(0,0,0,0.5)] ${(lastResult?.hallazgos.stress_level || 0) > 7 ? 'bg-red-500' :
-                                                    (lastResult?.hallazgos.stress_level || 0) > 4 ? 'bg-yellow' : 'bg-emerald-500'
+                                                (lastResult?.hallazgos.stress_level || 0) > 4 ? 'bg-yellow' : 'bg-emerald-500'
                                                 }`}
                                             style={{ width: `${(lastResult?.hallazgos.stress_level || 0) * 10}%` }}
                                         />

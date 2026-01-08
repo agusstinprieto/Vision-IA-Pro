@@ -56,6 +56,28 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, onSave, on
                             />
                         ))}
                     </div>
+
+                    {/* Custom Color Picker */}
+                    <div className="flex items-center gap-4 mt-6 p-4 bg-white/5 rounded-2xl border border-white/10">
+                        <div className="relative w-12 h-12 rounded-xl overflow-hidden border-2 border-white/20">
+                            <input
+                                type="color"
+                                value={localSettings.primaryColor}
+                                onChange={(e) => setLocalSettings({ ...localSettings, primaryColor: e.target.value })}
+                                className="absolute inset-x-[-50%] inset-y-[-50%] w-[200%] h-[200%] cursor-pointer p-0 m-0 border-none"
+                            />
+                        </div>
+                        <div className="flex-1">
+                            <label className="text-[10px] uppercase font-bold text-zinc-400 block mb-1">Color Personalizado (Hex)</label>
+                            <input
+                                type="text"
+                                value={localSettings.primaryColor}
+                                onChange={(e) => setLocalSettings({ ...localSettings, primaryColor: e.target.value })}
+                                className="w-full bg-transparent font-mono font-bold text-lg outline-none uppercase placeholder-zinc-700"
+                                placeholder="#000000"
+                            />
+                        </div>
+                    </div>
                 </section>
 
                 {/* Supervisor Section */}

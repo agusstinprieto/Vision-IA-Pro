@@ -1,8 +1,10 @@
 
 import React, { useState } from 'react';
 
+import { UserRole } from '../../types';
+
 interface LoginViewProps {
-    onLogin: (user: string) => void;
+    onLogin: (user: string, role: UserRole) => void;
 }
 
 export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
@@ -16,14 +18,26 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
         setIsLoading(true);
         setError('');
 
-        // Simulating authentication (admin / ia.agus)
+        // Simulating authentication with RBAC
         setTimeout(() => {
+            // Master Admin
             if ((user === 'admin' || user === 'ia.agus') && password === 'admin') {
-                onLogin(user);
-            } else if (password === 'ia.agus') {
-                onLogin(user || 'Master');
-            } else {
-                setError('Credenciales incorrectas. Verifica tu acceso.');
+                onLogin(user, 'MASTER');
+            }
+            // Manager Role
+            else if (user === 'gerente' && password === 'simsa2026') {
+                onLogin('Gerente Ops', 'MANAGER');
+            }
+            // Employee Role
+            else if (user === 'operador' && password === 'ruta123') {
+                onLogin('Operador #402', 'EMPLOYEE');
+            }
+            // Developer Role
+            else if (password === 'ia.agus.dev') {
+                onLogin('Agus Dev', 'DEVELOPER');
+            }
+            else {
+                setError('Credenciales incorrectas. Intente: admin/admin, gerente/simsa2026, operador/ruta123');
                 setIsLoading(false);
             }
         }, 800);

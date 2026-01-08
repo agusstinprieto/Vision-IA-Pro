@@ -108,3 +108,47 @@ export interface CabinAuditResult {
     };
     recomendacion: string;
 }
+
+export interface Unit {
+    id: string;
+    plate_id: string;
+    pipe_number: string;
+    is_active: boolean;
+    location?: GPSLocation;
+    last_audit?: string;
+}
+
+export interface InventoryTire {
+    id: string;
+    unit_id: string;
+    position: string;
+    brand: string;
+    model: string;
+    depth_mm: number;
+    status: SecurityAlert;
+    last_photo_url: string;
+    history: {
+        date: string;
+        depth: number;
+        photo: string;
+    }[];
+}
+
+export interface EmergencyContact {
+    id: string;
+    name: string;
+    role: string;
+    phone: string;
+    type: 'INTERNAL' | 'AUTHORITY' | 'MEDICAL';
+}
+
+// === AUTHENTICATION & RBAC ===
+export type UserRole = 'MASTER' | 'MANAGER' | 'EMPLOYEE' | 'DEVELOPER';
+
+export interface User {
+    id: string;
+    username: string;
+    role: UserRole;
+    name: string;
+    avatar?: string;
+}
