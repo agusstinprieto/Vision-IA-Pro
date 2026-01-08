@@ -1,5 +1,6 @@
 import { supabase } from '../auth/supabase';
 import { Unit, InventoryTire, DriverStatus, TripData, SecurityAlert } from '../../types';
+import { offlineService } from '../offline/offlineQueue';
 
 export const dbService = {
     // 1. Units (Fleet)
@@ -84,13 +85,26 @@ export const dbService = {
     },
 
     // 5. Inspections
+    // 5. Inspections
     async saveInspection(record: any) {
-        const { data, error } = await supabase
-            .from('inspections')
-            .insert([record])
-            .select();
+        try {
+            const { data, error } = await supabase
+                .from('inspections')
+                .insert([record])
+                .select();
 
-        if (error) throw error;
-        return data;
+            if (error) throw error;
+            return data;
+        } catch (error) {
+            console.error("Save Error:", error);
+            // Check if it's a network error (simplified check)
+            // In a real app, you'd check error.code or navigator.onLine
+            if (!navigator.onLine) {
+                console.warn("Offline detected. Queuing inspection.");
+                await offlineService.queueRequest('inspections', 'POST', record);
+                return [{ status: 'queued', ...record }];
+            }
+            throw error;
+        }
     }
 };

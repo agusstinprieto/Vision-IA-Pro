@@ -4,12 +4,14 @@ import { dbService } from '../../services/db/dbService';
 import { pdfService } from '../../services/reports/pdfService';
 import { DriverStatus } from '../../types';
 import { DriverScorecard } from './DriverScorecard';
+import { BiometricMonitor } from './BiometricMonitor';
 
 
 export const DriverHealthView = () => {
     const [selectedDriver, setSelectedDriver] = useState<string | null>(null);
     const [workers, setWorkers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [showBiometrics, setShowBiometrics] = useState(false);
 
     useEffect(() => {
         const fetchWorkers = async () => {
@@ -67,6 +69,12 @@ export const DriverHealthView = () => {
                         className="bg-brand text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 shadow-[0_0_20px_rgba(234,73,46,0.3)] hover:scale-105 transition-all"
                     >
                         <Download size={16} /> Reporte S.O.S.
+                    </button>
+                    <button
+                        onClick={() => setShowBiometrics(true)}
+                        className="bg-[#FFCC33] text-black px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-[#FFCC33]/80 transition-all shadow-lg active:scale-95"
+                    >
+                        <Eye size={16} /> Monitoreo IA
                     </button>
                 </div>
             </header>
@@ -197,6 +205,12 @@ export const DriverHealthView = () => {
                         fatigueEvents: Math.floor((workers.find(d => d.id === selectedDriver)?.risk_score || 0) / 10),
                         perfectTrips: Math.floor(Math.random() * 50) + 10
                     }}
+                />
+            )}
+            {/* Biometric Monitor Modal */}
+            {showBiometrics && (
+                <BiometricMonitor
+                    onClose={() => setShowBiometrics(false)}
                 />
             )}
         </div>

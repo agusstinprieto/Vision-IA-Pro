@@ -11,6 +11,7 @@ import { analyzeInspectionDelta } from './services/ai/gemini';
 import { dbService } from './services/db/dbService';
 import { LogOut, Settings as SettingsIcon, MenuIcon } from 'lucide-react';
 import { Sidebar } from './components/layout/Sidebar';
+import { GlobalAlerts } from './components/common/GlobalAlerts';
 import { useLanguage } from './context/LanguageContext';
 
 import { sendWhatsAppAlert } from './services/reports/alertService';
@@ -105,6 +106,7 @@ export default function App() {
 
   return (
     <div className="flex min-h-screen bg-[#0A0A0B] text-white font-['Inter'] selection:bg-brand transition-all duration-700">
+      <GlobalAlerts />
 
       {/* Sidebar Navigation */}
       <Sidebar
