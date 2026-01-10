@@ -56,7 +56,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#EA492E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
                     </div>
                     <h1 className="text-4xl font-black text-white uppercase tracking-tighter mb-2">
-                        SIMSA <span className="text-[#EA492E]">VISION</span> IA
+                        VISION <span className="text-[#EA492E]">IA</span> PRO
                     </h1>
                     <p className="text-zinc-500 font-mono text-xs uppercase tracking-[0.3em] font-bold italic">
                         Terminal Security Hub
@@ -115,7 +115,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                     </div>
 
                     <p className="text-center text-zinc-600 text-[10px] font-bold uppercase tracking-widest pt-4">
-                        Powered by IA.AGUS & Google Gemini 2.0
+                        Powered by IA.AGUS & Google Gemini 2.5
                     </p>
                 </form>
             </div>

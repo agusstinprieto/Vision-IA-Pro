@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Operaciones - VISION IA PRO</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --brand: #EA492E;
+            --bg: #0A0A0B;
+            --card: #121214;
+            --text: #ffffff;
+            --text-dim: #888888;
+            --border: rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .stars {
+            fixed: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1a1a1c 0%, #0a0a0b 100%);
+            z-index: -1;
+        }
+
+        header {
+            padding: 100px 20px 60px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+
+        .badge-ia {
+            background: rgba(234, 73, 46, 0.1);
+            color: var(--brand);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            border: 1px solid rgba(234, 73, 46, 0.2);
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 64px;
+            font-weight: 900;
+            letter-spacing: -2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        h1 span {
+            color: var(--brand);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+
+        section {
+            margin-bottom: 100px;
+        }
+
+        h2 {
+            font-size: 32px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin-bottom: 40px;
+            display: flex;
+            items-center: center;
+            gap: 15px;
+        }
+
+        h2::before {
+            content: '';
+            width: 40px;
+            height: 4px;
+            background: var(--brand);
+            display: block;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 40px;
+            border-radius: 40px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(234, 73, 46, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            font-size: 18px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            color: var(--brand);
+        }
+
+        .card p {
+            color: var(--text-dim);
+            font-size: 14px;
+        }
+
+        .glosario-item {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-left: 2px solid var(--border);
+        }
+
+        .glosario-item strong {
+            display: block;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            color: var(--text);
+        }
+
+        .glosario-item span {
+            color: var(--text-dim);
+            font-size: 14px;
+        }
+
+        .role-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 40px;
+            border-radius: 40px;
+            border: 1px solid var(--border);
+        }
+
+        .step {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .step-num {
+            width: 32px;
+            height: 32px;
+            background: var(--brand);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .alert-box {
+            background: rgba(234, 73, 46, 0.05);
+            border: 1px solid rgba(234, 73, 46, 0.2);
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 40px;
+        }
+
+        .alert-box h4 {
+            color: var(--brand);
+            text-transform: uppercase;
+            font-size: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        footer {
+            padding: 100px 20px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 40px;
+            }
+
+            .role-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #1a1a1c;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 900;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="stars"></div>
+
+    <header>
+        <div class="badge-ia">SISTEMA DMS EXTREME v2.0</div>
+        <h1>VISION <span>IA</span> PRO</h1>
+        <p style="color: var(--text-dim); font-weight: 700; text-transform: uppercase; letter-spacing: 5px;">Manual de
+            Operaciones Logísticas</p>
+    </header>
+
+    <div class="container">
+
+        <!-- GLOSARIO -->
+        <section id="glosario">
+            <h2>Glosario de Inteligencia</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Huella Digital (Baseline)</h3>
+                    <p>Es el registro maestro e inmutable de una unidad. Contiene la identidad exacta de cada llanta
+                        (marca, serie, desgaste inicial) al momento de su alta.</p>
+                </div>
+                <div class="card">
+                    <h3>Auditoría (Inspection)</h3>
+                    <p>Proceso de comparación en tiempo real donde la IA verifica si las llantas actuales coinciden con
+                        la Huella Digital registrada.</p>
+                </div>
+                <div class="card">
+                    <h3>Mismatch (Discrepancia)</h3>
+                    <p>Alerta generada cuando el sistema detecta que una llanta ha sido cambiada por otra distinta a la
+                        del registro oficial.</p>
+                </div>
+                <div class="card">
+                    <h3>Baja (Disposal)</h3>
+                    <p>Procedimiento para retirar oficialmente una llanta del inventario debido a daño, robo o desgaste,
+                        requiriendo evidencia fotográfica.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TECNOLOGIAS -->
+        <section id="tecnologia">
+            <h2>Tecnología de Resguardo</h2>
+            <div class="instructions">
+                <div class="glosario-item">
+                    <strong>Base de Datos de Seguridad (Secure DB)</strong>
+                    <span>Un repositorio blindado donde se almacenan las evidencias forenses. Una vez que se registra
+                        una "Huella Digital", esta no puede ser alterada sin supervisión de alto nivel.</span>
+                </div>
+                <div class="glosario-item">
+                    <strong>Reconocimiento de Identidad (OCR)</strong>
+                    <span>Ojo digital capaz de leer automáticamente placas, números económicos y códigos DOT en las
+                        paredes laterales de las llantas, eliminando errores de captura manual.</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- MANUAL CHOFER -->
+        <section id="chofer">
+            <h2>Protocolo del Conductor</h2>
+            <div class="role-section">
+                <div class="instructions">
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <h4>Identificación de Unidad</h4>
+                            <p>Utilice el botón "Auto-ID" en el equipo móvil para que la IA detecte la placa o número de
+                                remolque automáticamente.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <h4>Captura de Video</h4>
+                            <p>Realice un recorrido lento y fluido alrededor de la unidad. La IA extraerá los fotogramas
+                                de cada llanta.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <h4>Auditoría IA</h4>
+                            <p>Presione "Ejecutar Auditoría". Si el sistema marca color VERDE, la unidad puede salir. Si
+                                marca ROJO, se requiere justificación.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert-box">
+                    <h4>⚠️ ¿Qué hacer en caso de Alerta Roja?</h4>
+                    <p style="font-size: 13px; color: var(--text-dim);">Un "Mismatch" significa que la llanta no
+                        coincide. Si usted realizó un cambio autorizado (por ponchadura), debe presionar el botón de
+                        <strong>"Justificar"</strong>, subir la foto de la llanta vieja y la nueva, y esperar la firma
+                        del Supervisor.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- MANUAL SUPERVISOR -->
+        <section id="supervisor">
+            <h2>Control de Supervisión</h2>
+            <div class="role-section">
+                <div class="instructions">
+                    <div class="step">
+                        <div class="step-num">A</div>
+                        <div class="step-content">
+                            <h4>Módulo de Aprobaciones</h4>
+                            <p>Revise diariamente la pestaña de "Aprobaciones" para validar solicitudes de baja o
+                                cambios de llantas.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">B</div>
+                        <div class="step-content">
+                            <h4>Análisis de Evidencia</h4>
+                            <p>Compare la foto enviada por el chofer con los datos de la Huella Digital original antes
+                                de autorizar el cambio.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">C</div>
+                        <div class="step-content">
+                            <h4>Actualización de Inventario</h4>
+                            <p>Al aprobar una baja, el sistema actualiza automáticamente la Huella Digital para el
+                                siguiente viaje.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" style="background: rgba(234, 73, 46, 0.1); border-color: var(--brand);">
+                    <h3>Escenarios de Operación</h3>
+                    <p style="margin-bottom: 10px;"><span class="tag">PONCHADURA</span> Reportar inmediatamente para
+                        evitar multas de auditoría.</p>
+                    <p style="margin-bottom: 10px;"><span class="tag">ROBO</span> Iniciar proceso de baja con folio de
+                        reporte de seguridad.</p>
+                    <p style="margin-bottom: 10px;"><span class="tag">DESGASTE</span> Programar cambio preventivo cuando
+                        la IA detecte menos de 3mm.</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>VISION IA PRO - CONFIDENCIALIDAD NIVEL 4</p>
+        <p style="margin-top: 10px; font-size: 10px; opacity: 0.5;">PROPIEDAD DE IA.AGUS &copy; 2026</p>
+    </footer>
+</body>
+
+</html>

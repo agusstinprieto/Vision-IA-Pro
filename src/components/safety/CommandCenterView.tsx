@@ -5,12 +5,14 @@ import { telemetrySimulation, VehicleTelemetry } from '../../services/telemetry/
 import { GeofenceService } from '../../services/telemetry/geofenceService';
 import { BiometricMonitor } from './BiometricMonitor';
 import { CabinScanner } from './CabinScanner';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface CommandCenterViewProps {
     brandColor?: string;
 }
 
 export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor = '#FFCC33' }) => {
+    const { t } = useLanguage();
     const [telemetry, setTelemetry] = useState<VehicleTelemetry | null>(null);
     const [isPlaying, setIsPlaying] = useState(true);
     const [showBiometrics, setShowBiometrics] = useState(false);
@@ -18,7 +20,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
     const [camerasActive, setCamerasActive] = useState(false);
     const [cameraError, setCameraError] = useState('');
     const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
-    const [currentZone, setCurrentZone] = useState<string>('En Ruta');
+    const [currentZone, setCurrentZone] = useState<string>(t('command.en_route'));
     const [selectedVehicle, setSelectedVehicle] = useState({
         unitId: 'T-800',
         driver: 'J. Pérez',
@@ -50,7 +52,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
             if (fence) {
                 setCurrentZone(fence.name);
             } else {
-                setCurrentZone('Sector Abierto');
+                setCurrentZone(t('command.open_sector'));
             }
         }, 1000);
 
@@ -151,7 +153,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
                     <div>
                         <h1 className="text-3xl font-black text-white uppercase tracking-tight flex items-center gap-3">
                             <Truck style={{ color: brandColor }} size={32} />
-                            Command Center
+                            {t('command.header')}
                         </h1>
                         <div className="flex items-center gap-3 mt-2">
                             {/* Vehicle Selector Dropdown */}
@@ -208,7 +210,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
                         className="h-9 px-4 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl border border-white/5 flex items-center gap-2 transition-all text-xs font-bold shadow-lg"
                     >
                         {isPlaying ? <Pause size={14} style={{ color: brandColor }} /> : <Play size={14} style={{ color: brandColor }} />}
-                        {isPlaying ? 'PAUSAR' : 'REPRODUCIR'}
+                        {isPlaying ? t('command.pause') : t('command.play')}
                     </button>
 
                     <button
@@ -219,7 +221,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
                             }`}
                     >
                         <div className={`w-2 h-2 rounded-full ${camerasActive ? 'bg-red-500 animate-pulse' : 'bg-zinc-500'}`} />
-                        {camerasActive ? 'DESACTIVAR' : 'ACTIVAR'}
+                        {camerasActive ? t('command.deactivate') : t('command.activate')}
                     </button>
 
                     <button
@@ -233,8 +235,8 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
                     >
                         <Eye size={16} />
                         <div className="text-left">
-                            <p className="leading-tight">MONITOREO IA</p>
-                            <p className="text-[8px] opacity-70 font-bold uppercase tracking-tighter">Fatiga y Estrés</p>
+                            <p className="leading-tight">{t('command.ia_monitoring')}</p>
+                            <p className="text-[8px] opacity-70 font-bold uppercase tracking-tighter">{t('command.fatigue_stress')}</p>
                         </div>
                     </button>
 
@@ -248,8 +250,8 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
                     >
                         <Activity size={16} style={{ color: brandColor }} />
                         <div className="text-left">
-                            <p className="leading-tight">AUDITORÍA IA</p>
-                            <p className="text-[8px] text-zinc-500 font-bold uppercase tracking-tighter">Integridad Cabina</p>
+                            <p className="leading-tight">{t('command.ia_audit')}</p>
+                            <p className="text-[8px] text-zinc-500 font-bold uppercase tracking-tighter">{t('command.cabin_integrity')}</p>
                         </div>
                     </button>
                 </div>
@@ -304,7 +306,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
                     <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-xl p-4">
                         <div className="flex items-center gap-2 mb-2">
                             <Gauge className="text-[#FFCC33]" size={20} />
-                            <span className="text-zinc-400 text-xs font-bold uppercase">Velocidad</span>
+                            <span className="text-zinc-400 text-xs font-bold uppercase">{t('command.speed')}</span>
                         </div>
                         <p className="text-3xl font-black text-white">{telemetry.speed}</p>
                         <p className="text-zinc-500 text-xs mt-1">km/h | Marcha {telemetry.gear}</p>
@@ -314,7 +316,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
                     <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-xl p-4">
                         <div className="flex items-center gap-2 mb-2">
                             <Activity className="text-emerald-500" size={20} />
-                            <span className="text-zinc-400 text-xs font-bold uppercase">RPM</span>
+                            <span className="text-zinc-400 text-xs font-bold uppercase">{t('command.rpm')}</span>
                         </div>
                         <p className="text-3xl font-black text-white">{telemetry.rpm}</p>
                         <p className="text-zinc-500 text-xs mt-1">revoluciones/min</p>
@@ -324,7 +326,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
                     <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-xl p-4">
                         <div className="flex items-center gap-2 mb-2">
                             <Droplet className={getStatusColor(100 - telemetry.fuelLevel, { good: 50, warning: 75 })} size={20} />
-                            <span className="text-zinc-400 text-xs font-bold uppercase">Combustible</span>
+                            <span className="text-zinc-400 text-xs font-bold uppercase">{t('command.fuel')}</span>
                         </div>
                         <p className="text-3xl font-black text-white">{telemetry.fuelLevel}%</p>
                         <div className="w-full bg-zinc-800 rounded-full h-2 mt-2">
@@ -336,7 +338,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
                     <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-xl p-4">
                         <div className="flex items-center gap-2 mb-2">
                             <Thermometer className={getStatusColor(telemetry.engineTemp, { good: 90, warning: 95 })} size={20} />
-                            <span className="text-zinc-400 text-xs font-bold uppercase">Temp. Motor</span>
+                            <span className="text-zinc-400 text-xs font-bold uppercase">{t('command.temp_motor')}</span>
                         </div>
                         <p className="text-3xl font-black text-white">{telemetry.engineTemp}°C</p>
                         <p className="text-zinc-500 text-xs mt-1">Carga: {telemetry.cargoTemp}°C</p>
@@ -350,7 +352,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
                     <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-xl p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-zinc-400 text-xs font-bold uppercase mb-1">Ubicación GPS</p>
+                                <p className="text-zinc-400 text-xs font-bold uppercase mb-1">{t('command.gps_location')}</p>
                                 <p className="text-white font-mono text-sm">{telemetry.gps.lat.toFixed(4)}, {telemetry.gps.lng.toFixed(4)}</p>
                                 <p className="text-zinc-500 text-xs mt-1">Rumbo: {telemetry.gps.heading}° | Alt: {Math.round(telemetry.gps.altitude)}m</p>
                             </div>
@@ -361,7 +363,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
                     <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-xl p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-zinc-400 text-xs font-bold uppercase mb-1">Odómetro</p>
+                                <p className="text-zinc-400 text-xs font-bold uppercase mb-1">{t('command.odometer')}</p>
                                 <p className="text-white font-mono text-lg font-bold">{telemetry.odometer.toLocaleString()} km</p>
                                 <p className="text-zinc-500 text-xs mt-1">Viaje: {telemetry.tripDistance.toFixed(1)} km</p>
                             </div>
@@ -372,7 +374,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
                     <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-xl p-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-zinc-400 text-xs font-bold uppercase mb-1">Sistema Eléctrico</p>
+                                <p className="text-zinc-400 text-xs font-bold uppercase mb-1">{t('command.electrical')}</p>
                                 <p className="text-white font-mono text-lg font-bold">{telemetry.batteryVoltage}V</p>
                                 <p className="text-zinc-500 text-xs mt-1">Presión aceite: {telemetry.oilPressure.toFixed(1)} PSI</p>
                             </div>
@@ -386,7 +388,7 @@ export const CommandCenterView: React.FC<CommandCenterViewProps> = ({ brandColor
             <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-xl p-4">
                 <h3 className="text-white font-black uppercase text-sm mb-3 flex items-center gap-2">
                     <AlertTriangle className="text-[#FFCC33]" size={18} />
-                    Alertas Recientes
+                    {t('command.recent_alerts')}
                 </h3>
                 <div className="space-y-2">
                     <div className="flex items-center gap-3 text-sm">

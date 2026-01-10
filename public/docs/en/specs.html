@@ -158,6 +158,37 @@
                 </section>
             </div>
 
+            <section class="mt-12">
+                <h2 class="text-xl font-black text-white uppercase tracking-widest mb-6 border-l-4 border-yellow pl-4">
+                    AI Extraction Protocol (System Prompt)</h2>
+                <div class="bg-[#1A1C1E] p-8 rounded-3xl border border-white/5 font-mono text-xs text-zinc-400">
+                    <p class="mb-4 text-yellow font-bold uppercase">Role: Forensic Tire Expert</p>
+                    <div
+                        class="bg-black/40 p-6 rounded-xl border border-white/10 whitespace-pre-wrap leading-relaxed text-zinc-300">
+                        ACTÚA COMO UN PERITO FORENSE DE NEUMÁTICOS.
+                        Analiza esta ÚNICA imagen de una llanta.
+
+                        OBJETIVO: Extraer TODA la información de identidad visible.
+
+                        Busca Específicamente:
+                        1. MARCA (Brand)
+                        2. MODELO (Model)
+                        3. NÚMERO DE SERIE / DOT (Serial Number) - ¡CRÍTICO! Busca patrón de 4-13 caracteres.
+                        4. DESGASTE ESTIMADO (mm).
+                        5. ESTADO DEL RIN (Rim Condition) - "Bueno", "Doblado", "Oxidado", "Quebrado".
+
+                        RESPONDE SOLO JSON:
+                        {
+                        "marca": "string o null",
+                        "modelo": "string o null",
+                        "serial_number": "string o null",
+                        "profundidad_huella_mm": number (0-20),
+                        "estado_rin": "string o null"
+                        }</div>
+                    <p class="mt-4 text-[10px] text-zinc-500 italic">Reference: src/services/ai/gemini.ts v2.5</p>
+                </div>
+            </section>
+
             <section>
                 <h2 class="text-xl font-black text-white uppercase tracking-widest mb-6 border-l-4 border-yellow pl-4">
                     Advanced Intelligence Stack [LIVE]</h2>

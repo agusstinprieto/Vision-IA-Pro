@@ -1,6 +1,6 @@
 # Manual de Procedimiento: Safety Cabin IA
 
-Este documento detalla el procedimiento estándar para la utilización del sistema **Safety Cabin IA** dentro de la plataforma TransporteSIMSA.
+Este documento detalla el procedimiento estándar para la utilización del sistema **Safety Cabin IA** dentro de la plataforma VISION IA PRO.
 
 ## 1. Objetivo
 Garantizar la integridad física de los operadores y la seguridad de la carga mediante un monitoreo preventivo de biometría y estado de alerta en tiempo real.
@@ -41,4 +41,4 @@ El sistema ha sido actualizado para forzar el apagado de la cámara al cambiar d
 Se han eliminado las restricciones de altura fijas. Ahora puede desplazarse por toda la página de manera natural con el scroll principal del navegador.
 
 ---
-*Powered by IA.AGUS &bull; SIMSA VISION IA 2026*
+*Powered by IA.AGUS &bull; VISION IA PRO 2026*

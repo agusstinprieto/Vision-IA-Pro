@@ -15,7 +15,7 @@ class OfflineDatabase extends Dexie {
     requestQueue!: Table<QueuedRequest>;
 
     constructor() {
-        super('TransporteSIMSA_OfflineDB');
+        super('VisionIAPro_OfflineDB');
         this.version(1).stores({
             requestQueue: '++id, timestamp' // Primary key and index
         });

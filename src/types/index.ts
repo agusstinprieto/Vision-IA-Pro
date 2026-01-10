@@ -63,11 +63,20 @@ export interface InspectionImage {
 export interface ForensicAuditResult {
     tipo_inspeccion: InspectionType;
     alerta_seguridad: SecurityAlert;
+    isAnomaly?: boolean;
+    confidenceScore?: number;
     hallazgos: {
         identidad_confirmada: boolean;
         integridad_sellos: SealIntegrity;
         lectura_medidor: string;
         descripcion_anomalia: string;
+        coincidencia_id?: string;
+        detalles?: string;
+        // Tire Metadata
+        marca?: string;
+        modelo?: string;
+        serial_number?: string; // DOT Code
+        profundidad_huella_mm?: number;
     };
     razonamiento_forense: string;
 }
@@ -125,12 +134,13 @@ export interface InventoryTire {
     brand: string;
     model: string;
     depth_mm: number;
+    rim_condition?: string;  // NEW: Rim condition
+    serial_number?: string | null;  // NEW: DOT code
     status: SecurityAlert;
     last_photo_url: string;
     history: {
         date: string;
-        depth: number;
-        photo: string;
+        depth_mm: number;
     }[];
 }
 

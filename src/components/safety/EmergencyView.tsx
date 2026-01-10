@@ -4,7 +4,7 @@ import { Phone, ShieldAlert, Ambulance, Download, ExternalLink } from 'lucide-re
 
 export const EmergencyView = () => {
     const contacts = [
-        { id: 1, name: 'Centro de Control SIMSA', role: 'Interno', phone: '800-SIMSA-SOS', type: 'INTERNAL' },
+        { id: 1, name: 'Centro de Control VISION IA PRO', role: 'Interno', phone: '800-IA-AGUS-SOS', type: 'INTERNAL' },
         { id: 2, name: 'Soporte Técnico IA', role: 'Sistemas', phone: '55-1234-5678', type: 'INTERNAL' },
         { id: 3, name: 'Policía Federal de Caminos', role: 'Autoridad', phone: '911', type: 'AUTHORITY' },
         { id: 4, name: 'Cruz Roja Mexicana', role: 'Médico', phone: '065', type: 'MEDICAL' },
@@ -30,14 +30,14 @@ export const EmergencyView = () => {
                 {contacts.map(contact => (
                     <div key={contact.id} className="bg-[#121214] border border-white/5 rounded-3xl p-8 hover:border-white/10 transition-all group relative overflow-hidden">
                         <div className={`absolute top-0 right-0 w-24 h-24 blur-[60px] -z-0 ${contact.type === 'INTERNAL' ? 'bg-brand/10' :
-                                contact.type === 'AUTHORITY' ? 'bg-blue-500/10' :
-                                    'bg-red-500/10'
+                            contact.type === 'AUTHORITY' ? 'bg-blue-500/10' :
+                                'bg-red-500/10'
                             }`} />
 
                         <div className="relative z-10">
                             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 ${contact.type === 'INTERNAL' ? 'bg-brand/10 text-brand' :
-                                    contact.type === 'AUTHORITY' ? 'bg-blue-500/10 text-blue-500' :
-                                        'bg-red-500/10 text-red-500'
+                                contact.type === 'AUTHORITY' ? 'bg-blue-500/10 text-blue-500' :
+                                    'bg-red-500/10 text-red-500'
                                 }`}>
                                 {contact.type === 'MEDICAL' ? <Ambulance size={24} /> : <Phone size={24} />}
                             </div>
@@ -54,7 +54,7 @@ export const EmergencyView = () => {
             </div>
 
             <div className="bg-zinc-900 border border-white/5 p-8 rounded-3xl">
-                <h3 className="text-lg font-black uppercase tracking-widest mb-4 text-white">Protocolo de Evacuación IA</h3>
+                <h3 className="text-lg font-black uppercase tracking-widest mb-4 text-white">Protocolo de Evacuación VISION IA PRO</h3>
                 <p className="text-zinc-400 text-sm leading-relaxed mb-4">
                     En caso de detección de amenaza confirmada por la IA (Nivel Rojo), el sistema bloqueará automáticamente los accesos
                     perimetrales y notificará a las autoridades locales con la geolocalización exacta de la unidad comprometida.

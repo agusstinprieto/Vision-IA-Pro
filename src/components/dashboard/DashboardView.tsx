@@ -24,7 +24,7 @@ interface DashboardViewProps {
 
 export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandColor }) => {
     const { t } = useLanguage();
-    const [tires, setTires] = React.useState<InventoryTire[]>([]);
+    const [tiresStats, setTiresStats] = React.useState<any>(null);
     const [workers, setWorkers] = React.useState<any[]>([]);
     const [trips, setTrips] = React.useState<TripData[]>([]);
     const [loading, setLoading] = React.useState(true);
@@ -32,12 +32,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const [tiresData, workersData, tripsData] = await Promise.all([
-                    dbService.getTires(),
+                const [stats, workersData, tripsData] = await Promise.all([
+                    dbService.getTireStats(),
                     dbService.getWorkers(),
                     dbService.getTrips()
                 ]);
-                setTires(tiresData);
+                setTiresStats(stats);
                 setWorkers(workersData);
                 setTrips(tripsData);
             } catch (error) {
@@ -60,12 +60,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
 
     // --- Statistics Calculations ---
 
-    // 1. Tire Stats
-    const totalTires = tires.length || 1; // Avoid division by zero
-    const criticalTires = tires.filter(t => t.status === SecurityAlert.ROJA).length;
-    const warningTires = tires.filter(t => t.status === SecurityAlert.AMARILLA).length;
-    const avgDepth = (tires.reduce((acc, t) => acc + (t.depth_mm || 0), 0) / totalTires).toFixed(1);
-    const tireHealthPercentage = Math.round((tires.reduce((acc, t) => acc + (t.depth_mm || 0), 0) / (totalTires * 20)) * 100);
+    // 1. Tire Stats from service
+    const totalTires = tiresStats?.total || 0;
+    const criticalTires = tiresStats?.critical || 0;
+    const warningTires = tiresStats?.warning || 0;
+    const avgDepth = tiresStats?.avgDepth || "0.0";
+    const tireHealthPercentage = tiresStats?.healthPercentage || 0;
 
     // 2. Driver Stats
     const totalDrivers = workers.length;
@@ -73,9 +73,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
     const criticalDrivers = workers.filter(d => d.status === DriverStatus.PELIGRO || d.status === DriverStatus.FATIGA).length;
 
     const kpis = [
-        { label: 'Eficiencia de Auditoría', value: '98.4%', trend: '+2.1%', icon: <Zap size={20} />, color: 'emerald' },
-        { label: 'Alertas Críticas (24h)', value: criticalTires.toString().padStart(2, '0'), trend: '-15%', icon: <AlertCircle size={20} />, color: 'red' },
-        { label: 'Unidades en Ruta', value: '184', trend: 'Estable', icon: <Truck size={20} />, color: 'blue' },
+        { label: t('dashboard.efficiency' as any) || 'Eficiencia de Auditoría', value: '98.4%', trend: '+2.1%', icon: <Zap size={20} />, color: 'emerald' },
+        { label: t('dashboard.tire_alerts'), value: criticalTires.toString().padStart(2, '0'), trend: '-15%', icon: <AlertCircle size={20} />, color: 'red' },
+        { label: t('sidebar.unit_inventory'), value: '184', trend: 'Estable', icon: <Truck size={20} />, color: 'blue' },
         { label: 'Tire Life Index', value: `${avgDepth}mm`, trend: `${tireHealthPercentage}% Vida`, icon: <Activity size={20} />, color: 'amber' },
     ];
 
@@ -93,19 +93,21 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
             {/* Welcome Header */}
             <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                    <h2 className="text-4xl font-black mb-4 uppercase tracking-tighter leading-tight">CONTROL TOWER <br /><span className="text-blue-500">FIXED GATE IA</span></h2>
-                    <p className="text-zinc-500 text-lg max-w-sm font-medium">Monitoreo automático de arcos perimetrales. Captura desatendida SIN intervención del chofer.</p>
+                    <h2 className="text-4xl font-black mb-4 uppercase tracking-tighter leading-tight">{t('dashboard.control_tower')} <br /><span className="text-blue-500">{t('dashboard.fixed_gate')}</span></h2>
+                    <p className="text-zinc-500 text-lg max-w-sm font-medium">{t('dashboard.monitoring_desc')}</p>
                 </div>
                 <div className="flex gap-4">
+                    {/* 
                     <button
                         onClick={() => onNavigate('capture-tires')}
                         className="px-6 py-3 bg-brand text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-2xl shadow-brand/20 hover:scale-105 transition-all"
                     >
-                        Nueva Auditoría
+                        {t('sidebar.capture_tires')}
                     </button>
+                    */}
                     {/* Gate Status Badge */}
                     <div className="px-6 py-3 bg-blue-500/10 border border-blue-500/20 rounded-2xl hidden xl:block">
-                        <p className="text-[10px] text-blue-500 font-bold uppercase tracking-widest">GATE STATUS</p>
+                        <p className="text-[10px] text-blue-500 font-bold uppercase tracking-widest">{t('dashboard.gate_status')}</p>
                         <p className="text-white font-black">12/12 ONLINE</p>
                     </div>
                 </div>
@@ -140,7 +142,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
                         <div className="flex justify-between items-start mb-8">
                             <h3 className="text-xl font-black uppercase tracking-tighter flex items-center gap-3">
                                 <ShieldCheck className="text-brand" size={24} />
-                                Estado de la Flota (Real-time)
+                                {t('dashboard.system_status')}
                             </h3>
                             <button className="bg-white/5 hover:bg-white/10 text-xs font-black uppercase tracking-widest px-3 py-1 rounded-lg transition-colors">
                                 Semanal ▾
@@ -186,7 +188,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
                 {/* Live Feed */}
                 <div className="bg-[#121214] border border-white/5 rounded-[3rem] p-10 flex flex-col">
                     <div className="flex justify-between items-center mb-10">
-                        <h3 className="text-lg font-black uppercase tracking-widest">ACTIVIDAD</h3>
+                        <h3 className="text-lg font-black uppercase tracking-widest">{t('dashboard.activity_log')}</h3>
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 bg-red-500 rounded-full animate-ping" />
                             <span className="text-[10px] font-black text-zinc-600">LIVE FEED</span>
@@ -210,7 +212,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
                         onClick={() => onNavigate('tire-inventory')}
                         className="mt-10 py-5 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-white/10 transition-all"
                     >
-                        Explorar Historial Full ↗
+                        {t('dashboard.view_history')} ↗
                     </button>
                 </div>
 
@@ -224,7 +226,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
                         <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
                             <div>
                                 <h3 className="text-2xl font-black uppercase tracking-widest flex items-center gap-3 mb-1">
-                                    <Disc className="text-brand" size={28} /> Estado de Llantas
+                                    <Disc className="text-brand" size={28} /> {t('dashboard.forensic_audit')}
                                 </h3>
                                 <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">ANÁLISIS PREDICTIVO DE DESGASTE POR IA</p>
                             </div>
@@ -292,19 +294,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
                     </div>
                 </div>
 
-                {/* Driver Health Card */}
+                {/* Driver Health Card - HIDDEN FOR NOW
                 <div className="bg-[#121214] border border-white/5 rounded-[2.5rem] p-8 flex flex-col justify-between group hover:border-brand/20 transition-all">
                     <div>
                         <div className="flex justify-between items-start mb-6">
                             <h3 className="text-lg font-black uppercase tracking-widest flex items-center gap-2">
-                                <HeartPulse className="text-brand" size={24} /> Salud Operadores
+                                <HeartPulse className="text-brand" size={24} /> {t('sidebar.driver_health')}
                             </h3>
                             <span className="text-xs font-black text-zinc-500 bg-white/5 px-2 py-1 rounded-lg">{totalDrivers} Activos</span>
                         </div>
 
                         <div className="space-y-4">
                             <div className="flex items-center justify-center py-4 relative">
-                                {/* Simple Visualization Circle using border */}
                                 <div className="w-32 h-32 rounded-full border-8 border-zinc-800 flex items-center justify-center relative">
                                     <div className="absolute inset-0 rounded-full border-8 border-l-red-500 border-t-transparent border-r-transparent border-b-transparent rotate-45" />
                                     <div className="text-center">
@@ -327,6 +328,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
                         Monitorear Salud
                     </button>
                 </div>
+                */}
 
             </div>
 

@@ -21,11 +21,13 @@ import { TireInventoryView } from './components/inventory/TireInventoryView';
 import { SmartMapView } from './components/logistics/SmartMapView';
 import { EmergencyView } from './components/safety/EmergencyView';
 import { DriverHealthView } from './components/safety/DriverHealthView';
-import { SimulationView } from './components/safety/SimulationView';
+import { MobileCapture } from './components/scan/MobileCapture';
 import { CommandCenterView } from './components/safety/CommandCenterView';
 import { LanguageToggle } from './components/common/LanguageToggle';
 import { DashboardView } from './components/dashboard/DashboardView';
-import { PPEDashboard } from './components/safety/PPEDashboard';
+import { KnowledgeHub } from './components/docs/KnowledgeHub';
+import { SupervisorApprovalsView } from './components/supervisor/SupervisorApprovalsView';
+import { TireMonitoringView } from './components/supervisor/TireMonitoringView';
 
 // Standard Audit Entry Type
 interface AuditEntry {
@@ -117,7 +119,7 @@ export default function App() {
       <Sidebar
         activeView={view}
         onNavigate={setView}
-        businessName={settings.supervisor.name || 'SIMSA CONTROL TOWER'}
+        businessName={settings.supervisor.name || 'VISION IA PRO'}
         brandColor={settings.primaryColor}
         isOpen={isSidebarOpen}
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -162,8 +164,8 @@ export default function App() {
 
         {/* Scrollable Content */}
         {/* Scrollable Content */}
-        <div className={`flex-1 overflow-y-auto scrollbar-hide ${view === 'simulation' ? 'p-0 overflow-hidden' : 'p-2 lg:p-4 pb-20'}`}>
-          <div className={`${view === 'simulation' ? 'h-full' : 'max-w-7xl mx-auto'}`}>
+        <div className={`flex-1 overflow-y-auto scrollbar-hide p-2 lg:p-4 pb-20`}>
+          <div className="max-w-7xl mx-auto">
             {view === 'dashboard' ? (
               <DashboardView
                 onNavigate={setView}
@@ -231,14 +233,16 @@ export default function App() {
               <EmergencyView />
             ) : view === 'driver-health' ? (
               <DriverHealthView />
-            ) : view === 'simulation' ? (
-              <SimulationView />
+            ) : view === 'mobile-scan' ? (
+              <MobileCapture />
             ) : view === 'command-center' ? (
               <CommandCenterView brandColor={settings.primaryColor} />
             ) : view === 'gallery' ? (
               <PhotoGalleryView onClose={() => setView('dashboard')} userRole={userRole} />
-            ) : view === 'ppe-dashboard' ? (
-              <PPEDashboard />
+            ) : view === 'supervisor-approvals' ? (
+              <SupervisorApprovalsView />
+            ) : view === 'tire-monitoring' ? (
+              <TireMonitoringView />
             ) : view === 'capture-tires' || view === 'inspection' ? (
               <div className="max-w-3xl mx-auto">
                 <button
@@ -319,6 +323,8 @@ export default function App() {
                   setActiveTrip(null);
                 }} />
               </div>
+            ) : view === 'knowledge-hub' ? (
+              <KnowledgeHub />
             ) : null}
           </div>
         </div>

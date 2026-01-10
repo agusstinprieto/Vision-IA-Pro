@@ -1,30 +1,55 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, AlertTriangle, CheckCircle2, History, AlertOctagon, Download } from 'lucide-react';
+import { Search, Filter, AlertTriangle, CheckCircle2, History, AlertOctagon, Download, Trash2 } from 'lucide-react';
 import { dbService } from '../../services/db/dbService';
 import { pdfService } from '../../services/reports/pdfService';
 import { SecurityAlert, InventoryTire } from '../../types';
 import { predictTireLife } from '../../services/ai/predictive';
+import { TireDisposalModal } from './TireDisposalModal';
+import { useLanguage } from '../../context/LanguageContext';
 
 export const TireInventoryView = () => {
+    const { t } = useLanguage();
     const [searchTerm, setSearchTerm] = useState('');
     const [viewMode, setViewMode] = useState<'GRID' | 'LIST'>('GRID');
     const [statusFilter, setStatusFilter] = useState<'ALL' | 'CRITICAL' | 'WARNING' | 'GOOD'>('ALL');
     const [tires, setTires] = useState<InventoryTire[]>([]);
     const [loading, setLoading] = useState(true);
+    const [disposalModalOpen, setDisposalModalOpen] = useState(false);
+    const [selectedTire, setSelectedTire] = useState<InventoryTire | null>(null);
+    const [page, setPage] = useState(0);
+    const [hasMore, setHasMore] = useState(true);
+    const [isFetchingMore, setIsFetchingMore] = useState(false);
 
     useEffect(() => {
-        const fetchTires = async () => {
+        const fetchInitialTires = async () => {
             try {
-                const data = await dbService.getTires();
+                const { tires: data, hasMore: more } = await dbService.getTires(0, 12);
                 setTires(data);
+                setHasMore(more);
             } catch (error) {
                 console.error('Error fetching tires:', error);
             } finally {
                 setLoading(false);
             }
         };
-        fetchTires();
+        fetchInitialTires();
     }, []);
+
+    const fetchMoreTires = async () => {
+        if (!hasMore || isFetchingMore) return;
+        setIsFetchingMore(true);
+        try {
+            const nextPage = page + 1;
+            const { tires: newData, hasMore: more } = await dbService.getTires(nextPage, 12);
+            setTires(prev => [...prev, ...newData]);
+            setPage(nextPage);
+            setHasMore(more);
+        } catch (error) {
+            console.error('Error fetching more tires:', error);
+        } finally {
+            setIsFetchingMore(false);
+        }
+    };
 
     const filteredTires = tires.filter(tire => {
         const matchesSearch = tire.unit_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -41,7 +66,7 @@ export const TireInventoryView = () => {
     if (loading) {
         return (
             <div className="h-full w-full flex items-center justify-center">
-                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-brand"></div>
+                <div className="text-zinc-500 font-black uppercase tracking-widest animate-pulse">{t('common.loading')}</div>
             </div>
         );
     }
@@ -62,8 +87,8 @@ export const TireInventoryView = () => {
         <div className="p-4 lg:p-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div>
-                    <h2 className="text-3xl font-black uppercase tracking-tighter mb-2">Inventario de Llantas</h2>
-                    <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">Monitoreo de Desgaste & Mismatch</p>
+                    <h2 className="text-3xl font-black uppercase tracking-tighter mb-2">{t('inventory.header_tires')}</h2>
+                    <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">{t('inventory.desc_tires')}</p>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto items-center">
@@ -93,7 +118,7 @@ export const TireInventoryView = () => {
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
                         <input
                             type="text"
-                            placeholder="Buscar por Unidad o Marca..."
+                            placeholder={t('inventory.search_placeholder')}
                             className="bg-[#121214] border border-white/10 rounded-xl pl-12 pr-4 py-3 text-sm font-bold text-white w-full sm:w-64 focus:border-brand/50 outline-none transition-colors"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
@@ -116,7 +141,7 @@ export const TireInventoryView = () => {
                             : 'border-transparent text-zinc-500 hover:text-white'
                             }`}
                     >
-                        {f === 'ALL' ? 'Todos' : f === 'CRITICAL' ? 'Crítico (Riesgo)' : f === 'WARNING' ? 'Advertencia' : 'Buen Estado'}
+                        {f === 'ALL' ? t('inventory.filter_all') : f === 'CRITICAL' ? t('dashboard.tire_alerts') : f === 'WARNING' ? 'Warning' : 'OK'}
                     </button>
                 ))}
             </div>
@@ -156,11 +181,11 @@ export const TireInventoryView = () => {
                                     </div>
                                 )}
 
-                                {/* [NEW] SIMSA BRAIN PREDICTION */}
+                                {/* [NEW] VISION IA PRO BRAIN PREDICTION */}
                                 <div className="pt-4 border-t border-white/5">
                                     <p className="text-[9px] font-black uppercase text-brand tracking-widest mb-2 flex items-center gap-2">
                                         <span className="w-1.5 h-1.5 bg-brand rounded-full animate-pulse"></span>
-                                        Simsa Brain Prediction
+                                        Vision IA Pro Brain Prediction
                                     </p>
                                     {(() => {
                                         const prediction = predictTireLife(tire.history);
@@ -189,11 +214,19 @@ export const TireInventoryView = () => {
                                 </div>
                             </div>
 
-                            <div className="mt-6 flex justify-between items-center">
+                            <div className="mt-6 flex justify-between items-center gap-2">
                                 <button className="text-xs font-black text-brand uppercase tracking-widest hover:underline flex items-center gap-1">
-                                    <History size={12} /> Historial
+                                    <History size={12} /> {t('inventory.view_history')}
                                 </button>
-                                <span className="text-[9px] text-zinc-600 font-mono">ID: {tire.id}</span>
+                                <button
+                                    onClick={() => {
+                                        setSelectedTire(tire);
+                                        setDisposalModalOpen(true);
+                                    }}
+                                    className="text-xs font-black text-red-500 uppercase tracking-widest hover:underline flex items-center gap-1"
+                                >
+                                    <Trash2 size={12} /> Baja
+                                </button>
                             </div>
                         </div>
                     ))}
@@ -248,9 +281,18 @@ export const TireInventoryView = () => {
                                             {tire.status === SecurityAlert.AMARILLA && <span className="inline-flex items-center gap-2 px-2 py-1 rounded bg-amber-500/10 text-amber-500 text-[10px] font-black uppercase tracking-widest"><AlertTriangle size={12} /> WARNING</span>}
                                             {tire.status === SecurityAlert.VERDE && <span className="inline-flex items-center gap-2 px-2 py-1 rounded bg-emerald-500/10 text-emerald-500 text-[10px] font-black uppercase tracking-widest"><CheckCircle2 size={12} /> OK</span>}
                                         </td>
-                                        <td className="p-6 text-right">
+                                        <td className="p-6 text-right space-x-2">
                                             <button className="text-[10px] font-black text-brand uppercase tracking-widest hover:underline">
                                                 VER
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    setSelectedTire(tire);
+                                                    setDisposalModalOpen(true);
+                                                }}
+                                                className="text-[10px] font-black text-red-500 uppercase tracking-widest hover:underline inline-flex items-center gap-1"
+                                            >
+                                                <Trash2 size={12} /> BAJA
                                             </button>
                                         </td>
                                     </tr>
@@ -259,6 +301,40 @@ export const TireInventoryView = () => {
                         </table>
                     </div>
                 </div>
+            )}
+
+            {/* Load More Button */}
+            {hasMore && (
+                <div className="flex justify-center pt-8 pb-12">
+                    <button
+                        onClick={fetchMoreTires}
+                        disabled={isFetchingMore}
+                        className="bg-zinc-800 hover:bg-zinc-700 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs border border-white/5 transition-all shadow-xl disabled:opacity-50"
+                    >
+                        {isFetchingMore ? t('common.loading') : 'Cargar Más Llantas'}
+                    </button>
+                </div>
+            )}
+
+            {/* Disposal Modal */}
+            {selectedTire && (
+                <TireDisposalModal
+                    isOpen={disposalModalOpen}
+                    onClose={() => {
+                        setDisposalModalOpen(false);
+                        setSelectedTire(null);
+                    }}
+                    tire={selectedTire}
+                    onSuccess={async () => {
+                        // Refresh tire list (reset to page 0)
+                        setLoading(true);
+                        const { tires: data, hasMore: more } = await dbService.getTires(0, 12);
+                        setTires(data);
+                        setPage(0);
+                        setHasMore(more);
+                        setLoading(false);
+                    }}
+                />
             )}
         </div>
     );

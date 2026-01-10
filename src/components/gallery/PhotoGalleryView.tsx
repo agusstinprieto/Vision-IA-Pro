@@ -63,8 +63,32 @@ export const PhotoGalleryView: React.FC<PhotoGalleryViewProps> = ({ onClose, use
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
-            setInspections(data || []);
-            setFilteredInspections(data || []);
+            
+            // Add High-Impact Demo Assets to the list for "PRO" feel
+            const demoAssets: Inspection[] = [
+                {
+                    id: 'demo-laser-1',
+                    created_at: new Date().toISOString(),
+                    vehicle_id: 'SCANNER-PRO-01',
+                    status: 'DAMAGE_DETECTED',
+                    ai_summary: 'ANÁLISIS LÁSER: Protuberancia crítica detectada en hombro interno. Riesgo de estallamiento 94%.',
+                    image_url: '/docs/tire_scan_3d_1767882062473.png',
+                    inspection_type: 'TIRE'
+                },
+                {
+                    id: 'demo-cam-1',
+                    created_at: new Date(Date.now() - 3600000).toISOString(),
+                    vehicle_id: 'COMMAND-01',
+                    status: 'OPTIMAL',
+                    ai_summary: 'VISIÓN FORENSE: Monitoreo biométrico activo. Conductor en estado de alerta máxima.',
+                    image_url: '/docs/forensic_vision_3d_1767882112216.png',
+                    inspection_type: 'CABIN'
+                }
+            ];
+
+            const combined = [...demoAssets, ...(data || [])];
+            setInspections(combined);
+            setFilteredInspections(combined);
         } catch (error) {
             console.error('Error fetching gallery:', error);
         } finally {
@@ -150,11 +174,10 @@ export const PhotoGalleryView: React.FC<PhotoGalleryViewProps> = ({ onClose, use
                 <div>
                     <h1 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter mb-2 flex items-center gap-4">
                         <Lock size={32} className="text-brand" />
-                        Evidencia <span className="text-brand">Forense</span>
+                        {t('sidebar.gallery').split(' ')[0]} <span className="text-brand">{t('sidebar.gallery').split(' ')[1] || 'Forense'}</span>
                     </h1>
                     <p className="text-zinc-500 font-mono text-sm max-w-2xl">
-                        Bóveda segura de auditorías visuales (Llantas, Cabina, Daños).
-                        <span className="text-red-500 ml-2 font-bold uppercase text-[10px] border border-red-500/20 px-2 py-0.5 rounded">Rigor Legal</span>
+                        {t('dashboard.monitoring_desc')}
                     </p>
                 </div>
 
@@ -287,6 +310,17 @@ export const PhotoGalleryView: React.FC<PhotoGalleryViewProps> = ({ onClose, use
                                 + Simular
                             </button>
                         )}
+
+                        {/* HIGH IMPACT ASSETS - PINNED DEMO EVIDENCE */}
+                        <div className="flex bg-brand/10 border border-brand/20 rounded-xl p-2 items-center gap-3">
+                             <div className="w-10 h-10 rounded-lg bg-brand/20 flex items-center justify-center text-brand">
+                                <ExternalLink size={18} />
+                             </div>
+                             <div className="flex-1">
+                                <p className="text-[10px] font-black uppercase text-brand tracking-widest">Activos Demo de Alto Impacto</p>
+                                <p className="text-[8px] text-zinc-500 font-mono">Simulando escaneos de próxima generación</p>
+                             </div>
+                        </div>
 
                         {/* Search Input */}
                         <div className="relative w-full md:flex-1 md:w-64">

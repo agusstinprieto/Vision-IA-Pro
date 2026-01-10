@@ -17,7 +17,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, onSave, on
     };
 
     const colors = [
-        { name: 'SIMSA Orange', value: '#EA492E' },
+        { name: 'VISION Orange', value: '#EA492E' },
         { name: 'Cyber Blue', value: '#00D1FF' },
         { name: 'Emerald Green', value: '#10B981' },
         { name: 'Luxury Gold', value: '#D4AF37' },

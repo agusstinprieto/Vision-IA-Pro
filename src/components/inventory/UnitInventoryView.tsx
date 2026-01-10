@@ -3,8 +3,10 @@ import { Truck, Search, Filter, AlertTriangle, CheckCircle2, Scan } from 'lucide
 import { dbService } from '../../services/db/dbService';
 import { Unit } from '../../types';
 import { PlateScanner } from '../gate/PlateScanner';
+import { useLanguage } from '../../context/LanguageContext';
 
 export const UnitInventoryView = () => {
+    const { t } = useLanguage();
     const [searchTerm, setSearchTerm] = useState('');
     const [viewMode, setViewMode] = useState<'GRID' | 'LIST'>('GRID');
     const [filter, setFilter] = useState<'ALL' | 'ACTIVE' | 'MAINTENANCE'>('ALL');
@@ -38,7 +40,7 @@ export const UnitInventoryView = () => {
     if (loading) {
         return (
             <div className="h-full w-full flex items-center justify-center">
-                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-brand"></div>
+                <div className="text-zinc-500 font-black uppercase tracking-widest animate-pulse">{t('common.loading')}</div>
             </div>
         );
     }
@@ -47,8 +49,8 @@ export const UnitInventoryView = () => {
         <div className="p-4 lg:p-6 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div>
-                    <h2 className="text-3xl font-black uppercase tracking-tighter mb-2">Inventario de Unidades</h2>
-                    <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">Gestión de Flota & Pipas</p>
+                    <h2 className="text-3xl font-black uppercase tracking-tighter mb-2">{t('inventory.header_units')}</h2>
+                    <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">{t('inventory.desc_units')}</p>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
@@ -72,14 +74,14 @@ export const UnitInventoryView = () => {
                         className="flex items-center gap-2 bg-[#FFCC33] text-black px-4 py-2 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-[#FFCC33]/80 transition-all shadow-lg active:scale-95"
                     >
                         <Scan size={18} />
-                        <span className="hidden sm:inline">Escanear Placa</span>
+                        <span className="hidden sm:inline">{t('inventory.scan_plate')}</span>
                     </button>
 
                     <div className="relative">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
                         <input
                             type="text"
-                            placeholder="Buscar Placa / Pipa..."
+                            placeholder={t('inventory.search_placeholder')}
                             className="bg-[#121214] border border-white/10 rounded-xl pl-12 pr-4 py-3 text-sm font-bold text-white w-full sm:w-64 focus:border-brand/50 outline-none transition-colors"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
@@ -93,7 +95,7 @@ export const UnitInventoryView = () => {
                                 className={`px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${filter === f ? 'bg-zinc-800 text-white shadow-lg' : 'text-zinc-500 hover:text-zinc-300'
                                     }`}
                             >
-                                {f === 'ALL' ? 'Todos' : f === 'ACTIVE' ? 'Activos' : 'Manto.'}
+                                {f === 'ALL' ? t('inventory.filter_all') : f === 'ACTIVE' ? t('inventory.filter_active') : t('inventory.filter_maintenance')}
                             </button>
                         ))}
                     </div>
@@ -114,25 +116,25 @@ export const UnitInventoryView = () => {
                                     </div>
                                     <div className={`px-3 py-1 rounded-full border ${unit.is_active ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500' : 'bg-amber-500/10 border-amber-500/20 text-amber-500'} flex items-center gap-2`}>
                                         {unit.is_active ? <CheckCircle2 size={12} /> : <AlertTriangle size={12} />}
-                                        <span className="text-[10px] font-black uppercase tracking-widest">{unit.is_active ? 'OPERATIVO' : 'TALLER'}</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest">{unit.is_active ? t('inventory.status_operational') : t('inventory.status_workshop')}</span>
                                     </div>
                                 </div>
 
                                 <div className="space-y-4">
                                     <div>
-                                        <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mb-1">Unidad</p>
+                                        <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mb-1">{t('inventory.unit')}</p>
                                         <h3 className="text-2xl font-black text-white tracking-tight">{unit.plate_id}</h3>
                                     </div>
                                     <div>
-                                        <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mb-1">Pipa Asignada</p>
+                                        <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mb-1">{t('inventory.assigned_pipe')}</p>
                                         <p className="text-zinc-300 font-bold">{unit.pipe_number}</p>
                                     </div>
                                     <div className="pt-4 border-t border-white/5 flex justify-between items-center">
                                         <div>
-                                            <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">Última Auditoría</p>
+                                            <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">{t('inventory.last_audit')}</p>
                                             <p className="text-xs font-mono text-zinc-400">{unit.last_audit || 'N/A'}</p>
                                         </div>
-                                        <button className="text-xs font-black text-brand uppercase tracking-widest hover:underline">Ver Historial ↗</button>
+                                        <button className="text-xs font-black text-brand uppercase tracking-widest hover:underline">{t('inventory.view_history')} ↗</button>
                                     </div>
                                 </div>
                             </div>

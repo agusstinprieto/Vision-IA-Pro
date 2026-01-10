@@ -4,6 +4,7 @@ import {
     BarChart3,
     Camera,
     ShieldAlert,
+    ShieldCheck,
     Truck,
     Activity,
     Map as MapIcon,
@@ -11,11 +12,13 @@ import {
     History,
     Menu,
     X,
-    Sparkles,
+    Smartphone,
     Search,
     LayoutDashboard,
+    Layout,
     Image,
-    Images
+    Images,
+    BookOpen
 } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -50,19 +53,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
     const navItems: NavItem[] = [
         { id: 'dashboard', label: t('sidebar.dashboard'), icon: <LayoutDashboard size={20} />, category: 'CORE' },
-        { id: 'command-center', label: 'Command Center', icon: <BarChart3 size={20} />, badge: 'LIVE', category: 'CORE' },
-        { id: 'gallery', label: 'Evidencia Forense', icon: <Images size={20} />, category: 'CORE' },
-        { id: 'capture-tires', label: t('sidebar.capture_tires'), icon: <Camera size={20} />, badge: 'IA+', category: 'CORE' },
-        { id: 'ppe-dashboard', label: 'PPE Dashboard', icon: <ShieldAlert size={20} />, badge: 'NEW', category: 'CORE' },
-        { id: 'driver-health', label: t('sidebar.driver_health'), icon: <Activity size={20} />, badge: 'ALCOHOL', category: 'CORE' },
+        { id: 'unit-inventory', label: t('sidebar.unit_inventory'), icon: <Truck size={20} />, category: 'CORE' },
+        { id: 'tire-inventory', label: t('sidebar.tire_inventory'), icon: <History size={20} />, category: 'CORE' },
+        { id: 'tire-monitoring', label: 'CCTV Monitoreo', icon: <Layout size={20} />, badge: 'LIVE', category: 'CORE' },
 
-        { id: 'unit-inventory', label: t('sidebar.unit_inventory'), icon: <Truck size={20} />, category: 'INVENTORY' },
-        { id: 'tire-inventory', label: t('sidebar.tire_inventory'), icon: <History size={20} />, category: 'INVENTORY' },
+        { id: 'supervisor-approvals', label: t('sidebar.approvals'), icon: <ShieldCheck size={20} />, badge: 'PENDING', category: 'INVENTORY' },
+        { id: 'gallery', label: t('sidebar.gallery'), icon: <Images size={20} />, category: 'INVENTORY' },
 
-        { id: 'map', label: t('sidebar.map'), icon: <MapIcon size={20} />, category: 'LOGISTICS' },
-        { id: 'simulation', label: 'Modo Simulación', icon: <Sparkles size={20} />, badge: 'DEMO', category: 'LOGISTICS' },
-
+        { id: 'mobile-scan', label: t('sidebar.mobile_scan'), icon: <Smartphone size={20} />, badge: 'BETA', category: 'LOGISTICS' },
         { id: 'emergency', label: t('sidebar.emergency'), icon: <PhoneCall size={20} />, category: 'EMERGENCY' },
+        { id: 'knowledge-hub', label: t('sidebar.knowledge_hub'), icon: <BookOpen size={20} />, badge: 'DOCS', category: 'EMERGENCY' },
     ];
 
     // Role-based filtering
@@ -72,7 +72,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         if (userRole === 'EMPLOYEE') {
             // Employee sees Dashboard, Capture, Emergency. 
             // Also enable read-only view of Inventory and Map as requested.
-            return ['dashboard', 'capture-tires', 'capture-cabin', 'driver-health', 'emergency', 'unit-inventory', 'tire-inventory', 'map', 'command-center', 'simulation', 'ppe-dashboard'].includes(item.id);
+            return ['dashboard', 'capture-tires', 'capture-cabin', 'driver-health', 'emergency', 'unit-inventory', 'tire-inventory', 'map', 'command-center', 'simulation'].includes(item.id);
         }
         return false;
     });
@@ -128,11 +128,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <div className="relative z-10 flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/30">
-                                <span className="font-black text-xl" style={{ color: textColor }}>S</span>
+                                <span className="font-black text-xl" style={{ color: textColor }}>V</span>
                             </div>
                             <div className="flex flex-col">
                                 <h1 className="font-black text-lg tracking-tighter leading-none" style={{ color: textColor }}>
-                                    IA VISION <span className="opacity-60">PRO</span>
+                                    VISION IA <span className="opacity-60">PRO</span>
                                 </h1>
                                 <p className="text-[10px] uppercase font-black tracking-widest opacity-80" style={{ color: textColor }}>
                                     {businessName || 'Control Tower'}

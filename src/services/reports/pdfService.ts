@@ -79,10 +79,10 @@ export const pdfService = {
             doc.setPage(i);
             doc.setFontSize(8);
             doc.setTextColor(150, 150, 150);
-            doc.text(`Documento generado por SIMSA IA Control Tower - Página ${i} de ${pageCount}`, 105, 285, { align: 'center' });
+            doc.text(`Documento generado por VISION IA PRO - Página ${i} de ${pageCount}`, 105, 285, { align: 'center' });
         }
 
-        doc.save(`SIMSA-Reporte-Llantas-${new Date().toISOString().split('T')[0]}.pdf`);
+        doc.save(`VISION-Reporte-Llantas-${new Date().toISOString().split('T')[0]}.pdf`);
     },
 
     generateDriverReport: (workers: any[]) => {
@@ -95,7 +95,7 @@ export const pdfService = {
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(22);
         doc.setFont('helvetica', 'bold');
-        doc.text('SIMSA SAFETY IA', 15, 20);
+        doc.text('VISION IA PRO SAFETY', 15, 20);
 
         doc.setFontSize(10);
         doc.setFont('helvetica', 'normal');
@@ -124,6 +124,6 @@ export const pdfService = {
             }
         });
 
-        doc.save(`SIMSA-Emergencia-Salud-${new Date().toISOString().split('T')[0]}.pdf`);
+        doc.save(`VISION-Emergencia-Salud-${new Date().toISOString().split('T')[0]}.pdf`);
     }
 };
