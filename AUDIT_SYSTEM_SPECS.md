@@ -184,3 +184,30 @@ CREATE TABLE inspections (
 4. **Build Supervisor Approval Interface**
 5. **Implement Manual Interior Tire Upload**
 6. **Test Multi-Unit Association Logic**
+
+---
+
+## Automated Capture Strategy (Best Shot)
+
+### 1. Initial Registration Strategy (Onboarding)
+When units pass through the arch for the first time:
+1.  **Identification**: Arc detects unit ID (LPR/RFID).
+2.  **Configuration Inference**: System queries fleet DB (e.g., knows "T3-S2-R4" configuration implies 34 tires).
+3.  **Golden Record Creation**: System maps detected tires against expected configuration to create the initial **Level 1 Baseline**.
+
+### 2. Capture Method: Intelligent Frame Extraction
+**Core Principle**: Use High-Speed Video (60FPS+), NOT Single Photos.
+
+1.  **Presence Detection**: Laser/Floor sensors trigger recording.
+2.  **Continuous Streaming**: Cameras capture high-shutter speed video buffer.
+3.  **Edge AI Processing**:
+    *   **YOLO Object Detection**: Scans video stream for wheels.
+    *   **Best Shot Selection**: Algorithm scores frames based on centering, focus, and lighting.
+    *   **Extraction**: Only the highest-scored frame for each tire is saved.
+
+### 3. Positional Mapping (Time-Series)
+System assigns tire positions (1-36) based on temporal sequence:
+1.  **Tractor Axle 1 (Steer)**: First detection event.
+2.  **Tractor Axle 2/3 (Drive)**: Second cluster of detections.
+3.  **Trailer Axles**: Subsequent detection clusters separated by "gap" timing.
+*   **Interior Tires**: Captured via dedicated low-angle ground cameras or angled pit cameras.
