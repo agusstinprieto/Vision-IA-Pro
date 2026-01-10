@@ -2,12 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Search, Filter, AlertTriangle, CheckCircle2, History, AlertOctagon, Download, Trash2 } from 'lucide-react';
 import { dbService } from '../../services/db/dbService';
 import { pdfService } from '../../services/reports/pdfService';
-import { SecurityAlert, InventoryTire } from '../../types';
+import { SecurityAlert, InventoryTire, UserRole } from '../../types';
 import { predictTireLife } from '../../services/ai/predictive';
 import { TireDisposalModal } from './TireDisposalModal';
+import { AddTireModal } from './AddTireModal';
 import { useLanguage } from '../../context/LanguageContext';
 
-export const TireInventoryView = () => {
+interface TireInventoryViewProps {
+    userRole?: UserRole;
+}
+// ... (existing imports)
+
+export const TireInventoryView: React.FC<TireInventoryViewProps> = ({ userRole = 'EMPLOYEE' }) => {
     const { t } = useLanguage();
     const [searchTerm, setSearchTerm] = useState('');
     const [viewMode, setViewMode] = useState<'GRID' | 'LIST'>('GRID');
@@ -15,10 +21,107 @@ export const TireInventoryView = () => {
     const [tires, setTires] = useState<InventoryTire[]>([]);
     const [loading, setLoading] = useState(true);
     const [disposalModalOpen, setDisposalModalOpen] = useState(false);
+    const [addModalOpen, setAddModalOpen] = useState(false);
     const [selectedTire, setSelectedTire] = useState<InventoryTire | null>(null);
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [isFetchingMore, setIsFetchingMore] = useState(false);
+
+    // Skeleton Component
+    const TireSkeleton = () => (
+        <div className="bg-[#121214] border border-white/5 rounded-3xl p-6 space-y-4 animate-pulse">
+            <div className="flex justify-between items-start">
+                <div className="w-16 h-16 rounded-full bg-zinc-800" />
+                <div className="w-6 h-6 rounded bg-zinc-800" />
+            </div>
+            <div className="space-y-2">
+                <div className="h-6 bg-zinc-800 rounded w-1/2" />
+                <div className="h-4 bg-zinc-800 rounded w-3/4" />
+            </div>
+            <div className="h-20 bg-black/40 rounded-xl border border-white/5" />
+        </div>
+    );
+
+    // Memoized Tire Card for performance
+    const TireCard = React.memo(({ tire, onDisposal }: { tire: InventoryTire, onDisposal: (t: InventoryTire) => void }) => {
+        const { t } = useLanguage();
+        return (
+            <div className="bg-[#121214] border border-white/5 rounded-3xl p-6 group hover:border-brand/30 transition-all relative overflow-hidden">
+                <div className="absolute top-4 right-4">
+                    {tire.status === SecurityAlert.ROJA && <AlertOctagon className="text-red-500 animate-pulse" size={24} />}
+                    {tire.status === SecurityAlert.AMARILLA && <AlertTriangle className="text-amber-500" size={24} />}
+                    {tire.status === SecurityAlert.VERDE && <CheckCircle2 className="text-emerald-500" size={24} />}
+                </div>
+
+                <div className="mb-6">
+                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/10 mb-4 bg-zinc-900 flex items-center justify-center">
+                        <img
+                            src={tire.last_photo_url}
+                            alt="Tire"
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                            onError={(e) => {
+                                (e.target as HTMLImageElement).src = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%3E%3Crect%20fill%3D%22%23222%22%20width%3D%2240%22%20height%3D%2240%22%2F%3E%3Ctext%20fill%3D%22%23444%22%20font-family%3D%22sans-serif%22%20font-size%3D%2210%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%3ENO%20IMG%3C%2Ftext%3E%3C%2Fsvg%3E';
+                            }}
+                        />
+                    </div>
+                    <h3 className="text-xl font-black text-white tracking-tight">{tire.brand} <span className="text-zinc-500 text-sm font-medium">{tire.model}</span></h3>
+                    <p className="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-1">Unidad: {tire.unit_id} &bull; {tire.position}</p>
+                </div>
+
+                <div className="bg-black/40 rounded-xl p-4 border border-white/5 space-y-3">
+                    <div className="flex justify-between items-center">
+                        <span className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Profundidad</span>
+                        <span className={`text-lg font-black ${tire.depth_mm < 5 ? 'text-red-500' : tire.depth_mm < 9 ? 'text-amber-500' : 'text-white'
+                            }`}>{tire.depth_mm} mm</span>
+                    </div>
+
+                    <div className="pt-4 border-t border-white/5">
+                        <p className="text-[9px] font-black uppercase text-brand tracking-widest mb-2 flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 bg-brand rounded-full animate-pulse"></span>
+                            Vision IA Pro Brain Prediction
+                        </p>
+                        {(() => {
+                            const prediction = predictTireLife(tire.history);
+                            if (!prediction) return <p className="text-[10px] text-zinc-600 italic">Insuficientes datos históricos</p>;
+
+                            const lifePercent = Math.max(0, Math.min(100, (prediction.daysRemaining / 365) * 100));
+
+                            return (
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-end">
+                                        <span className="text-[10px] font-bold text-zinc-400">Reemplazo Est.</span>
+                                        <span className={`text-xs font-black ${prediction.status === 'CRITICAL' ? 'text-red-500' : prediction.status === 'WARNING' ? 'text-amber-500' : 'text-emerald-500'}`}>
+                                            {prediction.daysRemaining} Días
+                                        </span>
+                                    </div>
+                                    <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                        <div
+                                            className={`h-full rounded-full ${prediction.status === 'CRITICAL' ? 'bg-red-500' : prediction.status === 'WARNING' ? 'bg-amber-500' : 'bg-emerald-500'}`}
+                                            style={{ width: `${lifePercent}%` }}
+                                        />
+                                    </div>
+                                    <p className="text-[9px] text-zinc-600 font-mono text-right">{prediction.predictedReplacementDate.toLocaleDateString()}</p>
+                                </div>
+                            );
+                        })()}
+                    </div>
+                </div>
+
+                <div className="mt-6 flex justify-between items-center gap-2">
+                    <button className="text-xs font-black text-brand uppercase tracking-widest hover:underline flex items-center gap-1">
+                        <History size={12} /> {t('inventory.view_history')}
+                    </button>
+                    <button
+                        onClick={() => onDisposal(tire)}
+                        className="text-xs font-black text-red-500 uppercase tracking-widest hover:underline flex items-center gap-1"
+                    >
+                        <Trash2 size={12} /> Baja
+                    </button>
+                </div>
+            </div>
+        );
+    });
 
     useEffect(() => {
         const fetchInitialTires = async () => {
@@ -51,22 +154,26 @@ export const TireInventoryView = () => {
         }
     };
 
-    const filteredTires = tires.filter(tire => {
-        const matchesSearch = tire.unit_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            tire.brand.toLowerCase().includes(searchTerm.toLowerCase());
+    const filteredTires = React.useMemo(() => {
+        return tires.filter(tire => {
+            const matchesSearch = tire.unit_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                tire.brand.toLowerCase().includes(searchTerm.toLowerCase());
 
-        const statusMatch = statusFilter === 'ALL' ? true :
-            statusFilter === 'CRITICAL' ? tire.status === SecurityAlert.ROJA :
-                statusFilter === 'WARNING' ? tire.status === SecurityAlert.AMARILLA :
-                    tire.status === SecurityAlert.VERDE;
+            const statusMatch = statusFilter === 'ALL' ? true :
+                statusFilter === 'CRITICAL' ? tire.status === SecurityAlert.ROJA :
+                    statusFilter === 'WARNING' ? tire.status === SecurityAlert.AMARILLA :
+                        tire.status === SecurityAlert.VERDE;
 
-        return matchesSearch && statusMatch;
-    });
+            return matchesSearch && statusMatch;
+        });
+    }, [tires, searchTerm, statusFilter]);
 
     if (loading) {
         return (
-            <div className="h-full w-full flex items-center justify-center">
-                <div className="text-zinc-500 font-black uppercase tracking-widest animate-pulse">{t('common.loading')}</div>
+            <div className="p-4 lg:p-6 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                    {[...Array(8)].map((_, i) => <TireSkeleton key={i} />)}
+                </div>
             </div>
         );
     }
@@ -98,6 +205,15 @@ export const TireInventoryView = () => {
                     >
                         <Download size={16} /> Exportar Reporte
                     </button>
+
+                    {userRole !== 'EMPLOYEE' && (
+                        <button
+                            onClick={() => setAddModalOpen(true)}
+                            className="bg-brand hover:bg-brand/90 text-white px-4 py-3 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-brand/20 active:scale-95 transition-all"
+                        >
+                            <span className="text-lg leading-none">+</span> Alta Manual
+                        </button>
+                    )}
 
                     <div className="flex bg-[#121214] rounded-xl border border-white/10 p-1">
                         <button
@@ -149,86 +265,14 @@ export const TireInventoryView = () => {
             {viewMode === 'GRID' ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                     {filteredTires.map(tire => (
-                        <div key={tire.id} className="bg-[#121214] border border-white/5 rounded-3xl p-6 group hover:border-brand/30 transition-all relative overflow-hidden">
-
-                            {/* Status Badge */}
-                            <div className="absolute top-4 right-4">
-                                {tire.status === SecurityAlert.ROJA && <AlertOctagon className="text-red-500 animate-pulse" size={24} />}
-                                {tire.status === SecurityAlert.AMARILLA && <AlertTriangle className="text-amber-500" size={24} />}
-                                {tire.status === SecurityAlert.VERDE && <CheckCircle2 className="text-emerald-500" size={24} />}
-                            </div>
-
-                            <div className="mb-6">
-                                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/10 mb-4">
-                                    <img src={tire.last_photo_url} alt="Tire" className="w-full h-full object-cover" />
-                                </div>
-                                <h3 className="text-xl font-black text-white tracking-tight">{tire.brand} <span className="text-zinc-500 text-sm font-medium">{tire.model}</span></h3>
-                                <p className="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-1">Unidad: {tire.unit_id} &bull; {tire.position}</p>
-                            </div>
-
-                            <div className="bg-black/40 rounded-xl p-4 border border-white/5 space-y-3">
-                                <div className="flex justify-between items-center">
-                                    <span className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Profundidad</span>
-                                    <span className={`text-lg font-black ${tire.depth_mm < 5 ? 'text-red-500' : tire.depth_mm < 9 ? 'text-amber-500' : 'text-white'
-                                        }`}>{tire.depth_mm} mm</span>
-                                </div>
-
-                                {/* Mismatch Warning Logic (Mock) */}
-                                {tire.brand !== 'Michelin' && (
-                                    <div className="flex gap-2 items-center bg-red-500/10 p-2 rounded-lg border border-red-500/20">
-                                        <AlertTriangle size={12} className="text-red-500" />
-                                        <span className="text-[9px] font-bold text-red-500 uppercase tracking-wide">Mismatch Detectado</span>
-                                    </div>
-                                )}
-
-                                {/* [NEW] VISION IA PRO BRAIN PREDICTION */}
-                                <div className="pt-4 border-t border-white/5">
-                                    <p className="text-[9px] font-black uppercase text-brand tracking-widest mb-2 flex items-center gap-2">
-                                        <span className="w-1.5 h-1.5 bg-brand rounded-full animate-pulse"></span>
-                                        Vision IA Pro Brain Prediction
-                                    </p>
-                                    {(() => {
-                                        const prediction = predictTireLife(tire.history);
-                                        if (!prediction) return <p className="text-[10px] text-zinc-600 italic">Insuficientes datos históricos</p>;
-
-                                        const lifePercent = Math.max(0, Math.min(100, (prediction.daysRemaining / 365) * 100)); // Normalized to 1 year for visuals
-
-                                        return (
-                                            <div className="space-y-2">
-                                                <div className="flex justify-between items-end">
-                                                    <span className="text-[10px] font-bold text-zinc-400">Reemplazo Est.</span>
-                                                    <span className={`text-xs font-black ${prediction.status === 'CRITICAL' ? 'text-red-500' : prediction.status === 'WARNING' ? 'text-amber-500' : 'text-emerald-500'}`}>
-                                                        {prediction.daysRemaining} Días
-                                                    </span>
-                                                </div>
-                                                <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                                                    <div
-                                                        className={`h-full rounded-full ${prediction.status === 'CRITICAL' ? 'bg-red-500' : prediction.status === 'WARNING' ? 'bg-amber-500' : 'bg-emerald-500'}`}
-                                                        style={{ width: `${lifePercent}%` }}
-                                                    />
-                                                </div>
-                                                <p className="text-[9px] text-zinc-600 font-mono text-right">{prediction.predictedReplacementDate.toLocaleDateString()}</p>
-                                            </div>
-                                        );
-                                    })()}
-                                </div>
-                            </div>
-
-                            <div className="mt-6 flex justify-between items-center gap-2">
-                                <button className="text-xs font-black text-brand uppercase tracking-widest hover:underline flex items-center gap-1">
-                                    <History size={12} /> {t('inventory.view_history')}
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setSelectedTire(tire);
-                                        setDisposalModalOpen(true);
-                                    }}
-                                    className="text-xs font-black text-red-500 uppercase tracking-widest hover:underline flex items-center gap-1"
-                                >
-                                    <Trash2 size={12} /> Baja
-                                </button>
-                            </div>
-                        </div>
+                        <TireCard
+                            key={tire.id}
+                            tire={tire}
+                            onDisposal={(t) => {
+                                setSelectedTire(t);
+                                setDisposalModalOpen(true);
+                            }}
+                        />
                     ))}
                 </div>
             ) : (
@@ -327,6 +371,22 @@ export const TireInventoryView = () => {
                     tire={selectedTire}
                     onSuccess={async () => {
                         // Refresh tire list (reset to page 0)
+                        setLoading(true);
+                        const { tires: data, hasMore: more } = await dbService.getTires(0, 12);
+                        setTires(data);
+                        setPage(0);
+                        setHasMore(more);
+                        setLoading(false);
+                    }}
+                />
+            )}
+
+            {/* Add Tire Modal */}
+            {addModalOpen && (
+                <AddTireModal
+                    onClose={() => setAddModalOpen(false)}
+                    onTireAdded={async () => {
+                        // Refresh tire list
                         setLoading(true);
                         const { tires: data, hasMore: more } = await dbService.getTires(0, 12);
                         setTires(data);

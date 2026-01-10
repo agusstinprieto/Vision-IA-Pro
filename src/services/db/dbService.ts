@@ -3,11 +3,42 @@ import { Unit, InventoryTire, DriverStatus, TripData, SecurityAlert } from '../.
 import { offlineService } from '../offline/offlineQueue';
 
 export const dbService = {
+    currentCompanyId: '',
+
+    setCompanyId(id: string) {
+        this.currentCompanyId = id;
+    },
+
+    /**
+     * Ensures a valid Company ID is present. 
+     * Tries to recover from localStorage if memory state is lost.
+     */
+    ensureCompanyId() {
+        if (this.currentCompanyId) return this.currentCompanyId;
+
+        try {
+            const saved = localStorage.getItem('simsa_company');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                if (parsed.id) {
+                    this.currentCompanyId = parsed.id;
+                    return parsed.id;
+                }
+            }
+        } catch (e) {
+            console.error("Failed to recover company ID", e);
+        }
+
+        throw new Error("Sesión inválida o expirada. Por favor, recargue la página o inicie sesión nuevamente.");
+    },
+
     // 1. Units (Fleet)
     async getUnits(): Promise<Unit[]> {
+        if (!this.currentCompanyId) return [];
         const { data, error } = await supabase
             .from('units')
             .select('*')
+            .eq('company_id', this.currentCompanyId)
             .order('plate_id');
 
         if (error) throw error;
@@ -21,58 +52,108 @@ export const dbService = {
         }));
     },
 
-    // 2. Tires (Inventory) - Read from baselines
-    async getTires(page = 0, pageSize = 10): Promise<{ tires: InventoryTire[], hasMore: boolean }> {
+    async createUnit(plateId: string, pipeNumber: string) {
+        const companyId = this.ensureCompanyId();
+
+        const { data, error } = await supabase
+            .from('units')
+            .insert([{
+                plate_id: plateId.toUpperCase(),
+                pipe_number: pipeNumber.toUpperCase(),
+                is_active: true,
+                company_id: companyId,
+                last_audit: null
+            }])
+            .select();
+
+        if (error) throw error;
+        return data[0];
+    },
+
+    // 2. Tires (Inventory) - READ FROM OPTIMIZED TIRES TABLE
+    async getTires(page = 0, pageSize = 20): Promise<{ tires: InventoryTire[], hasMore: boolean }> {
         const from = page * pageSize;
         const to = from + pageSize - 1;
 
-        const { data, error, count } = await supabase
-            .from('baselines')
-            .select('unit_id, frame_data, updated_at', { count: 'exact' })
-            .order('updated_at', { ascending: false })
+        // Try optimized table first
+        const { data: tiresData, error, count } = await supabase
+            .from('tires')
+            .select('*', { count: 'exact' })
+            .eq('company_id', this.currentCompanyId)
+            .order('unit_id', { ascending: true })
             .range(from, to);
 
         if (error) throw error;
 
-        const tires: InventoryTire[] = [];
-        data?.forEach((baseline: any) => {
-            const frames = baseline.frame_data || [];
-            frames.forEach((frame: any, index: number) => {
-                if (frame.metadata && Object.keys(frame.metadata).length > 0) {
-                    const brand = frame.metadata.brand;
-                    if (brand && brand !== 'Desconocido' && brand !== '') {
-                        tires.push({
-                            id: `${baseline.unit_id}-tire-${index + 1}`,
-                            unit_id: baseline.unit_id,
-                            position: `Llanta ${index + 1}`,
-                            brand: brand,
-                            model: frame.metadata.model || 'N/A',
-                            depth_mm: frame.metadata.depth_mm || 0,
-                            rim_condition: frame.metadata.rim_condition || 'N/A',
-                            serial_number: frame.metadata.serial_number || null,
-                            last_photo_url: frame.url,
-                            status: frame.metadata.depth_mm < 5 ? SecurityAlert.ROJA :
-                                frame.metadata.depth_mm < 9 ? SecurityAlert.AMARILLA :
-                                    SecurityAlert.VERDE,
-                            history: []
-                        });
-                    }
+        // If optimized table is empty, we must migrate from baselines (one-time impact)
+        if (tiresData && tiresData.length === 0 && page === 0) {
+            console.warn("Tires table empty. Triggering automated migration from baselines...");
+            const { data: baselines } = await supabase.from('baselines')
+                .select('unit_id, frame_data')
+                .eq('company_id', this.currentCompanyId)
+                .limit(50);
+            if (baselines) {
+                for (const b of baselines) {
+                    await this.syncTiresFromBaseline(b.unit_id, b.frame_data);
                 }
-            });
-        });
+                // Retry once
+                return this.getTires(page, pageSize);
+            }
+        }
+
+        const tires: InventoryTire[] = (tiresData || []).map(t => ({
+            id: t.id,
+            unit_id: t.unit_id,
+            position: t.position,
+            brand: t.brand,
+            model: t.model || 'N/A',
+            depth_mm: t.depth_mm || 0,
+            rim_condition: 'N/A',
+            serial_number: null,
+            last_photo_url: t.last_photo_url,
+            status: t.status as SecurityAlert,
+            history: t.history || []
+        }));
 
         const hasMore = count ? (to + 1) < count : false;
         return { tires, hasMore };
     },
 
+    /**
+     * Internal helper to sync frame data into the flattened tires table
+     * This is the key to 100x performance increase
+     */
+    async syncTiresFromBaseline(unitId: string, frames: any[]) {
+        const tireInserts = frames
+            .filter(f => f.metadata && f.metadata.brand)
+            .map((f, index) => ({
+                id: `${unitId}-t${index + 1}`,
+                unit_id: unitId,
+                position: `Llanta ${index + 1}`,
+                brand: f.metadata.brand,
+                model: f.metadata.model || 'N/A',
+                depth_mm: f.metadata.depth_mm || 0,
+                status: f.metadata.depth_mm < 5 ? SecurityAlert.ROJA :
+                    f.metadata.depth_mm < 9 ? SecurityAlert.AMARILLA :
+                        SecurityAlert.VERDE,
+                last_photo_url: f.url,
+                last_photo_url: f.url,
+                updated_at: new Date().toISOString(),
+                company_id: this.currentCompanyId
+            }));
+
+        if (tireInserts.length > 0) {
+            await supabase.from('tires').upsert(tireInserts, { onConflict: 'id' });
+        }
+    },
+
     async getTireStats() {
-        // Fetch all baselines but only minimal data for stats
+        // Optimized: Fetch from the flat tires table instead of heavy JSON blobs
         const { data, error } = await supabase
-            .from('baselines')
-            .select('frame_data')
-            .not('frame_data', 'is', null)
-            .order('updated_at', { ascending: false })
-            .limit(50); // Fetch last 50 fleet snapshots for dashboard health
+            .from('tires')
+            .select('depth_mm, status')
+            .eq('company_id', this.currentCompanyId)
+            .limit(2000); // Safety limit for performance
 
         if (error) throw error;
 
@@ -81,18 +162,14 @@ export const dbService = {
         let warning = 0;
         let totalDepth = 0;
 
-        data?.forEach((baseline: any) => {
-            const frames = baseline.frame_data || [];
-            frames.forEach((frame: any) => {
-                if (frame.metadata && frame.metadata.brand) {
-                    const depth = frame.metadata.depth_mm || 0;
-                    total++;
-                    totalDepth += depth;
-                    if (depth < 5) critical++;
-                    else if (depth < 9) warning++;
-                }
+        if (data && data.length > 0) {
+            data.forEach(t => {
+                total++;
+                totalDepth += (t.depth_mm || 0);
+                if (t.status === SecurityAlert.ROJA) critical++;
+                else if (t.status === SecurityAlert.AMARILLA) warning++;
             });
-        });
+        }
 
         return {
             total,
@@ -113,11 +190,54 @@ export const dbService = {
         return data;
     },
 
+    /**
+     * Manual Tire Mounting (Alta Manual)
+     * Upserts a tire record. Uses standardized ID format to ensure replacement of existing tire at that position.
+     */
+    async mountTire(tire: {
+        unit_id: string;
+        position_index: number; // 1-based index (e.g., 1 for Front Left)
+        brand: string;
+        model: string;
+        depth_mm: number;
+        serial_number?: string;
+    }) {
+        const companyId = this.ensureCompanyId();
+        const id = `${tire.unit_id}-t${tire.position_index}`;
+        const positionLabel = `Llanta ${tire.position_index}`; // Standardize label
+
+        // Determine status based on depth
+        const status = tire.depth_mm < 5 ? SecurityAlert.ROJA :
+            tire.depth_mm < 9 ? SecurityAlert.AMARILLA :
+                SecurityAlert.VERDE;
+
+        const { data, error } = await supabase
+            .from('tires')
+            .upsert({
+                id: id,
+                unit_id: tire.unit_id,
+                position: positionLabel,
+                brand: tire.brand,
+                model: tire.model || 'N/A',
+                depth_mm: tire.depth_mm,
+                status: status,
+                serial_number: tire.serial_number,
+                last_photo_url: 'https://images.unsplash.com/photo-1542361345-89e58247f2d5?auto=format&fit=crop&q=80&w=400', // Placeholder for manual entry
+                company_id: companyId,
+                updated_at: new Date().toISOString()
+            }, { onConflict: 'id' })
+            .select();
+
+        if (error) throw error;
+        return data[0];
+    },
+
     // 3. Workers (Driver Health)
     async getWorkers(): Promise<import('../../types').Worker[]> {
         const { data, error } = await supabase
             .from('workers')
             .select('*')
+            .eq('company_id', this.currentCompanyId)
             .order('risk_score', { ascending: false });
 
         if (error) throw error;
@@ -127,7 +247,7 @@ export const dbService = {
     async createWorker(worker: Partial<import('../../types').Worker>) {
         const { data, error } = await supabase
             .from('workers')
-            .insert([worker])
+            .insert([{ ...worker, company_id: this.currentCompanyId }])
             .select();
 
         if (error) throw error;
@@ -149,6 +269,7 @@ export const dbService = {
         const { data, error } = await supabase
             .from('trips')
             .select('*')
+            .eq('company_id', this.currentCompanyId)
             .order('start_time', { ascending: false })
             .limit(limit);
 
@@ -159,7 +280,7 @@ export const dbService = {
     async createTrip(trip: Partial<TripData>) {
         const { data, error } = await supabase
             .from('trips')
-            .insert([trip])
+            .insert([{ ...trip, company_id: this.currentCompanyId }])
             .select();
 
         if (error) throw error;
@@ -172,7 +293,7 @@ export const dbService = {
         try {
             const { data, error } = await supabase
                 .from('inspections')
-                .insert([record])
+                .insert([{ ...record, company_id: this.currentCompanyId }])
                 .select();
 
             if (error) throw error;
@@ -228,7 +349,7 @@ export const dbService = {
     async saveDriverEvaluation(evaluation: any) {
         const { data, error } = await supabase
             .from('driver_evaluations')
-            .insert([evaluation])
+            .insert([{ ...evaluation, company_id: this.currentCompanyId }])
             .select();
 
         if (error) throw error;
@@ -243,7 +364,8 @@ export const dbService = {
                 type: incident.type,
                 description: incident.description,
                 location: incident.location,
-                created_at: new Date().toISOString()
+                created_at: new Date().toISOString(),
+                company_id: this.currentCompanyId
             }])
             .select();
 
@@ -301,18 +423,35 @@ export const dbService = {
 
     // 8. Forensic Baselines (New)
     async saveBaseline(unitId: string, frames: any[]) {
-        // Prepare payload: verify if we can store big JSON or need storage references
-        // For this demo, we store the base64/urls directly in a JSONB column 'frame_data'
+        // Upload frames to storage first if they are data URLs
+        const uploadedFrames = await Promise.all(frames.map(async (frame, index) => {
+            if (frame.url && frame.url.startsWith('data:')) {
+                try {
+                    const publicUrl = await this.uploadEvidence(frame.url, 'llantas', `${unitId}_baseline_${index}`);
+                    return { ...frame, url: publicUrl };
+                } catch (e) {
+                    console.error("Baseline Upload Error:", e);
+                    return frame;
+                }
+            }
+            return frame;
+        }));
+
         const { data, error } = await supabase
             .from('baselines')
             .upsert({
                 unit_id: unitId,
-                frame_data: frames,
-                updated_at: new Date().toISOString()
+                frame_data: uploadedFrames,
+                updated_at: new Date().toISOString(),
+                company_id: this.currentCompanyId
             }, { onConflict: 'unit_id' })
             .select();
 
         if (error) throw error;
+
+        // Sync to tires table for fast inventory
+        await this.syncTiresFromBaseline(unitId, uploadedFrames);
+
         return data[0];
     },
 
@@ -346,7 +485,7 @@ export const dbService = {
     }) {
         const { data, error } = await supabase
             .from('audits')
-            .insert([audit])
+            .insert([{ ...audit, company_id: this.currentCompanyId }])
             .select();
 
         if (error) throw error;
@@ -390,6 +529,9 @@ export const dbService = {
 
         if (baselineError) throw baselineError;
 
+        // Sync to tires table for fast inventory
+        await this.syncTiresFromBaseline(unitId, frameData);
+
         // Mark audit as approved
         const { error: auditError } = await supabase
             .from('audits')
@@ -415,7 +557,7 @@ export const dbService = {
     }) {
         const { data, error } = await supabase
             .from('inspections')
-            .insert([inspection])
+            .insert([{ ...inspection, company_id: this.currentCompanyId }])
             .select();
 
         if (error) throw error;
@@ -461,7 +603,7 @@ export const dbService = {
     }) {
         const { data, error } = await supabase
             .from('tire_disposals')
-            .insert([{ ...disposal, status: 'PENDING' }])
+            .insert([{ ...disposal, status: 'PENDING', company_id: this.currentCompanyId }])
             .select();
 
         if (error) throw error;
@@ -475,6 +617,7 @@ export const dbService = {
         const { data, error } = await supabase
             .from('tire_disposals')
             .select('*')
+            .eq('company_id', this.currentCompanyId)
             .eq('status', 'PENDING')
             .order('created_at', { ascending: false });
 

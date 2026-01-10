@@ -57,6 +57,19 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ settings, onSave, on
                         ))}
                     </div>
 
+                    {/* Business Name Configuration */}
+                    <div className="mt-8 space-y-1 bg-white/5 p-4 rounded-2xl border border-white/10">
+                        <label className="text-[10px] uppercase font-bold text-zinc-400 block ml-1">Nombre del Negocio (Subtítulo)</label>
+                        <input
+                            type="text"
+                            value={localSettings.businessName || ''}
+                            onChange={(e) => setLocalSettings({ ...localSettings, businessName: e.target.value })}
+                            className="w-full bg-black/30 border border-white/10 rounded-xl p-3 focus:border-white/30 outline-none transition-all font-black uppercase text-lg"
+                            placeholder="Ej. TORRE DE CONTROL"
+                        />
+                        <p className="text-[10px] text-zinc-600 mt-2 px-1">Este nombre aparecerá bajo el logo en la barra lateral.</p>
+                    </div>
+
                     {/* Custom Color Picker */}
                     <div className="flex items-center gap-4 mt-6 p-4 bg-white/5 rounded-2xl border border-white/10">
                         <div className="relative w-12 h-12 rounded-xl overflow-hidden border-2 border-white/20">

@@ -83,6 +83,7 @@ export interface ForensicAuditResult {
 
 export interface AppSettings {
     primaryColor: string;
+    businessName: string; // NEW: Dynamic Business Name
     supervisor: {
         name: string;
         phone: string;
@@ -155,6 +156,7 @@ export interface EmergencyContact {
 // === AUTHENTICATION & RBAC ===
 export interface Worker {
     id: string;
+    company_id: string;
     name: string;
     phone: string;
     unit_assigned: string;
@@ -171,7 +173,7 @@ export interface Worker {
     last_check: string;
 }
 
-export type UserRole = 'MASTER' | 'MANAGER' | 'EMPLOYEE' | 'DEVELOPER';
+export type UserRole = 'MASTER' | 'MANAGER' | 'EMPLOYEE' | 'DEVELOPER' | 'SUPERVISOR';
 
 export interface User {
     id: string;
@@ -179,4 +181,11 @@ export interface User {
     role: UserRole;
     name: string;
     avatar?: string;
+    company_id?: string; // Multi-tenant link
+}
+
+export interface Company {
+    id: string;
+    name: string;
+    slug: string;
 }

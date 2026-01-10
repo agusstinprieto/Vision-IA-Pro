@@ -50,42 +50,67 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
         fetchData();
     }, []);
 
-    if (loading) {
-        return (
-            <div className="h-full w-full flex items-center justify-center">
-                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-brand"></div>
-            </div>
-        );
-    }
+    // Skeleton Components
+    const KPISkeleton = () => (
+        <div className="bg-[#121214] border border-white/5 p-8 rounded-[2.5rem] animate-pulse h-[180px]" />
+    );
+
+    const ChartSkeleton = () => (
+        <div className="lg:col-span-2 bg-[#121214] border border-white/5 rounded-[3rem] p-10 animate-pulse h-[350px]" />
+    );
 
     // --- Statistics Calculations ---
-
-    // 1. Tire Stats from service
     const totalTires = tiresStats?.total || 0;
     const criticalTires = tiresStats?.critical || 0;
     const warningTires = tiresStats?.warning || 0;
     const avgDepth = tiresStats?.avgDepth || "0.0";
     const tireHealthPercentage = tiresStats?.healthPercentage || 0;
 
-    // 2. Driver Stats
-    const totalDrivers = workers.length;
-    const alertDrivers = workers.filter(d => (d.risk_score || 0) > 50 || (d.metrics?.alcohol_probability || 0) > 0 || (d.metrics?.fatigue || 0) > 50).length;
-    const criticalDrivers = workers.filter(d => d.status === DriverStatus.PELIGRO || d.status === DriverStatus.FATIGA).length;
-
-    const kpis = [
+    const kpis = React.useMemo(() => [
         { label: t('dashboard.efficiency' as any) || 'Eficiencia de Auditoría', value: '98.4%', trend: '+2.1%', icon: <Zap size={20} />, color: 'emerald' },
         { label: t('dashboard.tire_alerts'), value: criticalTires.toString().padStart(2, '0'), trend: '-15%', icon: <AlertCircle size={20} />, color: 'red' },
         { label: t('sidebar.unit_inventory'), value: '184', trend: 'Estable', icon: <Truck size={20} />, color: 'blue' },
         { label: 'Tire Life Index', value: `${avgDepth}mm`, trend: `${tireHealthPercentage}% Vida`, icon: <Activity size={20} />, color: 'amber' },
-    ];
+    ], [t, criticalTires, avgDepth, tireHealthPercentage]);
 
-    const recentAudits = trips.slice(0, 5).map(trip => ({
+    const KPICard = React.memo(({ kpi }: { kpi: any }) => (
+        <div className="bg-[#121214] border border-white/5 p-8 rounded-[2.5rem] group hover:border-brand/20 transition-all cursor-pointer">
+            <div className="flex justify-between items-start mb-6">
+                <div className="p-3 bg-white/5 rounded-2xl text-zinc-400 group-hover:scale-110 transition-transform">
+                    {kpi.icon}
+                </div>
+                <span className={`text-[10px] font-black uppercase tracking-widest ${kpi.trend.includes('+') ? 'text-emerald-500' : kpi.trend.includes('-') ? 'text-red-500' : 'text-zinc-500'
+                    }`}>
+                    {kpi.trend}
+                </span>
+            </div>
+            <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest mb-1">{kpi.label}</p>
+            <p className="text-4xl font-black tracking-tighter">{kpi.value}</p>
+        </div>
+    ));
+
+    const recentAudits = React.useMemo(() => trips.slice(0, 5).map(trip => ({
         id: trip.id,
         unit: trip.truck_id,
         type: 'AUDIT',
         status: trip.alert_level === SecurityAlert.ROJA ? 'RED' : 'GREEN',
         time: new Date(trip.start_time).toLocaleTimeString()
-    }));
+    })), [trips]);
+
+    if (loading) {
+        return (
+            <div className="p-4 lg:p-6 space-y-8 pb-8">
+                <header className="h-24 w-1/3 bg-zinc-900 rounded-3xl animate-pulse" />
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                    {[...Array(4)].map((_, i) => <KPISkeleton key={i} />)}
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <ChartSkeleton />
+                    <div className="bg-[#121214] border border-white/5 rounded-[3rem] p-10 animate-pulse h-[350px]" />
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="p-4 lg:p-6 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-8">
@@ -113,22 +138,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate, brandC
                 </div>
             </header>
 
-            {/* KPI Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                 {kpis.map((kpi, i) => (
-                    <div key={i} className="bg-[#121214] border border-white/5 p-8 rounded-[2.5rem] group hover:border-brand/20 transition-all cursor-pointer">
-                        <div className="flex justify-between items-start mb-6">
-                            <div className="p-3 bg-white/5 rounded-2xl text-zinc-400 group-hover:scale-110 transition-transform">
-                                {kpi.icon}
-                            </div>
-                            <span className={`text-[10px] font-black uppercase tracking-widest ${kpi.trend.includes('+') ? 'text-emerald-500' : kpi.trend.includes('-') ? 'text-red-500' : 'text-zinc-500'
-                                }`}>
-                                {kpi.trend}
-                            </span>
-                        </div>
-                        <p className="text-[10px] text-zinc-600 font-black uppercase tracking-widest mb-1">{kpi.label}</p>
-                        <p className="text-4xl font-black tracking-tighter">{kpi.value}</p>
-                    </div>
+                    <KPICard key={i} kpi={kpi} />
                 ))}
             </div>
 

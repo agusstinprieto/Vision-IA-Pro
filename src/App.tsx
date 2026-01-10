@@ -6,7 +6,7 @@ import { ResultView } from './components/inspection/ResultView';
 import { SettingsView } from './components/settings/SettingsView';
 import { LoginView } from './components/auth/LoginView';
 import { CabinScanner } from './components/safety/CabinScanner';
-import { SecurityAlert, TripData, AppSettings, CabinAuditResult, UserRole } from './types';
+import { SecurityAlert, TripData, AppSettings, CabinAuditResult, UserRole, Company } from './types';
 // [REMOVED MOCK IMPORTS]
 import { analyzeInspectionDelta } from './services/ai/gemini';
 import { dbService } from './services/db/dbService';
@@ -28,6 +28,7 @@ import { DashboardView } from './components/dashboard/DashboardView';
 import { KnowledgeHub } from './components/docs/KnowledgeHub';
 import { SupervisorApprovalsView } from './components/supervisor/SupervisorApprovalsView';
 import { TireMonitoringView } from './components/supervisor/TireMonitoringView';
+import { SuperAdminView } from './components/admin/SuperAdminView';
 
 // Standard Audit Entry Type
 interface AuditEntry {
@@ -40,6 +41,7 @@ interface AuditEntry {
 
 const DEFAULT_SETTINGS: AppSettings = {
   primaryColor: '#EA492E',
+  businessName: 'SIMSA', // Default set to SIMSA
   supervisor: { name: '', phone: '', email: '' },
   manager: { name: '', phone: '', email: '' }
 };
@@ -48,6 +50,7 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState('');
   const [userRole, setUserRole] = useState<UserRole>('EMPLOYEE');
+  const [currentCompany, setCurrentCompany] = useState<Company | null>(null);
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
 
   const [view, setView] = useState<string>('dashboard');
@@ -66,17 +69,32 @@ export default function App() {
   useEffect(() => {
     const savedSession = localStorage.getItem('simsa_session');
     const savedRole = localStorage.getItem('simsa_role') as UserRole;
+    const savedCompany = localStorage.getItem('simsa_company');
+
     if (savedSession) {
       setIsLoggedIn(true);
       setCurrentUser(savedSession);
       if (savedRole) setUserRole(savedRole);
+      if (savedCompany) {
+        try {
+          const company = JSON.parse(savedCompany);
+          setCurrentCompany(company);
+          dbService.setCompanyId(company.id);
+        } catch (e) { console.error("Company parse error", e); }
+      }
     }
 
     const savedSettings = localStorage.getItem('simsa_settings');
     if (savedSettings) {
-      const parsed = JSON.parse(savedSettings);
-      setSettings(parsed);
-      applyTheme(parsed.primaryColor);
+      try {
+        const parsed = JSON.parse(savedSettings);
+        // Merge with defaults to ensure new fields (like businessName) exist
+        setSettings({ ...DEFAULT_SETTINGS, ...parsed });
+        applyTheme(parsed.primaryColor || DEFAULT_SETTINGS.primaryColor);
+      } catch (e) {
+        console.error("Settings parse error, resetting", e);
+        setSettings(DEFAULT_SETTINGS);
+      }
     } else {
       applyTheme(DEFAULT_SETTINGS.primaryColor);
     }
@@ -86,18 +104,34 @@ export default function App() {
     document.documentElement.style.setProperty('--brand-color', color);
   };
 
-  const handleLogin = (user: string, role: UserRole) => {
+  const handleLogin = (user: string, role: UserRole, company: Company) => {
     setIsLoggedIn(true);
     setCurrentUser(user);
     setUserRole(role);
+    setCurrentCompany(company);
+
+    // Inject company context into DB Service
+    dbService.setCompanyId(company.id);
+
+    // Update settings name if it's the default
+    if (settings.businessName === 'SIMSA' || settings.businessName === 'VISION IA PRO') {
+      const newSettings = { ...settings, businessName: company.name };
+      setSettings(newSettings);
+      localStorage.setItem('simsa_settings', JSON.stringify(newSettings));
+    }
+
     localStorage.setItem('simsa_session', user);
     localStorage.setItem('simsa_role', role);
+    localStorage.setItem('simsa_company', JSON.stringify(company));
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     setCurrentUser('');
+    setCurrentCompany(null);
+    dbService.setCompanyId('');
     localStorage.removeItem('simsa_session');
+    localStorage.removeItem('simsa_company');
     setView('dashboard');
   };
 
@@ -119,7 +153,7 @@ export default function App() {
       <Sidebar
         activeView={view}
         onNavigate={setView}
-        businessName={settings.supervisor.name || 'VISION IA PRO'}
+        businessName={settings.businessName || 'VISION IA PRO'}
         brandColor={settings.primaryColor}
         isOpen={isSidebarOpen}
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -226,7 +260,7 @@ export default function App() {
             ) : view === 'unit-inventory' ? (
               <UnitInventoryView />
             ) : view === 'tire-inventory' ? (
-              <TireInventoryView />
+              <TireInventoryView userRole={userRole} />
             ) : view === 'map' ? (
               <SmartMapView />
             ) : view === 'emergency' ? (
@@ -325,6 +359,8 @@ export default function App() {
               </div>
             ) : view === 'knowledge-hub' ? (
               <KnowledgeHub />
+            ) : view === 'super-admin' ? (
+              <SuperAdminView />
             ) : null}
           </div>
         </div>

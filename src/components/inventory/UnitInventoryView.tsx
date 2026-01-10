@@ -4,6 +4,7 @@ import { dbService } from '../../services/db/dbService';
 import { Unit } from '../../types';
 import { PlateScanner } from '../gate/PlateScanner';
 import { useLanguage } from '../../context/LanguageContext';
+import { AddUnitModal } from './AddUnitModal';
 
 export const UnitInventoryView = () => {
     const { t } = useLanguage();
@@ -13,18 +14,21 @@ export const UnitInventoryView = () => {
     const [units, setUnits] = useState<Unit[]>([]);
     const [loading, setLoading] = useState(true);
     const [showScanner, setShowScanner] = useState(false);
+    const [showAddModal, setShowAddModal] = useState(false);
+
+    const fetchUnits = async () => {
+        try {
+            setLoading(true);
+            const data = await dbService.getUnits();
+            setUnits(data);
+        } catch (error) {
+            console.error('Error fetching units:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchUnits = async () => {
-            try {
-                const data = await dbService.getUnits();
-                setUnits(data);
-            } catch (error) {
-                console.error('Error fetching units:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchUnits();
     }, []);
 
@@ -68,6 +72,14 @@ export const UnitInventoryView = () => {
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" x2="21" y1="6" y2="6" /><line x1="8" x2="21" y1="12" y2="12" /><line x1="8" x2="21" y1="18" y2="18" /><line x1="3" x2="3.01" y1="6" y2="6" /><line x1="3" x2="3.01" y1="12" y2="12" /><line x1="3" x2="3.01" y1="18" y2="18" /></svg>
                         </button>
                     </div>
+
+                    <button
+                        onClick={() => setShowAddModal(true)}
+                        className="flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-white/20 transition-all border border-white/5"
+                    >
+                        <span className="text-xl leading-none mb-0.5">+</span>
+                        <span className="hidden sm:inline">Alta Unidad</span>
+                    </button>
 
                     <button
                         onClick={() => setShowScanner(true)}
@@ -204,6 +216,16 @@ export const UnitInventoryView = () => {
                         setShowScanner(false);
                     }}
                     onClose={() => setShowScanner(false)}
+                />
+            )}
+
+            {/* Add Unit Modal */}
+            {showAddModal && (
+                <AddUnitModal
+                    onClose={() => setShowAddModal(false)}
+                    onUnitAdded={() => {
+                        fetchUnits(); // Refresh list
+                    }}
                 />
             )}
         </div>

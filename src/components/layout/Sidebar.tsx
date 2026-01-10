@@ -20,7 +20,7 @@ import {
     Images,
     BookOpen
 } from 'lucide-react';
-import { useLanguage } from '../../context/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 interface SidebarProps {
     activeView: string;
@@ -49,7 +49,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     onToggle,
     userRole
 }) => {
-    const { t } = useLanguage();
+    const { t } = useTranslation();
 
     const navItems: NavItem[] = [
         { id: 'dashboard', label: t('sidebar.dashboard'), icon: <LayoutDashboard size={20} />, category: 'CORE' },
@@ -63,6 +63,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         { id: 'mobile-scan', label: t('sidebar.mobile_scan'), icon: <Smartphone size={20} />, badge: 'BETA', category: 'LOGISTICS' },
         { id: 'emergency', label: t('sidebar.emergency'), icon: <PhoneCall size={20} />, category: 'EMERGENCY' },
         { id: 'knowledge-hub', label: t('sidebar.knowledge_hub'), icon: <BookOpen size={20} />, badge: 'DOCS', category: 'EMERGENCY' },
+        // God Mode
+        ...(userRole === 'MASTER' || userRole === 'DEVELOPER' || userRole === 'ADMIN' ? [{ id: 'super-admin', label: 'God Mode', icon: <ShieldAlert size={20} />, category: 'CORE' }] : [])
     ];
 
     // Role-based filtering

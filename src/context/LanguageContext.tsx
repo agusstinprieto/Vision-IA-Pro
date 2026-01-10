@@ -1,40 +1,39 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { translations, Language, TranslationKey } from '../i18n/translations';
+import React, { createContext, useContext, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Language, TranslationKey } from '../i18n/translations';
 
 interface LanguageContextType {
     language: Language;
     setLanguage: (lang: Language) => void;
-    t: (key: TranslationKey) => string;
+    t: (key: any) => string; // Relaxed type to allow string or TranslationKey
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [language, setLanguage] = useState<Language>('es');
+    const { t, i18n } = useTranslation();
 
-    useEffect(() => {
-        const savedLang = localStorage.getItem('simsa_lang') as Language;
-        if (savedLang) setLanguage(savedLang);
-    }, []);
-
-    const handleSetLanguage = (lang: Language) => {
-        setLanguage(lang);
+    const setLanguage = (lang: Language) => {
+        i18n.changeLanguage(lang);
         localStorage.setItem('simsa_lang', lang);
     };
 
-    const t = (key: TranslationKey) => {
-        const keys = key.split('.');
-        let value: any = translations[language];
-
-        for (const k of keys) {
-            value = value?.[k];
+    // Sync initial load if needed, though i18n handle it independently
+    useEffect(() => {
+        const savedLang = localStorage.getItem('simsa_lang') as Language;
+        if (savedLang && i18n.language !== savedLang) {
+            i18n.changeLanguage(savedLang);
         }
+    }, [i18n]);
 
-        return value || key;
+    const contextValue = {
+        language: (i18n.language.startsWith('es') ? 'es' : 'en') as Language,
+        setLanguage,
+        t: (key: any) => t(key as string)
     };
 
     return (
-        <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t }}>
+        <LanguageContext.Provider value={contextValue}>
             {children}
         </LanguageContext.Provider>
     );

@@ -61,7 +61,7 @@
             <h2 class="text-2xl font-black text-white uppercase tracking-tighter mb-2">Restricted Access</h2>
             <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-8">Exclusive use for Audit Team /
                 IA.AGUS</p>
-            <input type="password" id="password-input" placeholder="Security Password"
+            <input type="password" id="password-input" placeholder="Security Password" autofocus
                 class="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-center text-white placeholder:text-zinc-700 focus:outline-none focus:border-[#EA492E] mb-6 font-mono">
             <button onclick="checkPassword()"
                 class="w-full bg-[#EA492E] py-4 rounded-xl text-white font-black uppercase tracking-widest text-xs hover:bg-[#EA492E]/80 transition-all">Unlock
@@ -340,6 +340,10 @@
                 checkPassword();
             }
         });
+
+        window.onload = function () {
+            document.getElementById('password-input').focus();
+        };
     </script>
 </body>
 
