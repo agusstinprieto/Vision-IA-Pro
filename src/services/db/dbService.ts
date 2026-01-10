@@ -85,21 +85,7 @@ export const dbService = {
 
         if (error) throw error;
 
-        // If optimized table is empty, we must migrate from baselines (one-time impact)
-        if (tiresData && tiresData.length === 0 && page === 0) {
-            console.warn("Tires table empty. Triggering automated migration from baselines...");
-            const { data: baselines } = await supabase.from('baselines')
-                .select('unit_id, frame_data')
-                .eq('company_id', this.currentCompanyId)
-                .limit(50);
-            if (baselines) {
-                for (const b of baselines) {
-                    await this.syncTiresFromBaseline(b.unit_id, b.frame_data);
-                }
-                // Retry once
-                return this.getTires(page, pageSize);
-            }
-        }
+
 
         const tires: InventoryTire[] = (tiresData || []).map(t => ({
             id: t.id,

@@ -116,7 +116,7 @@ export const SuperAdminView: React.FC = () => {
                                 value={newCompName}
                                 onChange={e => setNewCompName(e.target.value)}
                                 className="w-full bg-black/50 border border-white/10 rounded-xl p-3 mt-1 text-white focus:border-blue-500 outline-none"
-                                placeholder="Ej. Transportes Comugas"
+                                placeholder="Ej. Transportes Combugas"
                             />
                         </div>
                         <button

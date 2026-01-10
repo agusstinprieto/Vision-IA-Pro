@@ -39,17 +39,17 @@ export const KnowledgeHub = () => {
             tags: ['T3-S2-R4', 'IA.AGUS'],
             tires: 34,
             price: '$1,250,000 MXN',
-            image_url: '/docs/img/arch_render.png',
+            image_url: '/assets/demo/trailer_full_scanner.jpg',
             specs: { axles: 9, length: '31m', capacity: '60 Ton' }
         },
         {
             id: 'PIPA-01',
-            name: 'Pipa 42K (LP-Gas)',
+            name: 'Pipa 42K (Combugas)',
             type: 'Hazardous Mat',
             tags: ['T3-S3', 'Clean Energy', 'Fuel'],
             tires: 18,
             price: '$980,000 MXN',
-            image_url: '/docs/img/arch_render_metallic.png',
+            image_url: '/assets/demo/trailer_combugas_clean.png',
             specs: { axles: 6, length: '18m', capacity: '42,000 L' }
         },
         {
@@ -59,7 +59,7 @@ export const KnowledgeHub = () => {
             tags: ['T3-S3', 'Logística'],
             tires: 18,
             price: '$650,000 MXN',
-            image_url: '/docs/img/arch_render_painted.png',
+            image_url: '/assets/demo/trailer_sencillo_clean.png',
             specs: { axles: 6, length: '18m', capacity: '30 Ton' }
         }
     ];
@@ -72,7 +72,7 @@ export const KnowledgeHub = () => {
             model: 'RT-Pro Haul',
             price: '$8,450 MXN',
             type: 'Direccional / Tracción',
-            image_url: '/docs/tire_scan_3d_1767882062473.png',
+            image_url: '/assets/demo/tire_3d_laser.png',
             features: ['Heavy Duty Construction', 'Smart RFID Ready', 'Cool Running Compound']
         },
         {
@@ -82,7 +82,7 @@ export const KnowledgeHub = () => {
             model: 'X Multi Energy Z',
             price: '$9,200 MXN',
             type: 'Toda Posición',
-            image_url: '/docs/tire_scan_3d_1767882062473.png', // Using placeholder if specific brand asset missing
+            image_url: '/assets/demo/tire_catalog.png',
             features: ['Baja Resistencia al Rodamiento', 'Carcasa Renovable', 'Kilometraje Extendido']
         },
         {
@@ -92,7 +92,7 @@ export const KnowledgeHub = () => {
             model: 'M726 EL',
             price: '$10,100 MXN',
             type: 'Tracción Profunda',
-            image_url: '/docs/tire_scan_3d_1767882062473.png',
+            image_url: '/assets/demo/tire_optimal.png',
             features: ['32/32 Profundidad', 'Stone Ejectors', 'Bloques Sólidos']
         },
         {
@@ -102,7 +102,7 @@ export const KnowledgeHub = () => {
             model: 'Conti Coach',
             price: '$11,500 MXN',
             type: 'Autobús / Carga',
-            image_url: '/docs/tire_scan_3d_1767882062473.png',
+            image_url: '/assets/demo/tire_red_tech_315.png',
             features: ['Confort de Marcha', 'Agarre en Mojado', 'Sensores TPMS']
         }
     ];
@@ -252,7 +252,17 @@ export const KnowledgeHub = () => {
                                     </p>
 
                                     <div className="mt-8 flex gap-4">
-                                        <button className="bg-brand text-white px-8 py-4 rounded-xl font-black uppercase tracking-widest hover:bg-brand-dark transition-all transform hover:scale-105 shadow-xl shadow-brand/20">
+                                        <button
+                                            onClick={() => {
+                                                pdfService.generateTechnicalSpec({
+                                                    size: '295/80R22.5',
+                                                    brand: 'RED-TECH',
+                                                    model: 'RT-Pro Haul',
+                                                    type: 'Larga Distancia',
+                                                    features: ['Optimización de combustible', 'Durabilidad térmica', 'Tracción superior']
+                                                });
+                                            }}
+                                            className="bg-brand text-white px-8 py-4 rounded-xl font-black uppercase tracking-widest hover:bg-brand-dark transition-all transform hover:scale-105 shadow-xl shadow-brand/20">
                                             Descargar Ficha Técnica
                                         </button>
                                     </div>
@@ -261,7 +271,7 @@ export const KnowledgeHub = () => {
                                 <div className="relative h-[300px] flex items-center justify-center">
                                     <div className="absolute inset-0 bg-brand/20 blur-[100px] rounded-full" />
                                     <img
-                                        src="/docs/tire_scan_3d_1767882062473.png"
+                                        src="/assets/demo/tire_3d_laser.png"
                                         alt="295/80R22.5 Spec"
                                         className="relative z-10 w-full h-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in zoom-in duration-1000 slide-in-from-right-10"
                                     />

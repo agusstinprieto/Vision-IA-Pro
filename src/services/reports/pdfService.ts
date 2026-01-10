@@ -85,6 +85,74 @@ export const pdfService = {
         doc.save(`VISION-Reporte-Llantas-${new Date().toISOString().split('T')[0]}.pdf`);
     },
 
+    generateTechnicalSpec: (tire: { size: string, brand: string, model: string, type: string, features: string[] }) => {
+        const doc = new jsPDF() as jsPDFWithAutoTable;
+
+        // 1. Header with Brand Color
+        doc.setFillColor(234, 73, 46); // Brand Orange
+        doc.rect(0, 0, 210, 40, 'F');
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(24);
+        doc.setFont('helvetica', 'bold');
+        doc.text('FICHA TÉCNICA', 105, 25, { align: 'center' });
+        doc.setFontSize(10);
+        doc.text('VISION IA PRO - CATALOGO OFICIAL', 105, 35, { align: 'center' });
+
+        // 2. Main Tire Info
+        doc.setTextColor(30, 30, 33);
+        doc.setFontSize(60);
+        doc.text(tire.size, 105, 70, { align: 'center' });
+
+        doc.setFontSize(20);
+        doc.setTextColor(100, 100, 100);
+        doc.text(`${tire.brand} ${tire.model}`, 105, 85, { align: 'center' });
+
+        // 3. Technical Specs Box
+        doc.setFillColor(245, 245, 245);
+        doc.roundedRect(25, 100, 160, 80, 3, 3, 'F');
+
+        doc.setFontSize(12);
+        doc.setTextColor(30, 30, 33);
+        doc.text('ESPECIFICACIONES DEL PRODUCTO', 105, 115, { align: 'center' });
+
+        const specs = [
+            ['Aplicación:', tire.type],
+            ['Profundidad de Piso:', 'Original 18mm'],
+            ['Indice de Carga:', '152/148M'],
+            ['Tecnología:', 'Smart RFID Ready']
+        ];
+
+        let yPos = 135;
+        specs.forEach(([label, value]) => {
+            doc.setFont('helvetica', 'bold');
+            doc.text(label, 40, yPos);
+            doc.setFont('helvetica', 'normal');
+            doc.text(value, 100, yPos);
+            yPos += 10;
+        });
+
+        // 4. Features List
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('BENEFICIOS CLAVE', 25, 200);
+
+        tire.features.forEach((feat, i) => {
+            doc.setFillColor(234, 73, 46);
+            doc.circle(30, 210 + (i * 10), 1.5, 'F');
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(11);
+            doc.text(feat, 35, 211 + (i * 10));
+        });
+
+        // 5. Footer
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        doc.text('Documento generado automáticamente por VISION IA PRO', 105, 280, { align: 'center' });
+
+        doc.save(`Ficha-${tire.brand}-${tire.size.replace('/', '-')}.pdf`);
+    },
+
     generateDriverReport: (workers: any[]) => {
         const doc = new jsPDF() as jsPDFWithAutoTable;
 

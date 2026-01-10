@@ -72,16 +72,25 @@ export const PhotoGalleryView: React.FC<PhotoGalleryViewProps> = ({ onClose, use
                     vehicle_id: 'SCANNER-PRO-01',
                     status: 'DAMAGE_DETECTED',
                     ai_summary: 'ANÁLISIS FORENSE: Ruptura severa en costado detectada. Profundidad de piso: 3.2mm. Riesgo de falla crítica: ALTO.',
-                    image_url: 'C:/Users/aguss/.gemini/antigravity/brain/7a26fc71-7ed2-4fd6-94b1-b4612c50993b/tire_sidewall_damage_realistic_1768015939800.png',
+                    image_url: '/assets/demo/tire_damage.png',
                     inspection_type: 'TIRE'
                 },
                 {
                     id: 'demo-laser-2',
                     created_at: new Date(Date.now() - 3600000).toISOString(),
-                    vehicle_id: 'FLOTA-OPT-01',
+                    vehicle_id: 'RED-TECH-3D-01',
                     status: 'OPTIMAL',
-                    ai_summary: 'ANÁLISIS DE RUTINA: Estado de la banda de rodamiento: ÓPTIMO. Profundidad: 14.5mm. Sin anomalías detectadas.',
-                    image_url: 'C:/Users/aguss/.gemini/antigravity/brain/7a26fc71-7ed2-4fd6-94b1-b4612c50993b/tire_digital_red_tech_style_1768016317621.png',
+                    ai_summary: 'ESCANEO LÁSER 3D: Medición volumétrica de alta precisión. Dimensiones verificadas: 295/80R22.5. Profundidad uniforme detectada. Marca Red-Tech validada.',
+                    image_url: '/assets/demo/tire_3d_laser.png',
+                    inspection_type: 'TIRE'
+                },
+                {
+                    id: 'demo-red-tech-catalog',
+                    created_at: new Date(Date.now() - 3500000).toISOString(),
+                    vehicle_id: 'CATALOG-RT-2026',
+                    status: 'OPTIMAL',
+                    ai_summary: 'CATÁLOGO DIGITAL: Identificación de gama Red-Tech (RT-Pro Haul, Michelin X Multi, Bridgestone M726). Comparativa de precios y especificaciones cargada en sistema.',
+                    image_url: '/assets/demo/tire_catalog.png',
                     inspection_type: 'TIRE'
                 },
                 {
@@ -89,8 +98,8 @@ export const PhotoGalleryView: React.FC<PhotoGalleryViewProps> = ({ onClose, use
                     created_at: new Date(Date.now() - 7200000).toISOString(),
                     vehicle_id: 'COMUGAS-TR-04',
                     status: 'OPTIMAL',
-                    ai_summary: 'INSPECCIÓN DE UNIDAD DE CARGA: Trailer Comugas ingresando a planta. Verificación de sellos de seguridad intactos. Geocerca validada.',
-                    image_url: 'C:/Users/aguss/.gemini/antigravity/brain/7a26fc71-7ed2-4fd6-94b1-b4612c50993b/trailer_comugas_entering_plant_1768016006923.png',
+                    ai_summary: 'INSPECCIÓN DE UNIDAD DE CARGA: Trailer Combugas ingresando a planta. Verificación de sellos de seguridad intactos. Geocerca validada.',
+                    image_url: '/assets/demo/trailer_comugas.png',
                     inspection_type: 'CABIN'
                 },
                 {
@@ -99,8 +108,17 @@ export const PhotoGalleryView: React.FC<PhotoGalleryViewProps> = ({ onClose, use
                     vehicle_id: 'SIMSA-FULL-09',
                     status: 'OPTIMAL',
                     ai_summary: 'CONFIGURACIÓN FULL (DOBLE REMOLQUE): Inspección completa. Ambos remolques verificados. Presión de neumáticos en rangos operativos. Sin daños estructurales visibles en conexión dolly.',
-                    image_url: 'C:/Users/aguss/.gemini/antigravity/brain/7a26fc71-7ed2-4fd6-94b1-b4612c50993b/trailer_double_full_config_simsa_logo_1768016084173.png',
+                    image_url: '/assets/demo/trailer_double.png',
                     inspection_type: 'TIRE'
+                },
+                {
+                    id: 'demo-uploaded-1',
+                    created_at: new Date(Date.now() - 4000000).toISOString(),
+                    vehicle_id: 'SIMSA-SCANNER-01',
+                    status: 'OPTIMAL',
+                    ai_summary: 'ARCO DE SEGURIDAD: Escaneo computarizado de unidad en movimiento. Análisis de temperatura de frenos y rodamientos dentro de norma.',
+                    image_url: '/assets/demo/scanner_unit.jpg',
+                    inspection_type: 'CABIN'
                 }
             ];
 
@@ -259,12 +277,12 @@ export const PhotoGalleryView: React.FC<PhotoGalleryViewProps> = ({ onClose, use
                                         // 1. Randomly Select a Realistic Asset
                                         const realisticAssets = [
                                             {
-                                                path: 'C:/Users/aguss/.gemini/antigravity/brain/7a26fc71-7ed2-4fd6-94b1-b4612c50993b/tire_sidewall_damage_realistic_1768015939800.png',
+                                                path: '/assets/demo/tire_damage.png',
                                                 status: 'DAMAGE_DETECTED',
                                                 summary: 'ANÁLISIS FORENSE: Ruptura severa en costado detectada. Profundidad de piso: 3.2mm. Riesgo de falla crítica: ALTO.'
                                             },
                                             {
-                                                path: 'C:/Users/aguss/.gemini/antigravity/brain/7a26fc71-7ed2-4fd6-94b1-b4612c50993b/tire_optimal_tread_realistic_1768015969529.png',
+                                                path: '/assets/demo/tire_optimal.png',
                                                 status: 'OPTIMAL',
                                                 summary: 'ANÁLISIS DE RUTINA: Estado de la banda de rodamiento: ÓPTIMO. Profundidad: 14.5mm. Sin anomalías detectadas.'
                                             }

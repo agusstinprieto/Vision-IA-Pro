@@ -58,7 +58,7 @@ export const TireMonitoringView = () => {
 
             {/* Camera Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {cameras.map((cam) => (
+                {cameras.map((cam, idx) => (
                     <div key={cam.id} className="bg-zinc-900/50 border border-white/5 rounded-[2rem] overflow-hidden group hover:border-brand/30 transition-all relative">
                         {/* Feed Header */}
                         <div className="p-4 bg-black/40 border-b border-white/5 flex items-center justify-between">
@@ -88,8 +88,12 @@ export const TireMonitoringView = () => {
 
                             {/* Visual Asset (Simulated) */}
                             <img
-                                src={`https://images.unsplash.com/photo-1542282088-fe8426682bc8?q=80&w=600&auto=format&fit=crop`}
-                                className={`w-full h-full object-cover opacity-60 ${cam.status === 'ALERT' ? 'sepia hue-rotate-[320deg] saturate-200' : 'grayscale contrast-125'}`}
+                                src={
+                                    idx % 3 === 0 ? '/assets/demo/cctv_tire_steer_feed.png' :
+                                        idx % 3 === 1 ? '/assets/demo/cctv_trailer_axle_feed.png' :
+                                            '/assets/demo/cctv_wide_scan_feed.png'
+                                }
+                                className={`w-full h-full object-cover opacity-80 ${cam.status === 'ALERT' ? 'sepia hue-rotate-[320deg] saturate-200' : 'grayscale contrast-125'}`}
                                 alt="Camera Feed"
                             />
 
