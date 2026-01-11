@@ -16,6 +16,18 @@ export const UnitDigitalTwin: React.FC<UnitDigitalTwinProps> = ({ unit, onClose,
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [viewMode, setViewMode] = useState<'schematic' | 'xray'>('schematic');
     const [xrayVariant, setXrayVariant] = useState<'v1' | 'v2'>('v2');
+    const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+
+    const handleScroll = (direction: 'left' | 'right') => {
+        if (scrollContainerRef.current) {
+            const scrollAmount = 600; // Scroll 600px at a time
+            const newScrollLeft = scrollContainerRef.current.scrollLeft + (direction === 'right' ? scrollAmount : -scrollAmount);
+            scrollContainerRef.current.scrollTo({
+                left: newScrollLeft,
+                behavior: 'smooth'
+            });
+        }
+    };
 
     const unitHealth = React.useMemo(() => {
         if (!tires || tires.length === 0) return 0;
@@ -409,112 +421,58 @@ export const UnitDigitalTwin: React.FC<UnitDigitalTwinProps> = ({ unit, onClose,
                     )}
                 </div>
 
-                {/* Floating Details Drawer */}
-                <div
-                    className={`absolute top-0 right-0 h-full w-[440px] bg-[#141416]/98 backdrop-blur-3xl border-l border-white/10 p-10 flex flex-col z-50 shadow-[-30px_0_60px_rgba(0,0,0,0.6)] transition-all duration-700 cubic-bezier(0.4, 0, 0.2, 1) ${isSidebarOpen && selectedTire ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 pointer-events-none'}`}
-                >
-                    {selectedTire && (
-                        <div className="flex flex-col h-full">
-                            <div className="flex justify-between items-start mb-10">
-                                <div>
-                                    <div className="flex items-center gap-3 mb-3">
-                                        <span className="bg-brand text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg shadow-brand/20">Audit Report</span>
-                                        <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em]">{selectedTire.id.slice(-10).toUpperCase()}</span>
-                                    </div>
-                                    <h3 className="text-4xl font-black text-white uppercase tracking-tight">Pos. {selectedTire.position}</h3>
-                                </div>
-                                <button
-                                    onClick={() => setIsSidebarOpen(false)}
-                                    className="p-4 bg-white/5 rounded-full hover:bg-white/10 transition-all text-zinc-500 hover:text-white border border-white/5 active:scale-90"
-                                >
-                                    <X size={24} />
-                                </button>
-                            </div>
+                {/* Simple Photo Modal */}
+                {selectedTire && (
+                    <div
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl p-8 animate-in fade-in duration-300"
+                        onClick={() => setSelectedTire(null)}
+                    >
+                        <div className="relative max-w-4xl w-full" onClick={(e) => e.stopPropagation()}>
+                            {/* Close Button */}
+                            <button
+                                onClick={() => setSelectedTire(null)}
+                                className="absolute -top-4 -right-4 p-3 bg-brand rounded-full hover:bg-brand/80 transition-all hover:scale-110 active:scale-95 z-10 shadow-lg shadow-brand/50"
+                            >
+                                <X size={24} className="text-white" />
+                            </button>
 
-                            <div className="flex-1 overflow-y-auto custom-scrollbar space-y-10 pr-4">
-                                <div className="aspect-[16/10] bg-zinc-900 rounded-[3rem] overflow-hidden border border-white/10 relative group shrink-0 shadow-3xl">
-                                    {selectedTire.last_photo_url ? (
-                                        <img src={selectedTire.last_photo_url} className="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110" alt="Tire" />
-                                    ) : (
-                                        <div className="w-full h-full flex flex-col items-center justify-center">
-                                            <Truck className="text-zinc-800 mb-4 opacity-20" size={64} />
-                                            <span className="text-zinc-700 text-[10px] font-black uppercase tracking-[0.4em]">NO VISUAL LOG</span>
+                            {/* Photo Container */}
+                            <div className="bg-zinc-900 rounded-3xl overflow-hidden border-2 border-brand/30 shadow-2xl shadow-brand/20">
+                                {selectedTire.last_photo_url ? (
+                                    <img
+                                        src={selectedTire.last_photo_url}
+                                        className="w-full h-auto max-h-[80vh] object-contain"
+                                        alt={`Llanta ${selectedTire.position}`}
+                                    />
+                                ) : (
+                                    <div className="w-full h-96 flex flex-col items-center justify-center">
+                                        <Truck className="text-zinc-700 mb-6" size={80} />
+                                        <span className="text-zinc-500 text-lg font-black uppercase tracking-wider">Sin Foto Disponible</span>
+                                    </div>
+                                )}
+
+                                {/* Info Overlay */}
+                                <div className="p-6 bg-gradient-to-t from-black to-transparent">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <h3 className="text-2xl font-black text-white uppercase">Llanta {selectedTire.position}</h3>
+                                            <p className="text-zinc-400 text-sm mt-1">{selectedTire.brand} - {selectedTire.model}</p>
                                         </div>
-                                    )}
-                                    <div className="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-black via-black/30 to-transparent">
-                                        <div className="flex items-end justify-between">
-                                            <div>
-                                                <div className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2 italic">Current Tread Depth</div>
-                                                <div className="text-5xl font-black text-white leading-none">{selectedTire.depth_mm}<span className="text-xl text-zinc-500 ml-2 italic tracking-tighter">mm</span></div>
-                                            </div>
-                                            <div className={`px-5 py-2 rounded-full text-[10px] font-black border backdrop-blur-md uppercase tracking-[0.1em] ${selectedTire.status === SecurityAlert.ROJA ? 'bg-red-500/30 border-red-500 text-red-500 animate-pulse' :
-                                                selectedTire.status === SecurityAlert.AMARILLA ? 'bg-amber-500/30 border-amber-500 text-amber-500' :
-                                                    'bg-emerald-500/30 border-emerald-500 text-emerald-400'
+                                        <div className="text-right">
+                                            <div className="text-4xl font-black text-white">{selectedTire.depth_mm}<span className="text-lg text-zinc-500 ml-1">mm</span></div>
+                                            <div className={`mt-2 px-4 py-1 rounded-full text-xs font-black ${selectedTire.status === SecurityAlert.ROJA ? 'bg-red-500/30 border border-red-500 text-red-500' :
+                                                    selectedTire.status === SecurityAlert.AMARILLA ? 'bg-amber-500/30 border border-amber-500 text-amber-500' :
+                                                        'bg-emerald-500/30 border border-emerald-500 text-emerald-400'
                                                 }`}>
-                                                Status: {selectedTire.status}
+                                                {selectedTire.status}
                                             </div>
                                         </div>
-                                        <div className="w-full h-2 bg-white/10 rounded-full mt-6 overflow-hidden">
-                                            <div
-                                                className={`h-full transition-all duration-1000 ${selectedTire.status === SecurityAlert.ROJA ? 'bg-red-500' : selectedTire.status === SecurityAlert.AMARILLA ? 'bg-amber-400' : 'bg-emerald-500'}`}
-                                                style={{ width: `${Math.min(100, (selectedTire.depth_mm / 20) * 100)}%` }}
-                                            ></div>
-                                        </div>
                                     </div>
                                 </div>
-
-                                <div className="grid grid-cols-2 gap-5">
-                                    <div className="bg-[#1c1c1f] p-6 rounded-[2rem] border border-white/5 backdrop-blur-sm group hover:border-brand/30 transition-all duration-500 shadow-xl">
-                                        <div className="text-[10px] text-zinc-600 font-black uppercase tracking-widest mb-2">Manufacturer</div>
-                                        <div className="text-lg font-black text-white truncate group-hover:text-brand transition-colors">{selectedTire.brand}</div>
-                                    </div>
-                                    <div className="bg-[#1c1c1f] p-6 rounded-[2rem] border border-white/5 backdrop-blur-sm group hover:border-brand/30 transition-all duration-500 shadow-xl">
-                                        <div className="text-[10px] text-zinc-600 font-black uppercase tracking-widest mb-2">Model Design</div>
-                                        <div className="text-lg font-black text-white truncate group-hover:text-brand transition-colors">{selectedTire.model}</div>
-                                    </div>
-                                </div>
-
-                                <div className="bg-zinc-900/50 rounded-[2.5rem] p-8 border border-white/5 relative overflow-hidden shadow-inner">
-                                    <div className="absolute -top-10 -right-10 p-4 opacity-[0.03]">
-                                        <Info size={160} />
-                                    </div>
-                                    <div className="text-[11px] text-zinc-500 font-black uppercase tracking-[0.4em] mb-8 flex items-center gap-3 italic">
-                                        <div className="w-6 h-px bg-brand"></div>
-                                        Wear Intelligence Log
-                                    </div>
-                                    <div className="space-y-6">
-                                        {selectedTire.history?.length > 0 ? selectedTire.history.map((h, i) => (
-                                            <div key={i} className="flex justify-between items-center group/row p-1 rounded-xl hover:bg-white/5 transition-colors">
-                                                <div className="flex flex-col">
-                                                    <span className="text-[10px] font-black text-zinc-300 uppercase tracking-widest">{new Date(h.date).toLocaleDateString()}</span>
-                                                    <span className="text-[8px] text-zinc-600 font-bold uppercase tracking-tighter">REF# {h.id?.slice(-8).toUpperCase() || 'SYS-LOG'}</span>
-                                                </div>
-                                                <div className="flex items-center gap-6">
-                                                    <span className={`text-base font-black italic tracking-tighter ${h.depth_mm < 5 ? 'text-red-500' : 'text-zinc-300'}`}>{h.depth_mm} mm</span>
-                                                    <div className={`w-12 h-1.5 rounded-full overflow-hidden bg-white/5 border border-white/5`}>
-                                                        <div className={`h-full ${h.depth_mm < 5 ? 'bg-red-500' : 'bg-zinc-700'}`} style={{ width: `${(h.depth_mm / 20) * 100}%` }}></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )) : (
-                                            <div className="flex flex-col items-center py-12 text-zinc-800">
-                                                <Minimize2 size={40} strokeWidth={1} className="mb-4 opacity-10" />
-                                                <span className="text-[9px] font-black uppercase tracking-[0.5em] italic opacity-30 text-center">Initial Baseline Entry Only</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="mt-auto pt-8">
-                                <button className="w-full bg-brand text-white font-black uppercase tracking-[0.2em] py-5 rounded-[2rem] shadow-[0_20px_40px_rgba(234,73,46,0.2)] hover:bg-brand/90 active:scale-[0.97] transition-all flex items-center justify-center gap-3">
-                                    <Scan size={20} className="animate-pulse" />
-                                    Launch New Audit
-                                </button>
                             </div>
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
         </div>
     );
