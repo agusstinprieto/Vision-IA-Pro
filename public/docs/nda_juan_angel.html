@@ -106,8 +106,62 @@
     </style>
 </head>
 
-<body class="p-8">
+<!-- Password Protection Overlay -->
+<div id="protection-overlay"
+    class="fixed inset-0 bg-[#050505] z-[9999] flex items-center justify-center no-print border-none outline-none">
+    <div class="max-w-md w-full p-10 bg-[#0A0A0B] rounded-[2.5rem] border border-white/5 text-center shadow-2xl">
+        <div
+            class="w-16 h-16 bg-[#EA492E] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(234,73,46,0.3)]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+        </div>
+        <h2 class="text-2xl font-black text-white uppercase tracking-tighter mb-2">Legal Clearance Required</h2>
+        <p class="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em] mb-8">Confidential Legal Document</p>
+        <input type="password" id="password-input" placeholder="Enter Access Key"
+            class="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-center text-white placeholder:text-zinc-800 focus:outline-none focus:border-[#EA492E] mb-6 font-mono transition-colors">
+        <button onclick="checkPassword()"
+            class="w-full bg-[#EA492E] text-white py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-[#ff5733] transition-all">
+            Authorize Access
+        </button>
+        <p id="error-msg" class="text-red-500 text-[10px] font-black uppercase tracking-widest mt-4 hidden">
+            Unauthorized Access Attempt
+        </p>
+    </div>
+</div>
 
+<script>
+    const VALID_PASSWORDS = ['admin', 'ia.agus', 'agus', 'iaagus2026'];
+
+    function checkPassword() {
+        const input = document.getElementById('password-input');
+        const password = input.value.toLowerCase().trim();
+        const overlay = document.getElementById('protection-overlay');
+        const mainContent = document.getElementById('main-content');
+        const errorMsg = document.getElementById('error-msg');
+
+        if (VALID_PASSWORDS.includes(password)) {
+            overlay.style.display = 'none';
+            mainContent.classList.remove('hidden');
+        } else {
+            errorMsg.classList.remove('hidden');
+            input.value = '';
+            input.focus();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const input = document.getElementById('password-input');
+        if (input) {
+            input.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') checkPassword();
+            });
+        }
+    });
+</script>
+
+<div id="main-content" class="hidden">
     <div class="flex justify-center mb-10 no-print">
         <button onclick="window.print()"
             class="bg-[#EA492E] text-white px-10 py-4 rounded-full font-black uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-xl">
@@ -220,6 +274,8 @@
                 Protected by Law</p>
         </div>
     </div>
+</div>
+</div>
 </body>
 
 </html>

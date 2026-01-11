@@ -55,29 +55,52 @@
             display: block;
         }
     </style>
+    <!-- Password Protection -->
     <script>
+        const VALID_PASSWORDS = ['admin', 'ia.agus', 'agus', 'iaagus2026'];
+
+        function checkPassword() {
+            const input = document.getElementById('password-input');
+            const password = input.value.toLowerCase().trim();
+            const errorMsg = document.getElementById('error-msg');
+
+            if (VALID_PASSWORDS.includes(password)) {
+                document.getElementById('protection-overlay').style.display = 'none';
+                document.getElementById('main-content').classList.remove('hidden');
+            } else {
+                errorMsg.classList.remove('hidden');
+                input.value = '';
+                input.focus();
+            }
+        }
+
         function toggleLanguage(lang) {
             const esElements = document.querySelectorAll('.lang-es');
             const enElements = document.querySelectorAll('.lang-en');
 
-            localStorage.setItem('vp_lang', 'en');
-        } else {
-            esElements.forEach(el => el.style.display = 'block');
-            enElements.forEach(el => el.style.display = 'none');
-            localStorage.setItem('vp_lang', 'es');
-        }
+            if (lang === 'en') {
+                esElements.forEach(el => el.style.display = 'none');
+                enElements.forEach(el => el.style.display = 'block');
+                localStorage.setItem('vp_lang', 'en');
+            } else {
+                esElements.forEach(el => el.style.display = 'block');
+                enElements.forEach(el => el.style.display = 'none');
+                localStorage.setItem('vp_lang', 'es');
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             const savedLang = localStorage.getItem('vp_lang') || 'es';
             toggleLanguage(savedLang);
+            const input = document.getElementById('password-input');
+            if (input) {
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') checkPassword();
+                });
+            }
         });
     </script>
-</head>
 
-<body class="text-zinc-300 bg-[#050505]">
-
-    <!-- Password Protection -->
     <div id="protection-overlay">
         <div class="max-w-md w-full p-10 bg-[#0A0A0B] rounded-[2.5rem] border border-white/5 text-center shadow-2xl">
             <div
@@ -1607,6 +1630,6 @@
             });
         }
     </script>
-</body>
+    </body>
 
 </html>

@@ -392,29 +392,35 @@
     </div>
 
     <script>
+        const VALID_PASSWORDS = ['admin', 'ia.agus', 'agus', 'iaagus2026'];
+
         function checkPassword() {
-            const password = document.getElementById('password-input').value;
+            const input = document.getElementById('password-input');
+            const password = input.value.toLowerCase().trim();
             const overlay = document.getElementById('protection-overlay');
             const mainContent = document.getElementById('main-content');
             const errorMsg = document.getElementById('error-msg');
 
-            // Passwords: admin or ia.agus
-            if (password === 'admin' || password === 'ia.agus') {
+            if (VALID_PASSWORDS.includes(password)) {
                 overlay.style.opacity = '0';
                 setTimeout(() => {
                     overlay.style.display = 'none';
                     mainContent.classList.remove('hidden');
-                }, 500); // Smooth fade out
+                }, 500);
             } else {
                 errorMsg.classList.remove('hidden');
-                document.getElementById('password-input').classList.add('border-red-600');
+                input.classList.add('border-red-600');
+                input.value = '';
+                input.focus();
             }
         }
 
-        // Allow Enter key to submit
-        document.getElementById('password-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                checkPassword();
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('password-input');
+            if (input) {
+                input.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') checkPassword();
+                });
             }
         });
     </script>

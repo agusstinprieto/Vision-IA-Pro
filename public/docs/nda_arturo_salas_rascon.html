@@ -136,141 +136,212 @@
         Imprimir Contrato
     </button>
 
-    <!-- Navigation -->
-    <nav
-        class="fixed top-0 w-full z-40 glass border-b border-white/5 px-8 py-4 flex justify-between items-center no-print">
-        <div class="flex items-center gap-3">
-            <div class="w-8 h-8 bg-[#EA492E] rounded-lg flex items-center justify-center">
-                <span class="text-white font-black text-xs">VP</span>
+    <!-- Password Protection Overlay -->
+    <div id="protection-overlay"
+        class="fixed inset-0 bg-[#050505] z-[9999] flex items-center justify-center no-print border-none outline-none">
+        <div class="max-w-md w-full p-10 bg-[#0A0A0B] rounded-[2.5rem] border border-white/5 text-center shadow-2xl">
+            <div
+                class="w-16 h-16 bg-[#EA492E] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(234,73,46,0.3)]">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
             </div>
-            <span class="font-black text-white uppercase tracking-tighter text-sm">VISION IA PRO <span
-                    class="text-zinc-500">| LEGAL</span></span>
-        </div>
-        <a href="index.html"
-            class="text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-white transition-colors">Volver
-            al Hub</a>
-    </nav>
-
-    <!-- Document Container -->
-    <main
-        class="max-w-3xl w-full bg-[#0F1012] print:bg-white text-zinc-300 print:text-black p-12 md:p-20 shadow-2xl rounded-sm mt-12 print:mt-0 border border-white/5 print:border-none">
-
-        <!-- Header -->
-        <header class="text-center mb-16 border-b border-white/10 print:border-black/10 pb-12">
-            <h1 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-white mb-2 font-serif">Acuerdo de
-                Confidencialidad</h1>
-            <p class="text-xs font-bold uppercase tracking-[0.3em] text-[#EA492E]">Non-Disclosure Agreement (NDA)</p>
-            <div class="mt-8 text-sm text-zinc-500 print:text-zinc-600 font-mono">
-                REFERENCIA: NDA-2026-ASR-001 <br />
-                FECHA:
-                <script>document.write(new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }))</script>
-            </div>
-        </header>
-
-        <!-- Content -->
-        <div class="space-y-8 text-sm leading-7 text-justify text-zinc-400 print:text-gray-900 serif">
-
-            <p>
-                Este Acuerdo de Confidencialidad (el "Acuerdo") se celebra hoy, entre
-                <strong class="text-white print:text-black uppercase">IA.AGUS INDUSTRIAL INTELLIGENCE</strong> ("Parte
-                Reveladora")
-                y <strong
-                    class="text-white print:text-black uppercase border-b border-zinc-700 print:border-black px-1">ARTURO
-                    SALAS RASCON</strong> ("Parte Receptora").
+            <h2 class="text-2xl font-black text-white uppercase tracking-tighter mb-2">Legal Clearance Required</h2>
+            <p class="text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em] mb-8">Confidential Legal Document
             </p>
-
-            <section>
-                <h2 class="text-white font-black uppercase tracking-wider text-xs mb-4 mt-8 flex items-center gap-2">
-                    <span class="text-[#EA492E]">1.</span> Propósito
-                </h2>
-                <p>
-                    La Parte Reveladora compartirá cierta información confidencial relacionada con la tecnología
-                    patentada de visión artificial, arquitectura de sistemas <strong>VISION IA PRO</strong>, algoritmos
-                    de detección forense, y estrategias comerciales ("Información Confidencial") con el propósito
-                    exclusivo de evaluar una potencial colaboración profesional y/o desarrollo de proyectos
-                    tecnológicos.
-                </p>
-            </section>
-
-            <section>
-                <h2 class="text-white font-black uppercase tracking-wider text-xs mb-4 mt-8 flex items-center gap-2">
-                    <span class="text-[#EA492E]">2.</span> Definición de Confidencialidad
-                </h2>
-                <p>
-                    "Información Confidencial" incluye, pero no se limita a: código fuente, diagramas de flujo, manuales
-                    técnicos ("Installation Guide"), estructuras de bases de datos, listas de precios, estrategias de
-                    mercado, y cualquier dato técnico no público revelado por IA.AGUS.
-                </p>
-            </section>
-
-            <section>
-                <h2 class="text-white font-black uppercase tracking-wider text-xs mb-4 mt-8 flex items-center gap-2">
-                    <span class="text-[#EA492E]">3.</span> Obligaciones
-                </h2>
-                <p>
-                    La Parte Receptora, <strong>ARTURO SALAS RASCON</strong>, acuerda mantener la estricta
-                    confidencialidad de toda la información recibida. No copiará, modificará, realizará ingeniería
-                    inversa, ni divulgará dicha información a terceros sin el consentimiento expreso y por escrito de
-                    IA.AGUS.
-                </p>
-            </section>
-
-            <section>
-                <h2 class="text-white font-black uppercase tracking-wider text-xs mb-4 mt-8 flex items-center gap-2">
-                    <span class="text-[#EA492E]">4.</span> Propiedad Intelectual
-                </h2>
-                <p>
-                    Toda la Información Confidencial sigue siendo propiedad exclusiva de IA.AGUS. Nada en este Acuerdo
-                    otorga a la Parte Receptora licencia alguna sobre patentes, derechos de autor o secretos
-                    comerciales.
-                </p>
-            </section>
-
-            <section>
-                <h2 class="text-white font-black uppercase tracking-wider text-xs mb-4 mt-8 flex items-center gap-2">
-                    <span class="text-[#EA492E]">5.</span> Vigencia
-                </h2>
-                <p>
-                    Este Acuerdo entra en vigor en la fecha de firma y permanecerá vigente por un periodo de cinco (5)
-                    años a partir de la fecha de revelación de la última Información Confidencial.
-                </p>
-            </section>
+            <input type="password" id="password-input" placeholder="Enter Access Key"
+                class="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-center text-white placeholder:text-zinc-800 focus:outline-none focus:border-[#EA492E] mb-6 font-mono transition-colors">
+            <button onclick="checkPassword()"
+                class="w-full bg-[#EA492E] text-white py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-[#ff5733] transition-all">
+                Authorize Access
+            </button>
+            <p id="error-msg" class="text-red-500 text-[10px] font-black uppercase tracking-widest mt-4 hidden">
+                Unauthorized Access Attempt
+            </p>
         </div>
+    </div>
 
-        <!-- Signatures -->
-        <div class="mt-24 grid grid-cols-2 gap-12 print:gap-24 print:mt-32">
+    <script>
+        const VALID_PASSWORDS = ['admin', 'ia.agus', 'agus', 'iaagus2026'];
 
-            <div class="text-center">
-                <div class="h-16 mb-4 flex items-end justify-center">
-                    <div class="w-full border-b border-zinc-700 signature-line"></div>
+        function checkPassword() {
+            const input = document.getElementById('password-input');
+            const password = input.value.toLowerCase().trim();
+            const overlay = document.getElementById('protection-overlay');
+            const mainContent = document.getElementById('main-content');
+            const errorMsg = document.getElementById('error-msg');
+
+            if (VALID_PASSWORDS.includes(password)) {
+                overlay.style.display = 'none';
+                mainContent.classList.remove('hidden');
+            } else {
+                errorMsg.classList.remove('hidden');
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('password-input');
+            if (input) {
+                input.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') checkPassword();
+                });
+            }
+        });
+    </script>
+
+    <div id="main-content" class="hidden">
+        <nav
+            class="fixed top-0 w-full z-40 glass border-b border-white/5 px-8 py-4 flex justify-between items-center no-print">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-[#EA492E] rounded-lg flex items-center justify-center">
+                    <span class="text-white font-black text-xs">VP</span>
                 </div>
-                <p class="font-black text-white uppercase text-xs tracking-widest mb-1">IA.AGUS Representative</p>
-                <p class="text-[10px] text-zinc-500 uppercase">Por la Parte Reveladora</p>
+                <span class="font-black text-white uppercase tracking-tighter text-sm">VISION IA PRO <span
+                        class="text-zinc-500">| LEGAL</span></span>
+            </div>
+            <a href="index.html"
+                class="text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-white transition-colors">Volver
+                al Hub</a>
+        </nav>
+
+        <!-- Document Container -->
+        <main
+            class="max-w-3xl w-full bg-[#0F1012] print:bg-white text-zinc-300 print:text-black p-12 md:p-20 shadow-2xl rounded-sm mt-12 print:mt-0 border border-white/5 print:border-none">
+
+            <!-- Header -->
+            <header class="text-center mb-16 border-b border-white/10 print:border-black/10 pb-12">
+                <h1 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-white mb-2 font-serif">Acuerdo
+                    de
+                    Confidencialidad</h1>
+                <p class="text-xs font-bold uppercase tracking-[0.3em] text-[#EA492E]">Non-Disclosure Agreement (NDA)
+                </p>
+                <div class="mt-8 text-sm text-zinc-500 print:text-zinc-600 font-mono">
+                    REFERENCIA: NDA-2026-ASR-001 <br />
+                    FECHA:
+                    <script>document.write(new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }))</script>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="space-y-8 text-sm leading-7 text-justify text-zinc-400 print:text-gray-900 serif">
+
+                <p>
+                    Este Acuerdo de Confidencialidad (el "Acuerdo") se celebra hoy, entre
+                    <strong class="text-white print:text-black uppercase">IA.AGUS INDUSTRIAL INTELLIGENCE</strong>
+                    ("Parte
+                    Reveladora")
+                    y <strong
+                        class="text-white print:text-black uppercase border-b border-zinc-700 print:border-black px-1">ARTURO
+                        SALAS RASCON</strong> ("Parte Receptora").
+                </p>
+
+                <section>
+                    <h2
+                        class="text-white font-black uppercase tracking-wider text-xs mb-4 mt-8 flex items-center gap-2">
+                        <span class="text-[#EA492E]">1.</span> Propósito
+                    </h2>
+                    <p>
+                        La Parte Reveladora compartirá cierta información confidencial relacionada con la tecnología
+                        patentada de visión artificial, arquitectura de sistemas <strong>VISION IA PRO</strong>,
+                        algoritmos
+                        de detección forense, y estrategias comerciales ("Información Confidencial") con el propósito
+                        exclusivo de evaluar una potencial colaboración profesional y/o desarrollo de proyectos
+                        tecnológicos.
+                    </p>
+                </section>
+
+                <section>
+                    <h2
+                        class="text-white font-black uppercase tracking-wider text-xs mb-4 mt-8 flex items-center gap-2">
+                        <span class="text-[#EA492E]">2.</span> Definición de Confidencialidad
+                    </h2>
+                    <p>
+                        "Información Confidencial" incluye, pero no se limita a: código fuente, diagramas de flujo,
+                        manuales
+                        técnicos ("Installation Guide"), estructuras de bases de datos, listas de precios, estrategias
+                        de
+                        mercado, y cualquier dato técnico no público revelado por IA.AGUS.
+                    </p>
+                </section>
+
+                <section>
+                    <h2
+                        class="text-white font-black uppercase tracking-wider text-xs mb-4 mt-8 flex items-center gap-2">
+                        <span class="text-[#EA492E]">3.</span> Obligaciones
+                    </h2>
+                    <p>
+                        La Parte Receptora, <strong>ARTURO SALAS RASCON</strong>, acuerda mantener la estricta
+                        confidencialidad de toda la información recibida. No copiará, modificará, realizará ingeniería
+                        inversa, ni divulgará dicha información a terceros sin el consentimiento expreso y por escrito
+                        de
+                        IA.AGUS.
+                    </p>
+                </section>
+
+                <section>
+                    <h2
+                        class="text-white font-black uppercase tracking-wider text-xs mb-4 mt-8 flex items-center gap-2">
+                        <span class="text-[#EA492E]">4.</span> Propiedad Intelectual
+                    </h2>
+                    <p>
+                        Toda la Información Confidencial sigue siendo propiedad exclusiva de IA.AGUS. Nada en este
+                        Acuerdo
+                        otorga a la Parte Receptora licencia alguna sobre patentes, derechos de autor o secretos
+                        comerciales.
+                    </p>
+                </section>
+
+                <section>
+                    <h2
+                        class="text-white font-black uppercase tracking-wider text-xs mb-4 mt-8 flex items-center gap-2">
+                        <span class="text-[#EA492E]">5.</span> Vigencia
+                    </h2>
+                    <p>
+                        Este Acuerdo entra en vigor en la fecha de firma y permanecerá vigente por un periodo de cinco
+                        (5)
+                        años a partir de la fecha de revelación de la última Información Confidencial.
+                    </p>
+                </section>
             </div>
 
-            <div class="text-center">
-                <div class="h-16 mb-4 flex items-end justify-center">
-                    <div class="w-full border-b border-zinc-700 signature-line"></div>
+            <!-- Signatures -->
+            <div class="mt-24 grid grid-cols-2 gap-12 print:gap-24 print:mt-32">
+
+                <div class="text-center">
+                    <div class="h-16 mb-4 flex items-end justify-center">
+                        <div class="w-full border-b border-zinc-700 signature-line"></div>
+                    </div>
+                    <p class="font-black text-white uppercase text-xs tracking-widest mb-1">IA.AGUS Representative</p>
+                    <p class="text-[10px] text-zinc-500 uppercase">Por la Parte Reveladora</p>
                 </div>
-                <p class="font-black text-white uppercase text-xs tracking-widest mb-1">ARTURO SALAS RASCON</p>
-                <p class="text-[10px] text-zinc-500 uppercase">Por la Parte Receptora</p>
+
+                <div class="text-center">
+                    <div class="h-16 mb-4 flex items-end justify-center">
+                        <div class="w-full border-b border-zinc-700 signature-line"></div>
+                    </div>
+                    <p class="font-black text-white uppercase text-xs tracking-widest mb-1">ARTURO SALAS RASCON</p>
+                    <p class="text-[10px] text-zinc-500 uppercase">Por la Parte Receptora</p>
+                </div>
+
             </div>
 
-        </div>
+            <div class="mt-24 text-center border-t border-white/5 pt-8 print:hidden">
+                <p class="text-[10px] text-zinc-600 font-mono">Este documento es generado digitalmente por IA.AGUS Legal
+                    Systems.</p>
+            </div>
 
-        <div class="mt-24 text-center border-t border-white/5 pt-8 print:hidden">
-            <p class="text-[10px] text-zinc-600 font-mono">Este documento es generado digitalmente por IA.AGUS Legal
-                Systems.</p>
-        </div>
+        </main>
 
-    </main>
+        <!-- Footer for Print Only -->
+        <footer class="hidden print-only fixed bottom-0 left-0 w-full text-center pb-8 pt-4 bg-white">
+            <p class="text-[8pt] text-gray-500 font-bold uppercase tracking-widest">IA.AGUS Industrial Intelligence</p>
+            <p class="text-[7pt] text-gray-400 font-mono">CONFIDENTIAL LEGAL DOCUMENT - DO NOT DISTRIBUTE</p>
+        </footer>
 
-    <!-- Footer for Print Only -->
-    <footer class="hidden print-only fixed bottom-0 left-0 w-full text-center pb-8 pt-4 bg-white">
-        <p class="text-[8pt] text-gray-500 font-bold uppercase tracking-widest">IA.AGUS Industrial Intelligence</p>
-        <p class="text-[7pt] text-gray-400 font-mono">CONFIDENTIAL LEGAL DOCUMENT - DO NOT DISTRIBUTE</p>
-    </footer>
-
+    </div>
 </body>
 
 </html>

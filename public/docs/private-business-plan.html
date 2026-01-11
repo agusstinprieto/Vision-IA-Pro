@@ -72,6 +72,34 @@
 <body class="text-zinc-300 bg-[#050505]">
 
     <!-- Password Protection -->
+    <script>
+        const VALID_PASSWORDS = ['admin', 'ia.agus', 'agus', 'iaagus2026'];
+
+        function checkPassword() {
+            const input = document.getElementById('password-input');
+            const password = input.value.toLowerCase().trim();
+            const errorMsg = document.getElementById('error-msg');
+
+            if (VALID_PASSWORDS.includes(password)) {
+                document.getElementById('protection-overlay').style.display = 'none';
+                document.getElementById('main-content').classList.remove('hidden');
+            } else {
+                errorMsg.classList.remove('hidden');
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('password-input');
+            if (input) {
+                input.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') checkPassword();
+                });
+            }
+        });
+    </script>
+
     <div id="protection-overlay">
         <div class="max-w-md w-full p-10 bg-[#0A0A0B] rounded-[2.5rem] border border-white/5 text-center shadow-2xl">
             <div

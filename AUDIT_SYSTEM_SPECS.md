@@ -193,7 +193,7 @@ CREATE TABLE inspections (
 When units pass through the arch for the first time:
 1.  **Identification**: Arc detects unit ID (LPR/RFID).
 2.  **Configuration Inference**: System queries fleet DB (e.g., knows "T3-S2-R4" configuration implies 34 tires).
-3.  **Golden Record Creation**: System maps detected tires against expected configuration to create the initial **Level 1 Baseline**.
+3.  **Golden Record Creation (Acta de Nacimiento)**: The first read is authoritative. The system assumes the tires present during this first pass are the correct ones, creating the **Level 1 Baseline**. This serves as the "Birth Certificate" for the unit's tire configuration.
 
 ### 2. Capture Method: Intelligent Frame Extraction
 **Core Principle**: Use High-Speed Video (60FPS+), NOT Single Photos.
