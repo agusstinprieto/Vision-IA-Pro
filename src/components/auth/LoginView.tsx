@@ -62,6 +62,9 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
             if ((user === 'admin' || user === 'ia.agus') && password === 'admin2026') {
                 onLogin(user, 'MASTER', FALLBACK_COMPANY);
             }
+            else if (user === 'negocio' && password === 'demo') {
+                onLogin('Usuario Negocio', 'MANAGER', FALLBACK_COMPANY);
+            }
             else if (user === 'gerente' && password === 'gerente2026') {
                 onLogin('Gerente Ops', 'MANAGER', FALLBACK_COMPANY);
             }
@@ -166,9 +169,20 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
                         </div>
                     </div>
 
-                    <p className="text-center text-zinc-600 text-[10px] font-bold uppercase tracking-widest pt-4">
-                        Powered by IA.AGUS & Google Gemini 2.5
-                    </p>
+                    <div className="mt-12 text-center">
+                        <a
+                            href="https://www.ia-agus.com"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="group inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/5 hover:border-[#EA492E]/50 hover:bg-[#EA492E]/10 transition-all duration-300 shadow-[0_0_20px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(234,73,46,0.3)]"
+                        >
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#EA492E] animate-pulse shadow-[0_0_10px_#EA492E]"></span>
+                            <span className="text-[10px] font-mono text-zinc-500 tracking-widest group-hover:text-white transition-colors">
+                                Powered by <span className="font-bold text-[#EA492E] hover:drop-shadow-[0_0_8px_rgba(234,73,46,0.8)]">IA.AGUS</span>
+                                <span className="ml-2 lowercase opacity-70 group-hover:opacity-100 transition-opacity">www.ia-agus.com</span>
+                            </span>
+                        </a>
+                    </div>
                 </form>
             </div>
         </div>

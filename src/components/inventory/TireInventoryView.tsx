@@ -76,6 +76,27 @@ export const TireInventoryView: React.FC<TireInventoryViewProps> = ({ userRole =
                             }`}>{tire.depth_mm} mm</span>
                     </div>
 
+                    <div className="space-y-1">
+                        <p className="text-[10px] font-black text-brand tracking-widest uppercase">Forensic ID (DOT)</p>
+                        <p className="text-xs font-mono text-zinc-300 bg-white/5 p-1 px-2 rounded border border-white/5 truncate">{tire.serial_number || 'N/A'}</p>
+                    </div>
+
+                    {tire.tire_damage && tire.tire_damage !== 'Ninguno' && (
+                        <div className="p-3 rounded-lg bg-red-500/5 border border-red-500/20">
+                            <p className="text-[9px] font-black text-red-500 uppercase tracking-widest mb-1 flex items-center gap-1">
+                                <AlertTriangle size={10} /> Daños Críticos
+                            </p>
+                            <p className="text-[10px] text-zinc-400 leading-tight">{tire.tire_damage}</p>
+                        </div>
+                    )}
+
+                    {tire.rim_fingerprint && (
+                        <div className="p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/20">
+                            <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest mb-1">Huella Digital del Rin</p>
+                            <p className="text-[10px] text-zinc-400 italic line-clamp-2">{tire.rim_fingerprint}</p>
+                        </div>
+                    )}
+
                     <div className="pt-4 border-t border-white/5">
                         <p className="text-[9px] font-black uppercase text-brand tracking-widest mb-2 flex items-center gap-2">
                             <span className="w-1.5 h-1.5 bg-brand rounded-full animate-pulse"></span>

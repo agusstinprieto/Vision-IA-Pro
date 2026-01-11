@@ -5,6 +5,7 @@ import { Unit } from '../../types';
 import { PlateScanner } from '../gate/PlateScanner';
 import { useLanguage } from '../../context/LanguageContext';
 import { AddUnitModal } from './AddUnitModal';
+import { UnitDigitalTwin } from './UnitDigitalTwin';
 
 export const UnitInventoryView = () => {
     const { t } = useLanguage();
@@ -15,6 +16,7 @@ export const UnitInventoryView = () => {
     const [loading, setLoading] = useState(true);
     const [showScanner, setShowScanner] = useState(false);
     const [showAddModal, setShowAddModal] = useState(false);
+    const [selectedUnitForTwin, setSelectedUnitForTwin] = useState<Unit | null>(null);
 
     const fetchUnits = async () => {
         try {
@@ -146,7 +148,12 @@ export const UnitInventoryView = () => {
                                             <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">{t('inventory.last_audit')}</p>
                                             <p className="text-xs font-mono text-zinc-400">{unit.last_audit || 'N/A'}</p>
                                         </div>
-                                        <button className="text-xs font-black text-brand uppercase tracking-widest hover:underline">{t('inventory.view_history')} ↗</button>
+                                        <button
+                                            onClick={() => setSelectedUnitForTwin(unit)}
+                                            className="text-xs font-black text-brand uppercase tracking-widest hover:underline flex items-center gap-1"
+                                        >
+                                            <Scan size={14} /> Gemelo Digital
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -192,8 +199,11 @@ export const UnitInventoryView = () => {
                                             </td>
                                             <td className="p-6 font-mono text-sm text-zinc-400">{unit.last_audit || 'N/A'}</td>
                                             <td className="p-6 text-right">
-                                                <button className="text-[10px] font-black text-brand uppercase tracking-widest hover:underline">
-                                                    Ver Historial
+                                                <button
+                                                    onClick={() => setSelectedUnitForTwin(unit)}
+                                                    className="text-[10px] font-black text-brand uppercase tracking-widest hover:underline flex items-center gap-2 justify-end w-full"
+                                                >
+                                                    <Scan size={14} /> Ver Modelo 3D
                                                 </button>
                                             </td>
                                         </tr>
@@ -226,6 +236,14 @@ export const UnitInventoryView = () => {
                     onUnitAdded={() => {
                         fetchUnits(); // Refresh list
                     }}
+                />
+            )}
+
+            {/* Digital Twin Modal */}
+            {selectedUnitForTwin && (
+                <UnitDigitalTwin
+                    unit={selectedUnitForTwin}
+                    onClose={() => setSelectedUnitForTwin(null)}
                 />
             )}
         </div>

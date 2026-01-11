@@ -11,28 +11,30 @@ const cleanBase64 = (str: string) => str.replace(/^data:image\/\w+;base64,/, '')
  */
 export const extractTireMetadata = async (imageBase64: string, retries = 0): Promise<any> => {
     const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || "");
-    // Using Gemini 2.5 Flash (2026 model, should be available)
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    const prompt = `ACTÚA COMO UN PERITO FORENSE DE NEUMÁTICOS.
-    Analiza esta ÚNICA imagen de una llanta.
-    
-    OBJETIVO: Extraer TODA la información de identidad visible.
-    
-    Busca Específicamente:
-    1. MARCA (Brand)
-    2. MODELO (Model)
-    3. NÚMERO DE SERIE / DOT (Serial Number) - ¡CRÍTICO! Busca patrón de 4-13 caracteres, a veces termina en 4 dígitos (fecha).
-    4. DESGASTE ESTIMADO (mm).
-    5. ESTADO DEL RIN (Rim Condition) - "Bueno", "Doblado", "Oxidado", "Quebrado".
+    const prompt = `ACTÚA COMO UN EXPERTO FORENSE EN ACTIVOS.
+    Analiza la imagen de la llanta y el rin para crear un perfil de identidad y condición.
 
-    RESPONDE SOLO JSON:
+    REGLAS DE IDENTIFICACIÓN (Anti-Robo):
+    1. MARCA REAL: Lee el texto del costado (Continental, Bridgestone, etc).
+    2. SERIAL/DOT (CRÍTICO): Busca específicamente la palabra "DOT" seguida de un código de 10-12 caracteres (ej: DOT A3BD...). Si no ves "DOT", busca cualquier serie de números y letras grabada en bajorrelieve cerca del rin.
+    3. DISEÑO: Identifica el diseño del rin.
+
+    REGLAS DE CONDICIÓN (Mantenimiento):
+    1. DAÑOS: Detecta cortes, chipotes o desgaste irregular.
+    2. ESTADO DEL RIN: Detecta golpes o dobleces.
+
+    RESPONDE SOLO EL SIGUIENTE JSON:
     {
-        "marca": "string o null",
+        "marca": "string (Marca detectada)",
         "modelo": "string o null",
-        "serial_number": "string o null",
-        "profundidad_huella_mm": number (0-20),
-        "estado_rin": "string o null"
+        "serial_number": "string o null (DOT)",
+        "profundidad_huella_mm": number,
+        "estado_rin": "Bueno | Doblado | Oxidado | Dañado",
+        "descripcion_rin_seguridad": "Características fijas del rin para su identificación",
+        "reporte_daños_llanta": "Estado actual de la goma (cortes, etc)",
+        "alerta_mantenimiento": "VERDE | AMARILLA | ROJA (Basado SOLO en el daño físico)"
     }`;
 
     try {
@@ -49,7 +51,6 @@ export const extractTireMetadata = async (imageBase64: string, retries = 0): Pro
         return JSON.parse(jsonStr);
 
     } catch (error: any) {
-        // Retry logic for 429 (Max 2 retries)
         if ((error.message?.includes("429") || error.message?.includes("quota") || error.status === 429) && retries < 2) {
             console.warn(`⚠️ Rate Limit Hit (Metadata). Waiting 12s... (Attempt ${retries + 1}/2)`);
             await new Promise(resolve => setTimeout(resolve, 12000));
@@ -77,29 +78,31 @@ export const analyzeInspectionDelta = async (
         const genAI = new GoogleGenerativeAI(apiKey);
         const model = genAI.getGenerativeModel({ model: modelName });
 
-        const prompt = `ACTÚA COMO UN PERITO FORENSE DE NEUMÁTICOS.
+        const prompt = `ACTÚA COMO UN PERITO FORENSE DE ACTIVOS.
         Comparas una IMAGEN BASE (Original) con una IMAGEN ACTUAL (Auditoría).
         
-        OBJETIVO: Detectar si han CAMBIADO el neumático (Gato por Liebre).
-        Busca diferencias en:
-        1. Diseño de los RINES (golpes, rasguños, diseño). ¡ESTO ES CLAVE!
-        2. Texto lateral (Marca, Modelo, DOT).
-        3. Diseño de la huella (si es visible).
+        OBJETIVO: Detectar ROBO (Cambio de llanta/rin) y evaluar DAÑOS (Mantenimiento).
         
-        SI EL RIN ES DIFERENTE O LA MARCA CAMBIA -> ALERTA ROJA.
+        REGLAS DE SEGURIDAD (ANTI-ROBO):
+        1. IDENTIDAD: Si el DOT/Serial o la Marca NO coinciden -> ALERTA_SEGURIDAD = ROJA.
+        2. RIN: Si el diseño estructural del rin es diferente -> ALERTA_SEGURIDAD = ROJA.
         
-        SI HAY DUDAS O DIFERENCIAS VISIBLES, MARCA COMO "ROJA".
+        REGLAS DE MANTENIMIENTO:
+        1. DAÑOS NUEVOS: Si ves un nuevo golpe en el rin o corte en la llanta que NO estaba en la base -> ALERTA_MANTENIMIENTO = ROJA o AMARILLA.
+        2. NOTA CRÍTICA: Un nuevo daño NO significa un robo si el Serial/DOT coincide. Indica esto claramente.
         
         RESPONDE SOLO JSON:
         {
           "tipo_inspeccion": "TIRE_MATCH",
-          "alerta_seguridad": "ROJA | AMARILLA | VERDE",
+          "alerta_seguridad": "VERDE | ROJA",
+          "alerta_mantenimiento": "VERDE | AMARILLA | ROJA",
           "hallazgos": { 
                 "identidad_confirmada": boolean, 
                 "coincidencia_id": "TOTAL|PARCIAL|NULA",
-                "detalles": "diferencias encontradas"
+                "reporte_forense_daños": "Descripción de daños nuevos si existen",
+                "detalles": "Explicación técnica del match"
           },
-          "razonamiento_forense": "explicación corta en español"
+          "razonamiento_forense": "Resumen para el supervisor"
         }`;
 
         const result = await model.generateContent([
@@ -118,7 +121,7 @@ export const analyzeInspectionDelta = async (
         // Map to expected UI format
         return {
             ...parsed,
-            isAnomaly: parsed.alerta_seguridad === 'ROJA' || parsed.alerta_seguridad === 'AMARILLA' || !parsed.hallazgos.identidad_confirmada,
+            isAnomaly: parsed.alerta_seguridad === 'ROJA' || parsed.alerta_mantenimiento === 'ROJA',
             confidenceScore: parsed.hallazgos.identidad_confirmada ? 0.95 : 0.10
         } as ForensicAuditResult;
     };

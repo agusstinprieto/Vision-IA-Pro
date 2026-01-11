@@ -232,7 +232,11 @@ export const MobileCapture = () => {
                         brand: metadata.marca || undefined,
                         model: metadata.modelo || undefined,
                         serial_number: metadata.serial_number || undefined,
-                        depth_mm: metadata.profundidad_huella_mm || undefined
+                        depth_mm: metadata.profundidad_huella_mm || undefined,
+                        rim_condition: metadata.estado_rin || undefined,
+                        rim_fingerprint: metadata.descripcion_rin_seguridad || undefined,
+                        tire_damage: metadata.reporte_daños_llanta || undefined,
+                        security_alert: metadata.alerta_seguridad || undefined
                     }
                 };
 
@@ -242,13 +246,22 @@ export const MobileCapture = () => {
             }
 
             const framesToSave = enrichedFrames
-                .filter(f => f.metadata?.brand && f.metadata.brand !== 'Desconocido')
                 .map(f => ({
                     id: f.id,
                     url: f.url,
-                    metadata: f.metadata
+                    metadata: {
+                        brand: f.metadata?.brand || 'Genérica',
+                        model: f.metadata?.model || 'Std',
+                        serial_number: f.metadata?.serial_number || 'N/A',
+                        depth_mm: f.metadata?.depth_mm || 0,
+                        rim_condition: f.metadata?.rim_condition || 'N/A',
+                        rim_fingerprint: f.metadata?.rim_fingerprint || 'N/A',
+                        tire_damage: f.metadata?.tire_damage || 'N/A',
+                        security_alert: f.metadata?.security_alert || 'VERDE'
+                    }
                 }));
 
+            console.log(`Saving ${framesToSave.length} frames for unit ${unitId}`);
             await dbService.saveBaseline(unitId, framesToSave);
             setDbStatus('SUCCESS');
             setIsProcessing(false);

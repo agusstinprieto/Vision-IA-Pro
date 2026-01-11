@@ -62,7 +62,8 @@ export interface InspectionImage {
 
 export interface ForensicAuditResult {
     tipo_inspeccion: InspectionType;
-    alerta_seguridad: SecurityAlert;
+    alerta_seguridad: SecurityAlert; // ROBA/CAMBIO (Identity)
+    alerta_mantenimiento?: SecurityAlert; // DAÑO/DESGASTE (Condition)
     isAnomaly?: boolean;
     confidenceScore?: number;
     hallazgos: {
@@ -77,6 +78,7 @@ export interface ForensicAuditResult {
         modelo?: string;
         serial_number?: string; // DOT Code
         profundidad_huella_mm?: number;
+        reporte_forense_daños?: string; // NEW: Detailed condition report
     };
     razonamiento_forense: string;
 }
@@ -135,8 +137,10 @@ export interface InventoryTire {
     brand: string;
     model: string;
     depth_mm: number;
-    rim_condition?: string;  // NEW: Rim condition
-    serial_number?: string | null;  // NEW: DOT code
+    rim_condition?: string;
+    rim_fingerprint?: string; // NEW: Unique markings on the wheel
+    tire_damage?: string;     // NEW: Cuts, bulges, uneven wear
+    serial_number?: string | null;
     status: SecurityAlert;
     last_photo_url: string;
     history: {
@@ -188,4 +192,41 @@ export interface Company {
     id: string;
     name: string;
     slug: string;
+}
+
+// === AUDIT SYSTEM TYPES ===
+
+export interface Baseline {
+    id: string;
+    unit_id: string;
+    unit_type: 'TRACTOR' | 'TRAILER';
+    frame_data: InventoryTire[];
+    created_at: string;
+    created_by?: string;
+}
+
+export interface Audit {
+    id: string;
+    unit_id: string;
+    unit_type: 'TRACTOR' | 'TRAILER';
+    frame_data: InventoryTire[];
+    comparison_result: {
+        matched: number;
+        mismatched: number;
+        details?: string[];
+    };
+    requires_justification: boolean;
+    justification_photos?: string[];
+    justification_text?: string;
+    approved_by?: string;
+    approved_at?: string;
+    created_at: string;
+}
+
+export interface InspectionRecord {
+    id: string;
+    tractor_id?: string;
+    trailer_ids?: string[];
+    audit_ids?: string[]; // References to Audit.id
+    created_at: string;
 }

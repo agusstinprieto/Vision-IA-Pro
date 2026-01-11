@@ -53,10 +53,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
     const navItems: NavItem[] = [
         { id: 'dashboard', label: t('sidebar.dashboard'), icon: <LayoutDashboard size={20} />, category: 'CORE' },
-        { id: 'unit-inventory', label: t('sidebar.unit_inventory'), icon: <Truck size={20} />, category: 'CORE' },
-        { id: 'tire-inventory', label: t('sidebar.tire_inventory'), icon: <History size={20} />, category: 'CORE' },
-        { id: 'tire-monitoring', label: 'CCTV Monitoreo', icon: <Layout size={20} />, badge: 'LIVE', category: 'CORE' },
 
+        { id: 'unit-inventory', label: t('sidebar.unit_inventory'), icon: <Truck size={20} />, category: 'INVENTORY' },
+        { id: 'tire-inventory', label: t('sidebar.tire_inventory'), icon: <History size={20} />, category: 'INVENTORY' },
+        { id: 'digital-twin', label: t('sidebar.digital_twin'), icon: <Activity size={20} />, badge: 'NEW', category: 'INVENTORY' },
+        { id: 'tire-monitoring', label: t('sidebar.cctv_monitoring'), icon: <Layout size={20} />, badge: 'LIVE', category: 'INVENTORY' },
         { id: 'supervisor-approvals', label: t('sidebar.approvals'), icon: <ShieldCheck size={20} />, badge: 'PENDING', category: 'INVENTORY' },
         { id: 'gallery', label: t('sidebar.gallery'), icon: <Images size={20} />, category: 'INVENTORY' },
 
@@ -64,7 +65,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         { id: 'emergency', label: t('sidebar.emergency'), icon: <PhoneCall size={20} />, category: 'EMERGENCY' },
         { id: 'knowledge-hub', label: t('sidebar.knowledge_hub'), icon: <BookOpen size={20} />, badge: 'DOCS', category: 'EMERGENCY' },
         // God Mode
-        ...(userRole === 'MASTER' || userRole === 'DEVELOPER' || userRole === 'ADMIN' ? [{ id: 'super-admin', label: 'God Mode', icon: <ShieldAlert size={20} />, category: 'CORE' }] : [])
+        ...(userRole === 'MASTER' || userRole === 'DEVELOPER' || userRole === 'ADMIN' ? [{ id: 'super-admin', label: t('sidebar.god_mode'), icon: <ShieldAlert size={20} />, category: 'CORE' }] : [])
     ];
 
     // Role-based filtering
@@ -74,7 +75,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         if (userRole === 'EMPLOYEE') {
             // Employee sees Dashboard, Capture, Emergency. 
             // Also enable read-only view of Inventory and Map as requested.
-            return ['dashboard', 'capture-tires', 'capture-cabin', 'driver-health', 'emergency', 'unit-inventory', 'tire-inventory', 'map', 'command-center', 'simulation', 'knowledge-hub', 'mobile-scan'].includes(item.id);
+            return ['dashboard', 'capture-tires', 'capture-cabin', 'driver-health', 'emergency', 'unit-inventory', 'tire-inventory', 'digital-twin', 'map', 'command-center', 'simulation', 'knowledge-hub', 'mobile-scan'].includes(item.id);
         }
         return false;
     });
@@ -151,54 +152,59 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <nav className="flex-1 overflow-y-auto py-2 px-4 space-y-4 scrollbar-hide">
 
                     {/* Nav Categories */}
-                    {['CORE', 'INVENTORY', 'LOGISTICS', 'EMERGENCY'].map(cat => (
-                        <div key={cat} className="space-y-2">
-                            <h3 className="px-4 text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] mb-4">
-                                {getCategoryLabel(cat)}
-                            </h3>
+                    {['CORE', 'INVENTORY', 'LOGISTICS', 'EMERGENCY'].map(cat => {
+                        const items = visibleItems.filter(item => item.category === cat);
+                        if (items.length === 0) return null;
 
-                            <div className="space-y-1">
-                                {visibleItems.filter(item => item.category === cat).map(item => {
-                                    const isActive = activeView === item.id;
-                                    return (
-                                        <button
-                                            key={item.id}
-                                            onClick={() => {
-                                                onNavigate(item.id);
-                                                if (window.innerWidth < 1024) onToggle();
-                                            }}
-                                            className={`
+                        return (
+                            <div key={cat} className="space-y-2">
+                                <h3 className="px-4 text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] mb-4">
+                                    {getCategoryLabel(cat)}
+                                </h3>
+
+                                <div className="space-y-1">
+                                    {items.map(item => {
+                                        const isActive = activeView === item.id;
+                                        return (
+                                            <button
+                                                key={item.id}
+                                                onClick={() => {
+                                                    onNavigate(item.id);
+                                                    if (window.innerWidth < 1024) onToggle();
+                                                }}
+                                                className={`
                         w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl
                         text-left transition-all duration-200 group
                         ${isActive
-                                                    ? 'bg-zinc-900 border border-white/10 shadow-2xl'
-                                                    : 'hover:bg-white/[0.03] text-zinc-500 hover:text-white'
-                                                }
+                                                        ? 'bg-zinc-900 border border-white/10 shadow-2xl'
+                                                        : 'hover:bg-white/[0.03] text-zinc-500 hover:text-white'
+                                                    }
                       `}
-                                        >
-                                            <div
-                                                className={`transition-colors duration-200 ${isActive ? '' : 'group-hover:text-white'}`}
-                                                style={isActive ? { color: brandColor } : {}}
                                             >
-                                                {item.icon}
-                                            </div>
-                                            <span className={`flex-1 text-sm font-bold tracking-tight ${isActive ? 'text-white' : ''}`}>
-                                                {item.label}
-                                            </span>
-                                            {item.badge && (
-                                                <span
-                                                    className="px-2 py-0.5 text-[8px] font-black rounded-lg uppercase tracking-widest shadow-lg"
-                                                    style={{ backgroundColor: brandColor, color: textColor }}
+                                                <div
+                                                    className={`transition-colors duration-200 ${isActive ? '' : 'group-hover:text-white'}`}
+                                                    style={isActive ? { color: brandColor } : {}}
                                                 >
-                                                    {item.badge}
+                                                    {item.icon}
+                                                </div>
+                                                <span className={`flex-1 text-sm font-bold tracking-tight ${isActive ? 'text-white' : ''}`}>
+                                                    {item.label}
                                                 </span>
-                                            )}
-                                        </button>
-                                    );
-                                })}
+                                                {item.badge && (
+                                                    <span
+                                                        className="px-2 py-0.5 text-[8px] font-black rounded-lg uppercase tracking-widest shadow-lg"
+                                                        style={{ backgroundColor: brandColor, color: textColor }}
+                                                    >
+                                                        {item.badge}
+                                                    </span>
+                                                )}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        )
+                    })}
 
                 </nav>
 

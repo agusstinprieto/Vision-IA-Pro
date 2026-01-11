@@ -29,6 +29,7 @@ import { KnowledgeHub } from './components/docs/KnowledgeHub';
 import { SupervisorApprovalsView } from './components/supervisor/SupervisorApprovalsView';
 import { TireMonitoringView } from './components/supervisor/TireMonitoringView';
 import { SuperAdminView } from './components/admin/SuperAdminView';
+import { DigitalTwinView } from './components/digital-twin/DigitalTwinView';
 
 // Standard Audit Entry Type
 interface AuditEntry {
@@ -361,6 +362,8 @@ export default function App() {
               <KnowledgeHub />
             ) : view === 'super-admin' ? (
               <SuperAdminView />
+            ) : view === 'digital-twin' ? (
+              <DigitalTwinView />
             ) : null}
           </div>
         </div>

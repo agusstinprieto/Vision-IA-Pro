@@ -76,11 +76,12 @@ export const dbService = {
         const to = from + pageSize - 1;
 
         // Try optimized table first
+        console.log(`Fetching tires for company: ${this.currentCompanyId} (Page ${page})`);
         const { data: tiresData, error, count } = await supabase
             .from('tires')
             .select('*', { count: 'exact' })
             .eq('company_id', this.currentCompanyId)
-            .order('unit_id', { ascending: true })
+            .order('updated_at', { ascending: false })
             .range(from, to);
 
         if (error) throw error;
@@ -106,6 +107,34 @@ export const dbService = {
     },
 
     /**
+     * Get ALL tires for a specific unit (for Digital Twin view)
+     */
+    async getUnitTires(unitId: string): Promise<InventoryTire[]> {
+        const companyId = this.ensureCompanyId();
+        const { data, error } = await supabase
+            .from('tires')
+            .select('*')
+            .eq('company_id', companyId)
+            .eq('unit_id', unitId);
+
+        if (error) throw error;
+
+        return (data || []).map(t => ({
+            id: t.id,
+            unit_id: t.unit_id,
+            position: t.position,
+            brand: t.brand,
+            model: t.model || 'N/A',
+            depth_mm: t.depth_mm || 0,
+            rim_condition: 'N/A',
+            serial_number: t.serial_number || null,
+            last_photo_url: t.last_photo_url,
+            status: t.status as SecurityAlert,
+            history: t.history || []
+        }));
+    },
+
+    /**
      * Internal helper to sync frame data into the flattened tires table
      * This is the key to 100x performance increase
      */
@@ -119,17 +148,35 @@ export const dbService = {
                 brand: f.metadata.brand,
                 model: f.metadata.model || 'N/A',
                 depth_mm: f.metadata.depth_mm || 0,
-                status: f.metadata.depth_mm < 5 ? SecurityAlert.ROJA :
+                rim_condition: f.metadata.rim_condition || 'Bueno',
+                rim_fingerprint: f.metadata.rim_fingerprint || 'N/A',
+                tire_damage: f.metadata.tire_damage || 'Ninguno',
+                status: f.metadata.security_alert || (f.metadata.depth_mm < 5 ? SecurityAlert.ROJA :
                     f.metadata.depth_mm < 9 ? SecurityAlert.AMARILLA :
-                        SecurityAlert.VERDE,
-                last_photo_url: f.url,
+                        SecurityAlert.VERDE),
                 last_photo_url: f.url,
                 updated_at: new Date().toISOString(),
                 company_id: this.currentCompanyId
             }));
 
         if (tireInserts.length > 0) {
-            await supabase.from('tires').upsert(tireInserts, { onConflict: 'id' });
+            console.log(`Syncing ${tireInserts.length} tires for unit ${unitId}`);
+            const { error: upsertError } = await supabase.from('tires').upsert(tireInserts, { onConflict: 'id' });
+            if (upsertError) {
+                console.error("Critical Sync Error (Tires):", upsertError);
+                if (upsertError.message?.includes('updated_at')) {
+                    console.warn("Retrying without updated_at column...");
+                    const { error: retryError } = await supabase.from('tires').upsert(
+                        tireInserts.map(({ updated_at, ...rest }) => rest), // Remove updated_at
+                        { onConflict: 'id' }
+                    );
+                    if (retryError) throw retryError;
+                } else {
+                    throw upsertError;
+                }
+            }
+        } else {
+            console.warn("No valid inventory data to sync from baseline");
         }
     },
 
@@ -423,6 +470,28 @@ export const dbService = {
             return frame;
         }));
 
+        // Ensure the unit exists first to satisfy FK constraints
+        try {
+            const companyId = this.ensureCompanyId();
+            const { data: unitExists } = await supabase
+                .from('units')
+                .select('id')
+                .eq('plate_id', unitId)
+                .single();
+
+            if (!unitExists) {
+                console.log(`Unit ${unitId} not found, creating it...`);
+                await supabase.from('units').insert({
+                    plate_id: unitId,
+                    is_active: true,
+                    company_id: companyId,
+                    last_audit: new Date().toISOString()
+                });
+            }
+        } catch (e) {
+            console.error("Error ensuring unit exists:", e);
+        }
+
         const { data, error } = await supabase
             .from('baselines')
             .upsert({
@@ -476,6 +545,22 @@ export const dbService = {
 
         if (error) throw error;
         return data[0];
+    },
+
+    /**
+     * Get pending audits (requiring justification and not yet approved)
+     */
+    async getPendingAudits() {
+        const { data, error } = await supabase
+            .from('audits')
+            .select('*')
+            .eq('company_id', this.currentCompanyId)
+            .eq('requires_justification', true)
+            .is('approved_by', null)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        return data || [];
     },
 
     /**
@@ -536,7 +621,7 @@ export const dbService = {
      * Save multi-unit inspection (tractor + trailers)
      * Associates all audit IDs with detected vehicle IDs
      */
-    async saveInspection(inspection: {
+    async createMultiUnitInspection(inspection: {
         tractor_id: string | null;
         trailer_ids: string[];
         audit_ids: string[];
