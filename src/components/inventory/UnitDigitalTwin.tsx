@@ -273,95 +273,108 @@ export const UnitDigitalTwin: React.FC<UnitDigitalTwinProps> = ({ unit, onClose,
 
                 <div className="flex-1 relative overflow-hidden flex flex-col min-h-0 bg-black">
                     {viewMode === 'schematic' ? (
-                        <div className="w-full h-[calc(100%-24px)] mb-6 overflow-x-auto overflow-y-hidden flex items-center pt-8 pb-16 px-12 z-10 scroll-smooth relative pointer-events-auto touch-pan-x cursor-grab active:cursor-grabbing border-b border-white/5 custom-scrollbar">
-                            <div className="flex items-center gap-8 min-w-max h-full relative pr-[50vw]">
-                                {/* CABIN NOSE */}
-                                <div className="w-16 h-36 bg-zinc-800 rounded-l-[3rem] border-y-2 border-l-2 border-zinc-700/50 relative -mr-4 z-0 opacity-40"></div>
-
-                                {/* TRACTOR */}
-                                <div className="relative bg-[#1a1a1e] border-2 border-zinc-700/50 rounded-[4rem] w-[500px] h-64 p-8 flex items-center justify-between z-10 shadow-3xl shrink-0 group/tractor">
-                                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-zinc-800 px-6 py-1 rounded-full text-[10px] font-black uppercase text-zinc-500 border border-zinc-700 tracking-[0.3em] shadow-lg group-hover/tractor:text-brand transition-colors">TRACTOR</div>
-
-                                    <div className="flex flex-col justify-between h-full border-r border-dashed border-zinc-800/80 pr-8">
-                                        <div className="text-[8px] text-zinc-600 font-bold uppercase mb-2 text-center">Dir.</div>
-                                        <TireNode index={1} />
-                                        <div className="flex-1 w-px bg-zinc-800/50 mx-auto my-3"></div>
-                                        <TireNode index={2} />
-                                    </div>
-
-                                    <div className="flex-1 flex flex-col items-center justify-center opacity-10 group-hover/tractor:opacity-20 transition-all duration-700">
-                                        <Cog size={72} className="text-zinc-500 animate-spin-slow mb-4" />
-                                        <div className="text-[12px] font-black tracking-[0.4em] text-white uppercase italic leading-none">Chassis-A1</div>
-                                    </div>
-
-                                    <div className="flex gap-6 border-l border-dashed border-zinc-800/80 pl-8 h-full">
-                                        <div className="flex flex-col justify-between h-full">
-                                            <div className="text-[8px] text-zinc-600 font-bold uppercase mb-2 text-center">Tracc. 1</div>
-                                            <div className="flex flex-col gap-3"><TireNode index={3} /><TireNode index={4} /></div>
-                                            <div className="flex-1 w-full border-r border-zinc-800/50 mx-auto my-2"></div>
-                                            <div className="flex flex-col gap-3"><TireNode index={5} /><TireNode index={6} /></div>
-                                        </div>
-                                        <div className="flex flex-col justify-between h-full">
-                                            <div className="text-[8px] text-zinc-600 font-bold uppercase mb-2 text-center">Tracc. 2</div>
-                                            <div className="flex flex-col gap-3"><TireNode index={7} /><TireNode index={8} /></div>
-                                            <div className="flex-1 w-full border-r border-zinc-800/50 mx-auto my-2"></div>
-                                            <div className="flex flex-col gap-3"><TireNode index={9} /><TireNode index={10} /></div>
-                                        </div>
+                        <>
+                            {/* Scroll Hint Indicator */}
+                            <div className="absolute bottom-8 right-1/2 translate-x-1/2 z-50 pointer-events-none animate-bounce">
+                                <div className="bg-brand/90 backdrop-blur-sm px-6 py-3 rounded-full border-2 border-white/20 shadow-lg shadow-brand/50">
+                                    <div className="flex items-center gap-3">
+                                        <ArrowRight className="w-5 h-5 text-white animate-pulse" />
+                                        <span className="text-white font-black text-xs uppercase tracking-wider">Desliza para ver Pipa 2</span>
+                                        <ArrowRight className="w-5 h-5 text-white animate-pulse" />
                                     </div>
                                 </div>
+                            </div>
 
-                                {/* FIFTH WHEEL CONNECTION */}
-                                <div className="w-16 h-2 flex items-center justify-center -mx-6 z-0 shrink-0 opacity-50">
-                                    <div className="w-8 h-8 rounded-full bg-zinc-900 border-2 border-zinc-700 shadow-inner"></div>
-                                    <div className="flex-1 h-1.5 bg-zinc-800 border-y border-zinc-700"></div>
-                                </div>
+                            <div className="w-full h-[calc(100%-24px)] mb-6 overflow-x-auto overflow-y-hidden flex items-center pt-8 pb-20 px-12 z-10 scroll-smooth relative pointer-events-auto touch-pan-x cursor-grab active:cursor-grabbing border-b border-white/5 custom-scrollbar">
+                                <div className="flex items-center gap-8 min-w-max h-full relative pr-[50vw]">
+                                    {/* CABIN NOSE */}
+                                    <div className="w-16 h-36 bg-zinc-800 rounded-l-[3rem] border-y-2 border-l-2 border-zinc-700/50 relative -mr-4 z-0 opacity-40"></div>
 
-                                {/* TRAILER 1 */}
-                                <div className="relative bg-[#1a1a1e] border-2 border-zinc-700/50 rounded-[4rem] w-[580px] h-64 p-8 flex items-center justify-end z-10 shadow-3xl shrink-0 group/pipa1">
-                                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-zinc-800 px-6 py-1 rounded-full text-[10px] font-black uppercase text-zinc-500 border border-zinc-700 tracking-[0.3em] shadow-lg group-hover/pipa1:text-brand transition-colors">PIPA 1</div>
-                                    <div className="absolute top-1/2 left-16 -translate-y-1/2 text-[10rem] font-black text-zinc-800/20 opacity-5 select-none group-hover/pipa1:opacity-10 transition-opacity">01</div>
+                                    {/* TRACTOR */}
+                                    <div className="relative bg-[#1a1a1e] border-2 border-zinc-700/50 rounded-[4rem] w-[500px] h-64 p-8 flex items-center justify-between z-10 shadow-3xl shrink-0 group/tractor">
+                                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-zinc-800 px-6 py-1 rounded-full text-[10px] font-black uppercase text-zinc-500 border border-zinc-700 tracking-[0.3em] shadow-lg group-hover/tractor:text-brand transition-colors">TRACTOR</div>
 
-                                    <div className="flex gap-6 h-full pl-12 border-l border-dashed border-zinc-800/30">
-                                        <div className="flex flex-col justify-between h-full">
-                                            <div className="text-[8px] text-zinc-600 font-bold uppercase mb-2 text-center">Eje 1</div>
-                                            <div className="flex flex-col gap-3"><TireNode index={11} /><TireNode index={12} /></div>
-                                            <div className="flex-1 w-full border-r border-zinc-800/50 mx-auto my-2"></div>
-                                            <div className="flex flex-col gap-3"><TireNode index={13} /><TireNode index={14} /></div>
+                                        <div className="flex flex-col justify-between h-full border-r border-dashed border-zinc-800/80 pr-8">
+                                            <div className="text-[8px] text-zinc-600 font-bold uppercase mb-2 text-center">Dir.</div>
+                                            <TireNode index={1} />
+                                            <div className="flex-1 w-px bg-zinc-800/50 mx-auto my-3"></div>
+                                            <TireNode index={2} />
                                         </div>
-                                        <div className="flex flex-col justify-between h-full">
-                                            <div className="text-[8px] text-zinc-600 font-bold uppercase mb-2 text-center">Eje 2</div>
-                                            <div className="flex flex-col gap-3"><TireNode index={15} /><TireNode index={16} /></div>
-                                            <div className="flex-1 w-full border-r border-zinc-800/50 mx-auto my-2"></div>
-                                            <div className="flex flex-col gap-3"><TireNode index={17} /><TireNode index={18} /></div>
+
+                                        <div className="flex-1 flex flex-col items-center justify-center opacity-10 group-hover/tractor:opacity-20 transition-all duration-700">
+                                            <Cog size={72} className="text-zinc-500 animate-spin-slow mb-4" />
+                                            <div className="text-[12px] font-black tracking-[0.4em] text-white uppercase italic leading-none">Chassis-A1</div>
+                                        </div>
+
+                                        <div className="flex gap-6 border-l border-dashed border-zinc-800/80 pl-8 h-full">
+                                            <div className="flex flex-col justify-between h-full">
+                                                <div className="text-[8px] text-zinc-600 font-bold uppercase mb-2 text-center">Tracc. 1</div>
+                                                <div className="flex flex-col gap-3"><TireNode index={3} /><TireNode index={4} /></div>
+                                                <div className="flex-1 w-full border-r border-zinc-800/50 mx-auto my-2"></div>
+                                                <div className="flex flex-col gap-3"><TireNode index={5} /><TireNode index={6} /></div>
+                                            </div>
+                                            <div className="flex flex-col justify-between h-full">
+                                                <div className="text-[8px] text-zinc-600 font-bold uppercase mb-2 text-center">Tracc. 2</div>
+                                                <div className="flex flex-col gap-3"><TireNode index={7} /><TireNode index={8} /></div>
+                                                <div className="flex-1 w-full border-r border-zinc-800/50 mx-auto my-2"></div>
+                                                <div className="flex flex-col gap-3"><TireNode index={9} /><TireNode index={10} /></div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                {/* CONNECTOR 2 */}
-                                <div className="w-12 h-1 bg-zinc-800 -mx-2 z-0 opacity-40 shrink-0"></div>
+                                    {/* FIFTH WHEEL CONNECTION */}
+                                    <div className="w-16 h-2 flex items-center justify-center -mx-6 z-0 shrink-0 opacity-50">
+                                        <div className="w-8 h-8 rounded-full bg-zinc-900 border-2 border-zinc-700 shadow-inner"></div>
+                                        <div className="flex-1 h-1.5 bg-zinc-800 border-y border-zinc-700"></div>
+                                    </div>
 
-                                {/* TRAILER 2 */}
-                                <div className="relative bg-[#1a1a1e] border-2 border-zinc-700/50 rounded-[4rem] w-[580px] h-64 p-8 flex items-center justify-end z-10 shadow-3xl shrink-0 group/pipa2">
-                                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-zinc-800 px-6 py-1 rounded-full text-[10px] font-black uppercase text-zinc-500 border border-zinc-700 tracking-[0.3em] shadow-lg group-hover/pipa2:text-brand transition-colors">PIPA 2</div>
-                                    <div className="absolute top-1/2 left-16 -translate-y-1/2 text-[10rem] font-black text-zinc-800/20 opacity-5 select-none group-hover/pipa2:opacity-10 transition-opacity">02</div>
+                                    {/* TRAILER 1 */}
+                                    <div className="relative bg-[#1a1a1e] border-2 border-zinc-700/50 rounded-[4rem] w-[580px] h-64 p-8 flex items-center justify-end z-10 shadow-3xl shrink-0 group/pipa1">
+                                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-zinc-800 px-6 py-1 rounded-full text-[10px] font-black uppercase text-zinc-500 border border-zinc-700 tracking-[0.3em] shadow-lg group-hover/pipa1:text-brand transition-colors">PIPA 1</div>
+                                        <div className="absolute top-1/2 left-16 -translate-y-1/2 text-[10rem] font-black text-zinc-800/20 opacity-5 select-none group-hover/pipa1:opacity-10 transition-opacity">01</div>
 
-                                    <div className="flex gap-6 h-full pl-12 border-l border-dashed border-zinc-800/30">
-                                        <div className="flex flex-col justify-between h-full">
-                                            <div className="text-[8px] text-zinc-600 font-bold uppercase mb-2 text-center">Eje 3</div>
-                                            <div className="flex flex-col gap-3"><TireNode index={19} /><TireNode index={20} /></div>
-                                            <div className="flex-1 w-full border-r border-zinc-800/50 mx-auto my-2"></div>
-                                            <div className="flex flex-col gap-3"><TireNode index={21} /><TireNode index={22} /></div>
+                                        <div className="flex gap-6 h-full pl-12 border-l border-dashed border-zinc-800/30">
+                                            <div className="flex flex-col justify-between h-full">
+                                                <div className="text-[8px] text-zinc-600 font-bold uppercase mb-2 text-center">Eje 1</div>
+                                                <div className="flex flex-col gap-3"><TireNode index={11} /><TireNode index={12} /></div>
+                                                <div className="flex-1 w-full border-r border-zinc-800/50 mx-auto my-2"></div>
+                                                <div className="flex flex-col gap-3"><TireNode index={13} /><TireNode index={14} /></div>
+                                            </div>
+                                            <div className="flex flex-col justify-between h-full">
+                                                <div className="text-[8px] text-zinc-600 font-bold uppercase mb-2 text-center">Eje 2</div>
+                                                <div className="flex flex-col gap-3"><TireNode index={15} /><TireNode index={16} /></div>
+                                                <div className="flex-1 w-full border-r border-zinc-800/50 mx-auto my-2"></div>
+                                                <div className="flex flex-col gap-3"><TireNode index={17} /><TireNode index={18} /></div>
+                                            </div>
                                         </div>
-                                        <div className="flex flex-col justify-between h-full">
-                                            <div className="text-[8px] text-zinc-600 font-bold uppercase mb-2 text-center">Eje 4</div>
-                                            <div className="flex flex-col gap-3"><TireNode index={23} /><TireNode index={24} /></div>
-                                            <div className="flex-1 w-full border-r border-zinc-800/50 mx-auto my-2"></div>
-                                            <div className="flex flex-col gap-3"><TireNode index={25} /><TireNode index={26} /></div>
+                                    </div>
+
+                                    {/* CONNECTOR 2 */}
+                                    <div className="w-12 h-1 bg-zinc-800 -mx-2 z-0 opacity-40 shrink-0"></div>
+
+                                    {/* TRAILER 2 */}
+                                    <div className="relative bg-[#1a1a1e] border-2 border-zinc-700/50 rounded-[4rem] w-[580px] h-64 p-8 flex items-center justify-end z-10 shadow-3xl shrink-0 group/pipa2">
+                                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-zinc-800 px-6 py-1 rounded-full text-[10px] font-black uppercase text-zinc-500 border border-zinc-700 tracking-[0.3em] shadow-lg group-hover/pipa2:text-brand transition-colors">PIPA 2</div>
+                                        <div className="absolute top-1/2 left-16 -translate-y-1/2 text-[10rem] font-black text-zinc-800/20 opacity-5 select-none group-hover/pipa2:opacity-10 transition-opacity">02</div>
+
+                                        <div className="flex gap-6 h-full pl-12 border-l border-dashed border-zinc-800/30">
+                                            <div className="flex flex-col justify-between h-full">
+                                                <div className="text-[8px] text-zinc-600 font-bold uppercase mb-2 text-center">Eje 3</div>
+                                                <div className="flex flex-col gap-3"><TireNode index={19} /><TireNode index={20} /></div>
+                                                <div className="flex-1 w-full border-r border-zinc-800/50 mx-auto my-2"></div>
+                                                <div className="flex flex-col gap-3"><TireNode index={21} /><TireNode index={22} /></div>
+                                            </div>
+                                            <div className="flex flex-col justify-between h-full">
+                                                <div className="text-[8px] text-zinc-600 font-bold uppercase mb-2 text-center">Eje 4</div>
+                                                <div className="flex flex-col gap-3"><TireNode index={23} /><TireNode index={24} /></div>
+                                                <div className="flex-1 w-full border-r border-zinc-800/50 mx-auto my-2"></div>
+                                                <div className="flex flex-col gap-3"><TireNode index={25} /><TireNode index={26} /></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </>
                     ) : (
                         <div className="flex-1 relative flex items-center justify-center overflow-hidden p-12 animate-in zoom-in-95 duration-1000">
                             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.15),transparent)] pointer-events-none"></div>
