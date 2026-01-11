@@ -268,7 +268,7 @@ export const UnitDigitalTwin: React.FC<UnitDigitalTwinProps> = ({ unit, onClose,
 
                 <div className="flex-1 relative overflow-hidden flex flex-col min-h-0 bg-black">
                     {viewMode === 'schematic' ? (
-                        <div className="w-full h-[calc(100%-24px)] mb-6 overflow-x-auto overflow-y-hidden flex items-center pt-8 pb-12 px-12 z-50 scroll-smooth relative pointer-events-auto touch-pan-x cursor-grab active:cursor-grabbing border-b border-white/5">
+                        <div className="w-full h-[calc(100%-24px)] mb-6 overflow-x-auto overflow-y-hidden flex items-center pt-8 pb-12 px-12 z-50 scroll-smooth relative pointer-events-auto touch-pan-x cursor-grab active:cursor-grabbing border-b border-white/5 custom-scrollbar">
                             <div className="flex items-center gap-8 min-w-max h-full relative pr-[50vw]">
                                 {/* CABIN NOSE */}
                                 <div className="w-16 h-36 bg-zinc-800 rounded-l-[3rem] border-y-2 border-l-2 border-zinc-700/50 relative -mr-4 z-0 opacity-40"></div>
