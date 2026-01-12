@@ -16,18 +16,6 @@ export const UnitDigitalTwin: React.FC<UnitDigitalTwinProps> = ({ unit, onClose,
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [viewMode, setViewMode] = useState<'schematic' | 'xray'>('schematic');
     const [xrayVariant, setXrayVariant] = useState<'v1' | 'v2'>('v2');
-    const scrollContainerRef = React.useRef<HTMLDivElement>(null);
-
-    const handleScroll = (direction: 'left' | 'right') => {
-        if (scrollContainerRef.current) {
-            const scrollAmount = 600; // Scroll 600px at a time
-            const newScrollLeft = scrollContainerRef.current.scrollLeft + (direction === 'right' ? scrollAmount : -scrollAmount);
-            scrollContainerRef.current.scrollTo({
-                left: newScrollLeft,
-                behavior: 'smooth'
-            });
-        }
-    };
 
     const unitHealth = React.useMemo(() => {
         if (!tires || tires.length === 0) return 0;
@@ -286,17 +274,6 @@ export const UnitDigitalTwin: React.FC<UnitDigitalTwinProps> = ({ unit, onClose,
                 <div className="flex-1 relative overflow-hidden flex flex-col min-h-0 bg-black">
                     {viewMode === 'schematic' ? (
                         <>
-                            {/* Scroll Hint Indicator */}
-                            <div className="absolute bottom-8 right-1/2 translate-x-1/2 z-50 pointer-events-none animate-bounce">
-                                <div className="bg-brand/90 backdrop-blur-sm px-6 py-3 rounded-full border-2 border-white/20 shadow-lg shadow-brand/50">
-                                    <div className="flex items-center gap-3">
-                                        <ArrowRight className="w-5 h-5 text-white animate-pulse" />
-                                        <span className="text-white font-black text-xs uppercase tracking-wider">Desliza para ver Pipa 2</span>
-                                        <ArrowRight className="w-5 h-5 text-white animate-pulse" />
-                                    </div>
-                                </div>
-                            </div>
-
                             <div className="w-full h-[calc(100%-24px)] mb-6 overflow-x-auto overflow-y-hidden flex items-center pt-8 pb-20 px-12 z-10 scroll-smooth relative pointer-events-auto touch-pan-x cursor-grab active:cursor-grabbing border-b border-white/5 custom-scrollbar">
                                 <div className="flex items-center gap-8 min-w-max h-full relative pr-[50vw]">
                                     {/* CABIN NOSE */}
@@ -461,8 +438,8 @@ export const UnitDigitalTwin: React.FC<UnitDigitalTwinProps> = ({ unit, onClose,
                                         <div className="text-right">
                                             <div className="text-4xl font-black text-white">{selectedTire.depth_mm}<span className="text-lg text-zinc-500 ml-1">mm</span></div>
                                             <div className={`mt-2 px-4 py-1 rounded-full text-xs font-black ${selectedTire.status === SecurityAlert.ROJA ? 'bg-red-500/30 border border-red-500 text-red-500' :
-                                                    selectedTire.status === SecurityAlert.AMARILLA ? 'bg-amber-500/30 border border-amber-500 text-amber-500' :
-                                                        'bg-emerald-500/30 border border-emerald-500 text-emerald-400'
+                                                selectedTire.status === SecurityAlert.AMARILLA ? 'bg-amber-500/30 border border-amber-500 text-amber-500' :
+                                                    'bg-emerald-500/30 border border-emerald-500 text-emerald-400'
                                                 }`}>
                                                 {selectedTire.status}
                                             </div>
