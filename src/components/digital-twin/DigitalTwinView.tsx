@@ -10,6 +10,7 @@ export const DigitalTwinView = () => {
     const [selectedUnit, setSelectedUnit] = useState<Unit | null>(null);
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(true);
+    const [isCollapsed, setIsCollapsed] = useState(false);
 
     useEffect(() => {
         loadUnits();
@@ -43,58 +44,79 @@ export const DigitalTwinView = () => {
         <div className="flex-1 flex items-center justify-center bg-black p-2 overflow-hidden min-h-0">
             <div className="flex w-full max-w-[1700px] h-full min-h-[700px] bg-black overflow-hidden relative rounded-[2.5rem] border border-white/5 shadow-2xl shadow-brand/5">
                 {/* Left Panel: Unit List */}
-                <div className="w-64 border-r border-white/5 bg-[#121214] flex flex-col h-full z-10 shrink-0">
-                    <div className="p-6 border-b border-white/5">
-                        <h2 className="text-xl font-black text-white uppercase tracking-tighter mb-4 flex items-center gap-3">
-                            <LayoutGrid className="text-brand" size={24} />
+                <div className={`${isCollapsed ? 'w-20' : 'w-72'} transition-all duration-300 ease-in-out border-r border-white/5 bg-[#121214] flex flex-col h-full z-10 shrink-0 relative`}>
+                    {/* Toggle Button */}
+                    <button
+                        onClick={() => setIsCollapsed(!isCollapsed)}
+                        className="absolute -right-3 top-8 bg-brand text-white p-1 rounded-full shadow-lg z-50 hover:scale-110 transition-transform"
+                    >
+                        {isCollapsed ? <ArrowRight size={14} /> : <div className="rotate-180"><ArrowRight size={14} /></div>}
+                    </button>
+
+                    <div className="p-6 border-b border-white/5 overflow-hidden">
+                        <h2 className={`text-xl font-black text-white uppercase tracking-tighter mb-4 flex items-center gap-3 whitespace-nowrap ${isCollapsed ? 'opacity-0' : 'opacity-100'} transition-opacity`}>
+                            <LayoutGrid className="text-brand shrink-0" size={24} />
                             Digital Twin Hub
                         </h2>
                         <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
+                            <Search className={`absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 transition-all ${isCollapsed ? 'left-1/2 -translate-x-1/2 w-6 h-6 text-white' : ''}`} size={16} />
                             <input
                                 type="text"
-                                placeholder="Buscar unidad..."
+                                placeholder="Buscar..."
                                 value={search}
-                                onChange={e => setSearch(e.target.value)}
-                                className="w-full bg-zinc-900 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-brand/50 placeholder:text-zinc-600 font-medium"
+                                onChange={e => {
+                                    setSearch(e.target.value);
+                                    if (isCollapsed) setIsCollapsed(false);
+                                }}
+                                className={`w-full bg-zinc-900 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-brand/50 placeholder:text-zinc-600 font-medium ${isCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
                             />
                         </div>
                     </div>
 
                     <div className="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1">
                         {loading ? (
-                            <div className="text-center py-10 text-zinc-500 text-sm">Cargando flota...</div>
+                            <div className="text-center py-10 text-zinc-500 text-sm">...</div>
                         ) : filteredUnits.map(unit => (
                             <button
                                 key={unit.id}
                                 onClick={() => setSelectedUnit(unit)}
-                                className={`w-full text-left p-4 rounded-xl transition-all duration-200 group relative border ${selectedUnit?.id === unit.id
+                                title={isCollapsed ? unit.plate_id : undefined}
+                                className={`w-full text-left p-4 rounded-xl transition-all duration-200 group relative border flex items-center ${isCollapsed ? 'justify-center px-0' : ''} ${selectedUnit?.id === unit.id
                                     ? 'bg-white/10 border-brand/50 shadow-lg shadow-brand/10'
                                     : 'hover:bg-white/5 border-transparent hover:border-white/5'
                                     }`}
                             >
-                                <div className="flex justify-between items-start mb-2">
-                                    <span className={`text-sm font-black tracking-tight ${selectedUnit?.id === unit.id ? 'text-white' : 'text-zinc-400 group-hover:text-white'}`}>
-                                        {unit.plate_id}
-                                    </span>
-                                    <div className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${unit.status === 'ACTIVO' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-zinc-800 text-zinc-500'
-                                        }`}>
-                                        {unit.status}
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-2 text-xs text-zinc-500">
-                                    <Truck size={12} />
-                                    <span>{unit.type}</span>
-                                    {unit.pipe_number && (
+                                <div className={`flex justify-between items-start ${isCollapsed ? 'mb-0' : 'mb-2'} w-full`}>
+                                    {!isCollapsed && (
                                         <>
-                                            <span className="w-1 h-1 rounded-full bg-zinc-700"></span>
-                                            <span className="text-zinc-400 font-mono">{unit.pipe_number}</span>
+                                            <span className={`text-sm font-black tracking-tight ${selectedUnit?.id === unit.id ? 'text-white' : 'text-zinc-400 group-hover:text-white'}`}>
+                                                {unit.plate_id}
+                                            </span>
+                                            <div className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${unit.status === 'ACTIVO' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-zinc-800 text-zinc-500'
+                                                }`}>
+                                                {unit.status === 'ACTIVO' ? 'ACT' : 'MANT'}
+                                            </div>
                                         </>
                                     )}
+                                    {isCollapsed && (
+                                        <Truck size={20} className={selectedUnit?.id === unit.id ? 'text-white' : 'text-zinc-600'} />
+                                    )}
                                 </div>
+                                {!isCollapsed && (
+                                    <div className="flex items-center gap-2 text-xs text-zinc-500">
+                                        <Truck size={12} />
+                                        <span>{unit.type}</span>
+                                        {unit.pipe_number && (
+                                            <>
+                                                <span className="w-1 h-1 rounded-full bg-zinc-700"></span>
+                                                <span className="text-zinc-400 font-mono">{unit.pipe_number}</span>
+                                            </>
+                                        )}
+                                    </div>
+                                )}
 
                                 {/* Arrow Indicator */}
-                                {selectedUnit?.id === unit.id && (
+                                {selectedUnit?.id === unit.id && !isCollapsed && (
                                     <div className="absolute right-4 top-1/2 -translate-y-1/2 text-brand animate-in slide-in-from-left-2 fade-in">
                                         <ArrowRight size={16} />
                                     </div>
@@ -103,12 +125,14 @@ export const DigitalTwinView = () => {
                         ))}
                     </div>
 
-                    <div className="p-4 border-t border-white/5 bg-zinc-900/50">
-                        <div className="flex justify-between items-center text-xs">
-                            <span className="text-zinc-500 font-bold">TOTAL UNIDADES</span>
-                            <span className="text-white font-mono font-bold bg-white/10 px-2 py-0.5 rounded">{units.length}</span>
+                    {!isCollapsed && (
+                        <div className="p-4 border-t border-white/5 bg-zinc-900/50">
+                            <div className="flex justify-between items-center text-xs">
+                                <span className="text-zinc-500 font-bold">TOTAL</span>
+                                <span className="text-white font-mono font-bold bg-white/10 px-2 py-0.5 rounded">{units.length}</span>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
 
                 {/* Right Panel: Visualization */}
