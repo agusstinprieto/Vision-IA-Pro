@@ -1,0 +1,12 @@
+{
+    "name": "vision-ia-pro",
+    "alias": [
+        "vision-ia-pro.vercel.app"
+    ],
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
+    ]
+}
