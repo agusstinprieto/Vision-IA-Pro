@@ -8,7 +8,7 @@ export default defineConfig({
         react(),
         VitePWA({
             registerType: 'autoUpdate',
-            includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+            includeAssets: ['favicon.svg'],
             manifest: {
                 name: 'Transporte SIMSA IA Pro',
                 short_name: 'SIMSA IA',
