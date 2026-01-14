@@ -174,14 +174,14 @@ export const MobileCapture = () => {
         }
 
         const duration = video.duration;
-        // Smart Scan Config
-        const SCAN_FPS = 4; // Check 4 frames per second (Dense Sampling)
-        const TARGET_FRAMES = 18; // We still want 18 final frames
+        // Smart Scan Config (Aggressive Mode V3: "Deep Clean")
+        const SCAN_FPS = 8; // High density scan
+        const TARGET_FRAMES = 36; // Max capacity as requested
 
         const totalCandidates = Math.floor(duration * SCAN_FPS);
         // Limit max candidates to avoid browser hang on long videos
-        const stepTime = totalCandidates > 100 ? duration / 100 : 1 / SCAN_FPS;
-        const candidatesToCheck = totalCandidates > 100 ? 100 : totalCandidates;
+        const stepTime = totalCandidates > 200 ? duration / 200 : 1 / SCAN_FPS;
+        const candidatesToCheck = totalCandidates > 200 ? 200 : totalCandidates;
 
         interface ScoredFrame {
             time: number;
@@ -234,18 +234,15 @@ export const MobileCapture = () => {
             const stdDev = Math.sqrt(varianceSum / count);
 
             // HEURISTIC V2: "Dark Texture Bias"
-            // Tires are Dark (Low Mean) and Textured (High StdDev).
-            // We penalize bright frames heavily (sky, white truck body, concrete).
-            const darknessFactor = 1 - Math.min(1, (mean / 150)); // If mean > 150, factor is 0
-            const finalScore = stdDev * (darknessFactor * 3); // Boost weight of darkness check
+            const darknessFactor = 1 - Math.min(1, (mean / 150));
+            const finalScore = stdDev * (darknessFactor * 3);
 
-            // Only keep frames with sufficient score
-            // StdDev > 20 is good texture. Darkness factor adds weight.
-            if (finalScore > 15) {
-                // Enhance Contrast for final display
+            // Initial generic capture (grab almost everything potentially interesting)
+            if (finalScore > 5) {
+                // Enhance Contrast
                 const fullImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                 const fullData = fullImageData.data;
-                const factor = 1.2; // Slight contrast boost
+                const factor = 1.2;
                 for (let j = 0; j < fullData.length; j += 4) {
                     fullData[j] = Math.min(255, ((fullData[j] - 128) * factor) + 128);
                     fullData[j + 1] = Math.min(255, ((fullData[j + 1] - 128) * factor) + 128);
@@ -260,23 +257,37 @@ export const MobileCapture = () => {
                 });
             }
 
-            setProgress(Math.round(((i + 1) / candidatesToCheck) * 50)); // First 50% is scanning
+            setProgress(Math.round(((i + 1) / candidatesToCheck) * 50));
         }
 
-        // Selection Phase: Sort by Score and pick Top N
-        console.log(`Found ${candidateFrames.length} candidates with detail.`);
+        // Selection Phase 2: Intelligent Discard
+        console.log(`Found ${candidateFrames.length} raw candidates.`);
 
-        // If we found too few, lower threshold or just take what we have
-        const finalSelection = candidateFrames
-            .sort((a, b) => b.score - a.score) // Sort desc by score
-            .slice(0, TARGET_FRAMES) // Take top 18
-            .sort((a, b) => a.time - b.time); // Restore chronological order
+        // 1. Sort by Quality first
+        let bestFrames = candidateFrames.sort((a, b) => b.score - a.score);
+
+        // 2. Filter out low quality ones (Noise Floor), but guarantee at least 6 frames
+        // Threshold 18 kills the "25-30%" detail frames (asphalt texture)
+        const QUALITY_THRESHOLD = 18;
+
+        let filteredFrames = bestFrames.filter(f => f.score >= QUALITY_THRESHOLD);
+
+        // Safety Clean: If we filtered too aggressively, take top 12 anyway
+        if (filteredFrames.length < 12) {
+            filteredFrames = bestFrames.slice(0, 12);
+        }
+
+        // 3. Trim to absolute Max (36)
+        filteredFrames = filteredFrames.slice(0, TARGET_FRAMES);
+
+        // 4. Restore chronological order for display
+        const finalSelection = filteredFrames.sort((a, b) => a.time - b.time);
 
         setFrames(finalSelection.map((f, idx) => ({
             id: idx + 1,
             url: f.url,
             status: 'ANALYZING',
-            confidence: Math.min(100, (f.score / 50) * 100), // Adjusted normalization for new score formula
+            confidence: Math.min(100, (f.score / 50) * 100),
             timestamp: new Date().toISOString()
         })));
 

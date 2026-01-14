@@ -31,6 +31,7 @@ import { TireMonitoringView } from './components/supervisor/TireMonitoringView';
 import { SuperAdminView } from './components/admin/SuperAdminView';
 import { DigitalTwinView } from './components/digital-twin/DigitalTwinView';
 import { GateMonitor } from './components/gate/GateMonitor';
+import TechnicalSpecs from './pages/TechnicalSpecs';
 
 // Standard Audit Entry Type
 interface AuditEntry {
@@ -367,6 +368,8 @@ export default function App() {
               <DigitalTwinView />
             ) : view === 'gate-monitor' ? (
               <GateMonitor />
+            ) : view === 'specs' ? (
+              <TechnicalSpecs />
             ) : null}
           </div>
         </div>

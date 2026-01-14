@@ -63,6 +63,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         { id: 'mobile-scan', label: t('sidebar.mobile_scan'), icon: <Smartphone size={20} />, badge: 'BETA', category: 'LOGISTICS' },
         { id: 'gate-monitor', label: t('sidebar.gate_monitor'), icon: <Camera size={20} />, badge: '4-CAM', category: 'LOGISTICS' },
+        { id: 'specs', label: 'Tech Specs (HTML)', icon: <Activity size={20} />, category: 'EMERGENCY' },
         { id: 'emergency', label: t('sidebar.emergency'), icon: <PhoneCall size={20} />, category: 'EMERGENCY' },
         { id: 'knowledge-hub', label: t('sidebar.knowledge_hub'), icon: <BookOpen size={20} />, badge: 'DOCS', category: 'EMERGENCY' },
         // God Mode
@@ -76,7 +77,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         if (userRole === 'EMPLOYEE') {
             // Employee sees Dashboard, Capture, Emergency. 
             // Also enable read-only view of Inventory and Map as requested.
-            return ['dashboard', 'capture-tires', 'capture-cabin', 'driver-health', 'emergency', 'unit-inventory', 'tire-inventory', 'digital-twin', 'map', 'command-center', 'simulation', 'knowledge-hub', 'mobile-scan', 'gate-monitor'].includes(item.id);
+            return ['dashboard', 'capture-tires', 'capture-cabin', 'driver-health', 'emergency', 'unit-inventory', 'tire-inventory', 'digital-twin', 'map', 'command-center', 'simulation', 'knowledge-hub', 'mobile-scan', 'gate-monitor', 'specs'].includes(item.id);
         }
         return false;
     });

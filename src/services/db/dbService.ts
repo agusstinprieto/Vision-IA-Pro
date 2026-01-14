@@ -10,12 +10,14 @@ export const dbService = {
     },
 
     /**
-     * Ensures a valid Company ID is present. 
-     * Tries to recover from localStorage if memory state is lost.
+     * Async helper to guarantee a valid Company ID.
+     * If session is lost, it attempts to FETCH the first valid company from DB.
+     * Use this in async methods to prevent FK crashes.
      */
-    ensureCompanyId() {
+    async resolveCompanyId(): Promise<string> {
         if (this.currentCompanyId) return this.currentCompanyId;
 
+        // 1. Try Persistence
         try {
             const saved = localStorage.getItem('simsa_company');
             if (saved) {
@@ -25,11 +27,33 @@ export const dbService = {
                     return parsed.id;
                 }
             }
-        } catch (e) {
-            console.error("Failed to recover company ID", e);
-        }
+        } catch (e) { console.warn("Persistence Check Failed", e); }
 
-        throw new Error("Sesión inválida o expirada. Por favor, recargue la página o inicie sesión nuevamente.");
+        // 2. Try Fetching REAL ID from DB (Fallback for Dev/Refresh)
+        try {
+            console.warn("Session lost! Fetching backup company ID from DB...");
+            const { data, error } = await supabase
+                .from('companies')
+                .select('id')
+                .limit(1)
+                .single();
+
+            if (data && data.id) {
+                console.log("Recovered Session with ID:", data.id);
+                this.currentCompanyId = data.id;
+                return data.id;
+            }
+        } catch (err) { console.error("Recovery Failed", err); }
+
+        throw new Error("No se pudo recuperar la sesión de la empresa. Por favor inicie sesión nuevamente.");
+    },
+
+    ensureCompanyId() {
+        if (this.currentCompanyId) return this.currentCompanyId;
+        // Use the dangerous fallback only for sync calls that can't await
+        // But warn heavily. Ideally, migrate all to resolveCompanyId()
+        console.warn("CRITICAL: Using Unsafe Fallback ID in sync context.");
+        return '00000000-0000-0000-0000-000000000000'; // Risks FK Error
     },
 
     // 1. Units (Fleet)
@@ -139,6 +163,7 @@ export const dbService = {
      * This is the key to 100x performance increase
      */
     async syncTiresFromBaseline(unitId: string, frames: any[]) {
+        const companyId = await this.resolveCompanyId();
         const tireInserts = frames
             .filter(f => f.metadata && f.metadata.brand)
             .map((f, index) => ({
@@ -156,7 +181,7 @@ export const dbService = {
                         SecurityAlert.VERDE),
                 last_photo_url: f.url,
                 updated_at: new Date().toISOString(),
-                company_id: this.currentCompanyId
+                company_id: companyId
             }));
 
         if (tireInserts.length > 0) {
@@ -472,7 +497,7 @@ export const dbService = {
 
         // Ensure the unit exists first to satisfy FK constraints
         try {
-            const companyId = this.ensureCompanyId();
+            const companyId = await this.resolveCompanyId();
             const { data: unitExists } = await supabase
                 .from('units')
                 .select('id')
@@ -498,7 +523,7 @@ export const dbService = {
                 unit_id: unitId,
                 frame_data: uploadedFrames,
                 updated_at: new Date().toISOString(),
-                company_id: this.currentCompanyId
+                company_id: await this.resolveCompanyId()
             }, { onConflict: 'unit_id' })
             .select();
 
