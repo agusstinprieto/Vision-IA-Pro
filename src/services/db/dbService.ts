@@ -326,7 +326,7 @@ export const dbService = {
         try {
             const { data, error } = await supabase
                 .from('inspections')
-                .insert([{ ...record, company_id: this.currentCompanyId }])
+                .insert([{ ...record, company_id: this.ensureCompanyId() }])
                 .select();
 
             if (error) throw error;

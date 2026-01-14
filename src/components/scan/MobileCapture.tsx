@@ -39,11 +39,17 @@ const FrameCard = React.memo(({
         >
             <img src={frame.url} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" alt={`Frame ${frame.id}`} />
 
-            {/* Overlay Info */}
+            // Overlay Info
             <div className="absolute top-1 left-1 bg-black/70 backdrop-blur px-1.5 py-0.5 rounded text-[8px] font-mono text-white border border-white/10">
                 CAM-{String(frame.id).padStart(2, '0')}
             </div>
 
+            {/* Detail Score Indicator */}
+            <div className={`absolute top-1 right-1 px-1.5 py-0.5 rounded text-[8px] font-black border ${frame.confidence > 80 ? 'bg-green-500/20 text-green-400 border-green-500/30' : 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'}`}>
+                {Math.round(frame.confidence)}% DETALLE
+            </div>
+
+            {/* Status Indicator */}
             {/* Status Indicator */}
             {frame.status !== 'ANALYZING' && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 backdrop-blur-[2px] z-10">
@@ -168,43 +174,113 @@ export const MobileCapture = () => {
         }
 
         const duration = video.duration;
-        const captureCount = 18;
-        const interval = duration / captureCount;
-        const newFrames: ScannedFrame[] = [];
+        // Smart Scan Config
+        const SCAN_FPS = 4; // Check 4 frames per second (Dense Sampling)
+        const TARGET_FRAMES = 18; // We still want 18 final frames
+
+        const totalCandidates = Math.floor(duration * SCAN_FPS);
+        // Limit max candidates to avoid browser hang on long videos
+        const stepTime = totalCandidates > 100 ? duration / 100 : 1 / SCAN_FPS;
+        const candidatesToCheck = totalCandidates > 100 ? 100 : totalCandidates;
+
+        interface ScoredFrame {
+            time: number;
+            score: number;
+            url: string;
+        }
+
+        let candidateFrames: ScoredFrame[] = [];
 
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
 
-        for (let i = 0; i < captureCount; i++) {
-            video.currentTime = i * interval;
+        console.log(`Smart Scan Started: Checking ${candidatesToCheck} frames...`);
+
+        for (let i = 0; i < candidatesToCheck; i++) {
+            const currentTime = i * stepTime;
+            if (currentTime > duration) break;
+
+            video.currentTime = currentTime;
             await new Promise(r => video.onseeked = r);
 
+            // Draw small for analysis speed
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            // Get Image Data for scoring (Focus on center 50% - Tire is usually centered)
+            const marginX = canvas.width * 0.25;
+            const marginY = canvas.height * 0.25;
+            const scanWidth = canvas.width - (2 * marginX);
+            const scanHeight = canvas.height - (2 * marginY);
+
+            const imageData = ctx.getImageData(marginX, marginY, scanWidth, scanHeight);
             const data = imageData.data;
-            const factor = 1.5;
-            for (let j = 0; j < data.length; j += 4) {
-                data[j] = Math.min(255, ((data[j] - 128) * factor) + 128);
-                data[j + 1] = Math.min(255, ((data[j + 1] - 128) * factor) + 128);
-                data[j + 2] = Math.min(255, ((data[j + 2] - 128) * factor) + 128);
+
+            // Calculate Variance & Brightness
+            let sum = 0;
+            let count = 0;
+            // Sparse sampling for performance (every 20th pixel)
+            for (let k = 0; k < data.length; k += 80) {
+                const brightness = (data[k] + data[k + 1] + data[k + 2]) / 3;
+                sum += brightness;
+                count++;
             }
-            ctx.putImageData(imageData, 0, 0);
+            const mean = sum / count;
 
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+            let varianceSum = 0;
+            for (let k = 0; k < data.length; k += 80) {
+                const brightness = (data[k] + data[k + 1] + data[k + 2]) / 3;
+                varianceSum += Math.pow(brightness - mean, 2);
+            }
+            const stdDev = Math.sqrt(varianceSum / count);
 
-            newFrames.push({
-                id: i + 1,
-                url: dataUrl,
-                status: 'ANALYZING',
-                confidence: 0,
-                timestamp: new Date().toISOString()
-            });
+            // HEURISTIC V2: "Dark Texture Bias"
+            // Tires are Dark (Low Mean) and Textured (High StdDev).
+            // We penalize bright frames heavily (sky, white truck body, concrete).
+            const darknessFactor = 1 - Math.min(1, (mean / 150)); // If mean > 150, factor is 0
+            const finalScore = stdDev * (darknessFactor * 3); // Boost weight of darkness check
 
-            setFrames([...newFrames]);
-            setProgress(Math.round(((i + 1) / captureCount) * 100));
+            // Only keep frames with sufficient score
+            // StdDev > 20 is good texture. Darkness factor adds weight.
+            if (finalScore > 15) {
+                // Enhance Contrast for final display
+                const fullImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const fullData = fullImageData.data;
+                const factor = 1.2; // Slight contrast boost
+                for (let j = 0; j < fullData.length; j += 4) {
+                    fullData[j] = Math.min(255, ((fullData[j] - 128) * factor) + 128);
+                    fullData[j + 1] = Math.min(255, ((fullData[j + 1] - 128) * factor) + 128);
+                    fullData[j + 2] = Math.min(255, ((fullData[j + 2] - 128) * factor) + 128);
+                }
+                ctx.putImageData(fullImageData, 0, 0);
+
+                candidateFrames.push({
+                    time: currentTime,
+                    score: finalScore,
+                    url: canvas.toDataURL('image/jpeg', 0.85)
+                });
+            }
+
+            setProgress(Math.round(((i + 1) / candidatesToCheck) * 50)); // First 50% is scanning
         }
 
+        // Selection Phase: Sort by Score and pick Top N
+        console.log(`Found ${candidateFrames.length} candidates with detail.`);
+
+        // If we found too few, lower threshold or just take what we have
+        const finalSelection = candidateFrames
+            .sort((a, b) => b.score - a.score) // Sort desc by score
+            .slice(0, TARGET_FRAMES) // Take top 18
+            .sort((a, b) => a.time - b.time); // Restore chronological order
+
+        setFrames(finalSelection.map((f, idx) => ({
+            id: idx + 1,
+            url: f.url,
+            status: 'ANALYZING',
+            confidence: Math.min(100, (f.score / 50) * 100), // Adjusted normalization for new score formula
+            timestamp: new Date().toISOString()
+        })));
+
+        setProgress(100);
         setIsProcessing(false);
         setIsReadyToAnalyze(true);
     };
